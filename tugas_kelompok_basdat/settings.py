@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'feeding',
     'attractions',
     'tickets',
-    'adoption',
+    'adoptions',
 ]
 
 MIDDLEWARE = [
