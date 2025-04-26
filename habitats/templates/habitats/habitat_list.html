@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>DAFTAR HABITAT</h4>
+            <a href="{% url 'habitats:habitat_add' %}" class="btn btn-primary">+ Tambah Habitat</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nama Habitat</th>
+                            <th>Luas Area</th>
+                            <th>Kapasitas Maksimal</th>
+                            <th>Status Lingkungan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for habitat in habitats %}
+                        <tr>
+                            <td>{{ habitat.name }}</td>
+                            <td>{{ habitat.area }} m²</td>
+                            <td>{{ habitat.max_capacity }} hewan</td>
+                            <td>{{ habitat.environment_status }}</td>
+                            <td>
+                                <a href="{% url 'habitats:habitat_detail' habitat.id %}" class="btn btn-sm btn-info">[Detail]</a>
+                                <a href="{% url 'habitats:habitat_edit' habitat.id %}" class="btn btn-sm btn-warning">[Edit]</a>
+                                <a href="{% url 'habitats:habitat_delete' habitat.id %}" class="btn btn-sm btn-danger">[Hapus]</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada data habitat</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Konfirmasi Hapus Habitat</h4>
+        </div>
+        <div class="card-body">
+            <p>Apakah Anda yakin ingin menghapus habitat "{{ object.name }}"?</p>
+            {% if object.animal_set.exists %}
+            <div class="alert alert-warning">
+                <strong>Perhatian!</strong> Habitat ini memiliki {{ object.animal_set.count }} hewan. Menghapus habitat ini akan mempengaruhi data hewan tersebut.
+            </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-danger mx-2">Ya, Hapus</button>
+                    <a href="{% url 'habitats:habitat_list' %}" class="btn btn-secondary mx-2">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

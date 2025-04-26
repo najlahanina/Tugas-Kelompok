@@ -13,7 +13,7 @@ class AnimalCreateView(CreateView):
     model = Animal
     form_class = AnimalForm
     template_name = 'animals/animal_form.html'
-    success_url = reverse_lazy('animal-list')
+    success_url = reverse_lazy('animal_list')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,7 +25,7 @@ class AnimalUpdateView(UpdateView):
     model = Animal
     form_class = AnimalForm
     template_name = 'animals/animal_form.html'
-    success_url = reverse_lazy('animal-list')
+    success_url = reverse_lazy('animal_list')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -35,5 +35,5 @@ class AnimalUpdateView(UpdateView):
 
 class AnimalDeleteView(DeleteView):
     model = Animal
-    success_url = reverse_lazy('animal-list')
+    success_url = reverse_lazy('animal_list')
     template_name = 'animals/animal_confirm_delete.html'

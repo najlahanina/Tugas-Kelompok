@@ -14,44 +14,23 @@
         <ul class="flex gap-6">
             {% if user.is_authenticated %}
                 <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Dashboard</a></li>
-    
-                {% comment %} {% if user.profile.role == "veterinarian" %}
-                    <li><a href="{% url 'rekam_medis' %}" class="text-blue-500 hover:text-blue-700">Rekam Medis Hewan</a></li>
-    
-                {% elif user.profile.role == "animal_keeper" %}
-                    <li><a href="{% url 'catatan_perawatan' %}" class="text-blue-500 hover:text-blue-700">Catatan Perawatan Hewan</a></li>
-    
-                {% elif user.profile.role == "admin_staff" %}
-                    <li><a href="{% url 'kelola_pengunjung' %}" class="text-blue-500 hover:text-blue-700">Kelola Pengunjung</a></li>
-                    <li><a href="{% url 'kelola_adopsi' %}" class="text-blue-500 hover:text-blue-700">Kelola Adopsi</a></li>
-                    <li><a href="{% url 'kelola_adopter' %}" class="text-blue-500 hover:text-blue-700">Kelola Adopter</a></li>
-    
-                {% elif user.profile.role == "trainer" %}
-                    <li><a href="{% url 'jadwal_pertunjukan' %}" class="text-blue-500 hover:text-blue-700">Jadwal Pertunjukan</a></li>
-    
-                {% elif user.profile.role == "visitor" %}
-                    <li><a href="{% url 'info_kebun_binatang' %}" class="text-blue-500 hover:text-blue-700">Informasi Kebun Binatang</a></li>
-                    {% if user.profile.visitor_profile.is_adopter %}
-                        <li><a href="{% url 'hewan_adopsi' %}" class="text-blue-500 hover:text-blue-700">Hewan Adopsi</a></li>
-                    {% endif %}
-                {% endif %} {% endcomment %}
-
+                
                 {% comment %} GANTIII DI SINI UNTUK NAVBAR {% endcomment %}
                 {% if user.profile.role == "veterinarian" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Rekam Medis Hewan</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
+                    <li><a href="{% url 'animals:animal_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
     
                 {% elif user.profile.role == "animal_keeper" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Catatan Perawatan Hewan</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Manajemen Habitat</a></li>
+                    <li><a href="{% url 'animals:animal_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
+                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Habitat</a></li>
     
                 {% elif user.profile.role == "admin_staff" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Kelola Pengunjung</a></li>
                     <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Kelola Adopsi</a></li>
                     <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Kelola Adopter</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Manajemen Habitat</a></li>
+                    <li><a href="{% url 'animals:animal_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
+                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Habitat</a></li>
     
                 {% elif user.profile.role == "trainer" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Jadwal Pertunjukan</a></li>
@@ -62,7 +41,8 @@
                         <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Hewan Adopsi</a></li>
                     {% endif %}
                 {% endif %}
-    
+                
+                <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Pengaturan Profil</a></li>
                 <li><a href="{% url 'main:logout' %}" class="text-red-500 hover:text-red-700">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'main:login' %}" class="text-blue-500 hover:text-blue-700">Login</a></li>
