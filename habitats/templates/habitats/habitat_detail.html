@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>DETAIL HABITAT: {{ habitat.name }}</h4>
+            <div>
+                <a href="{% url 'habitat_edit' habitat.id %}" class="btn btn-sm btn-warning">[Edit Habitat]</a>
+                <a href="{% url 'habitat_delete' habitat.id %}" class="btn btn-sm btn-danger">[Hapus Habitat]</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Luas Area</th>
+                    <td>{{ habitat.area }} m²</td>
+                </tr>
+                <tr>
+                    <th>Status Lingkungan</th>
+                    <td>{{ habitat.environment_status }}</td>
+                </tr>
+                <tr>
+                    <th>Kapasitas Maksimal</th>
+                    <td>{{ habitat.max_capacity }} hewan</td>
+                </tr>
+            </table>
+            
+            <h5 class="mt-4 mb-3">DAFTAR HEWAN DALAM HABITAT</h5>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nama Individu</th>
+                            <th>Spesies</th>
+                            <th>Asal Hewan</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Status Kesehatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for animal in animals %}
+                        <tr>
+                            <td>{{ animal.name|default:"-" }}</td>
+                            <td>{{ animal.species }}</td>
+                            <td>{{ animal.origin }}</td>
+                            <td>{{ animal.birth_date|date:"Y-m-d"|default:"-" }}</td>
+                            <td>{{ animal.health_status }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada hewan di habitat ini</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

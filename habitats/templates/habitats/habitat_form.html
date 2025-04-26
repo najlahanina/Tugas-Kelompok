@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3 row">
+                    <label for="{{ form.name.id_for_label }}" class="col-sm-3 col-form-label">{{ form.name.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.name }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="{{ form.area.id_for_label }}" class="col-sm-3 col-form-label">{{ form.area.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.area }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="{{ form.max_capacity.id_for_label }}" class="col-sm-3 col-form-label">{{ form.max_capacity.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.max_capacity }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="{{ form.environment_status.id_for_label }}" class="col-sm-3 col-form-label">{{ form.environment_status.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.environment_status }}
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-center mt-4">
+                    {% if is_add %}
+                    <button type="submit" class="btn btn-primary">[Tambah Habitat]</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary">[SIMPAN PERUBAHAN]</button>
+                    {% endif %}
+                    <a href="{% url 'habitats:habitat_list' %}" class="btn btn-secondary ms-2">[BATAL]</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

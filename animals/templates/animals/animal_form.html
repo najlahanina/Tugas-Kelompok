@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.species.id_for_label }}" class="form-label">{{ form.species.label }}</label>
+                    {{ form.species }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.origin.id_for_label }}" class="form-label">{{ form.origin.label }}</label>
+                    {{ form.origin }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.birth_date.id_for_label }}" class="form-label">{{ form.birth_date.label }} (opsional)</label>
+                    {{ form.birth_date }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.health_status.id_for_label }}" class="form-label">{{ form.health_status.label }}</label>
+                    {{ form.health_status }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.habitat.id_for_label }}" class="form-label">{{ form.habitat.label }}</label>
+                    {{ form.habitat }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.photo_url.id_for_label }}" class="form-label">{{ form.photo_url.label }}</label>
+                    {{ form.photo_url }}
+                </div>
+                
+                <div class="d-flex justify-content-center">
+                    {% if is_add %}
+                    <button type="submit" class="btn btn-primary mx-2">[TAMBAH]</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary mx-2">[SIMPAN PERUBAHAN]</button>
+                    {% endif %}
+                    <a href="{% url 'animals:animal_list' %}" class="btn btn-secondary mx-2">[BATAL]</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
