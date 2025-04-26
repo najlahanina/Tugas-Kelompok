@@ -1,38 +1,323 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block meta %}
-<title>Home</title>
+<title>Welcome to Sizopi</title>
+<meta name="description" content="Explore Sizopi - A world-class conservation, education and recreation facility featuring exotic wildlife from around the globe.">
 {% endblock meta %}
 
 {% block content %}
+<!-- Hero Section -->
+<div class="hero-section h-60 flex items-center justify-center text-center text-white mb-6">
+  <div class="container mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-2 text-[#586132]">Welcome to Sizopi</h1>
+      <p class="text-xl mb-4 text-[#586132]">Discover the wonders of wildlife in our natural conservation park</p>
+  </div>
+</div>
 
-<style>
-  .hover\:zoom-image {
-      transition: transform 0.3s ease;
-  }
+<!-- About Section -->
+<section class="container mx-auto px-4 py-8" id="about">
+  <div class="text-center mb-8">
+      <h2 class="text-4xl font-bold text-[#586132] mb-4">Experience the Wild</h2>
+      <p class="text-gray-600 max-w-3xl mx-auto">Sizopi offers an unforgettable adventure where visitors can observe animals in their natural habitat. Our park is committed to wildlife conservation, education, and providing an immersive experience for all visitors.</p>
+  </div>
+</section>
 
-  .hover\:zoom-image:hover {
-      transform: scale(1.05);
-  }
-</style>
+<!-- Facilities Section with Carousel -->
+<section class="bg-gray-50 py-16" id="facilities">
+  <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center text-[#586132] mb-12">Our Facilities</h2>
+      <div id="facilities-carousel" class="relative overflow-hidden">
+          <div class="carousel-container flex transition-transform duration-500 ease-in-out">
+              <!-- Swimming with Dolphin -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://cdn.sanity.io/images/esqfj3od/production/df2fc4fcfcf5029020847c9ab8a8c47d8bda8323-1080x720.webp?w=3840&q=65&fit=clip&auto=format" alt="Swimming with Dolphin" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Swimming with Dolphin</h3>
+                      <p class="text-gray-600">Experience the thrill of swimming alongside these intelligent marine mammals. Our trained dolphins offer an interactive adventure that creates memories to last a lifetime. Learn about marine conservation while enjoying this unique encounter.</p>
+                  </div>
+              </div>
+              
+              <!-- Sea World -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://ik.imagekit.io/tvlk/xpe-asset/dsIfD0QxFcgaDmB6sQchobk5CmBu9PzsWhwFXGFxJ179jzSxIGG5kZNhhHY-p7nw/xxt/experience/image/Seaworld-10-jpg-1080x720-FIT-232a7b36200337f598dcc4c886f04dc9.jpeg?_src=imagekit&tr=c-at_max,h-500,q-60,w-380" alt="Sea World" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Sea World</h3>
+                      <p class="text-gray-600">Dive into an underwater adventure at our Sea World attraction. Explore vibrant coral reefs, encounter exotic marine species, and watch spectacular aquatic shows. Our aquarium exhibits showcase the diversity of underwater ecosystems from around the globe.</p>
+                  </div>
+              </div>
+              
+              <!-- Tiger Show -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://tamansafari.com/wp-content/uploads/2023/12/latest-update-img-02.png" alt="Tiger Show" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Tiger Show</h3>
+                      <p class="text-gray-600">Witness the power and majesty of tigers in our educational tiger show. Our skilled trainers demonstrate natural tiger behaviors while educating visitors about conservation efforts to protect these magnificent endangered creatures in their natural habitats.</p>
+                  </div>
+              </div>
+              
+              <!-- Baby Zoo -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://www.oregonzoo.org/sites/default/files/2025-02/2-02-2025el-99.jpg" alt="Baby Zoo" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Baby Zoo</h3>
+                      <p class="text-gray-600">Delight in our Baby Zoo where children and adults can interact with adorable baby animals. This hands-on experience provides a gentle introduction to wildlife for young visitors, with opportunities to feed and pet friendly juvenile animals in a supervised environment.</p>
+                  </div>
+              </div>
+              
+              <!-- Oriental Circus -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,q_auto:best,w_640/v1634025439/01jsbjexst1acdwdrbm45dzqqs.jpg" alt="Oriental Circus" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Oriental Circus</h3>
+                      <p class="text-gray-600">Experience the magic of our Oriental Circus featuring talented performers from across Asia. This spectacular show combines acrobatics, animal demonstrations, and cultural performances in an entertaining and educational format for the whole family.</p>
+                  </div>
+              </div>
+              
+              <!-- Taman Burung -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://www.ancol.com/blog/wp-content/uploads/2024/05/JBL-1-1024x683.jpg" alt="Taman Burung" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Taman Burung</h3>
+                      <p class="text-gray-600">Stroll through our Bird Park (Taman Burung) where hundreds of bird species from Indonesia and around the world create a symphony of colors and sounds. Walk-through aviaries let you get up close to exotic birds in lush natural settings.</p>
+                  </div>
+              </div>
+              
+              <!-- Area Reptil -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://news.tamansafari.com/Newsportalv22ok/upload/677_Gambar_WhatsApp_2024-08-03_pukul_12.47.24_a0e1305a.jpg" alt="Area Reptil" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Area Reptil</h3>
+                      <p class="text-gray-600">Explore our Reptile Area featuring various reptilian species from around the world. Get a close look at snakes, lizards, turtles, and the famous Komodo dragons. Our educational exhibits highlight the importance of these often misunderstood creatures in our ecosystem.</p>
+                  </div>
+              </div>
+              
+              <!-- Kebun Kupu-Kupu -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/10/50/5b/the-natureland-which.jpg?w=900&h=500&s=1" alt="Kebun Kupu-Kupu" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Kebun Kupu-Kupu</h3>
+                      <p class="text-gray-600">Enter our enchanting Butterfly Garden where hundreds of colorful butterflies flutter freely around you. Witness the complete lifecycle of these delicate creatures from caterpillar to chrysalis to beautiful butterfly in this magical tropical garden setting.</p>
+                  </div>
+              </div>
+              
+              <!-- Safari Journey -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://tamansafari.com/taman-safari-bali/wp-content/uploads/2020/07/dt_junglehopper.jpg" alt="Safari Journey" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Safari Journey</h3>
+                      <p class="text-gray-600">Experience a thrilling drive-through safari where you can observe animals roaming freely in their natural habitats. Get up close with lions, tigers, elephants, and more from the safety of your vehicle or our safari bus.</p>
+                  </div>
+              </div>
+              
+              <!-- Istana Panda -->
+              <div class="facility-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex-shrink-0 w-full md:w-1/2 lg:w-1/3 p-3">
+                  <img src="https://asset.kompas.com/crops/4pCvJ-Xn4JiZCwbUy82xQyz_ogA=/0x0:1000x667/1200x800/data/photo/2017/11/29/3471378805.jpg" alt="Istana Panda" class="w-full h-56 object-cover rounded-t-lg">
+                  <div class="p-6">
+                      <h3 class="text-xl font-bold text-[#586132] mb-2">Istana Panda</h3>
+                      <p class="text-gray-600">Visit our Panda Palace to meet these gentle giants from China. Our state-of-the-art facility replicates the pandas' natural habitat, allowing visitors to observe these rare and endangered animals as they play, eat bamboo, and relax in a carefully controlled environment.</p>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Carousel controls -->
+          <button id="prev-slide" class="absolute top-1/2 left-2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow-md hover:bg-opacity-100 transition duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+          </button>
+          <button id="next-slide" class="absolute top-1/2 right-2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow-md hover:bg-opacity-100 transition duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+          </button>
+      </div>
+  </div>
+</section>
 
-<section class="bg-white">
+<!-- Map Section -->
+<section class="container mx-auto px-4 py-16" id="map">
+    <h2 class="text-4xl font-bold text-center text-[#586132] mb-12">Park Map</h2>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="mb-6">
+            <p class="text-gray-600 mb-4">Navigate our expansive safari park with ease using our interactive map. Plan your visit to ensure you don't miss any attractions!</p>
+        </div>
         
+        <div class="relative aspect-video bg-gray-200 rounded-lg overflow-hidden">
+            <img src="https://tamansafari.com/wp-content/uploads/2025/01/map_tsi-02.png" alt="Sizopi Park Map" class="w-full h-full object-contain">
+        </div>
+    </div>
 </section>
 
-<section class="bg-[#716969]">
-    
+<!-- Animal Fun Facts Section -->
+<section class="bg-gray-50 py-16" id="fun-facts">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center text-[#586132] mb-12">Animal Fun Facts</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Sumatran Tiger -->
+            <div class="animal-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9z7mrJYa7zsRfi6n26gjfhjzjvYMO3RfYMmFSJxJuaIo5y5-W7ih9VDxE1FZEineYw0EJYSmJ8Zi4P7o62NSOo0R7W2YyoL6UjKLhEoSEP_FuwdwnWFAIRHaZ-Uxq_LKGRf_xzYXK64tg/w640-h419/1644897149271573-0.png" alt="Sumatran Tiger" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#586132] mb-2">Sumatran Tiger</h3>
+                    <p class="text-gray-600 mb-4">The Sumatran tiger is the smallest surviving tiger subspecies and is only found on the Indonesian island of Sumatra.</p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-[#586132] mb-2">Did You Know?</h4>
+                        <p class="text-gray-700">Sumatran tigers have the most stripes among all tiger subspecies, helping them blend perfectly into their dense jungle habitat. With fewer than 400 left in the wild, they are critically endangered.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Komodo Dragon -->
+            <div class="animal-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300">
+                <img src="https://awsimages.detik.net.id/community/media/visual/2018/12/08/525a5f7b-41ba-4013-9692-cc57f0319fcd.jpeg?w=1200" alt="Komodo Dragon" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#586132] mb-2">Komodo Dragon</h3>
+                    <p class="text-gray-600 mb-4">The Komodo dragon is the largest living lizard species, native to the Indonesian islands of Komodo, Rinca, Flores, and Gili Motang.</p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-[#586132] mb-2">Did You Know?</h4>
+                        <p class="text-gray-700">Komodo dragons can eat up to 80% of their body weight in a single feeding. Their saliva contains over 50 strains of bacteria, making their bite deadly even if prey escapes the initial attack.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Orangutan -->
+            <div class="animal-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300">
+                <img src="https://cdn.betahita.id/5/8/9/7/5897.jpeg" alt="Orangutan" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#586132] mb-2">Orangutan</h3>
+                    <p class="text-gray-600 mb-4">Orangutans are great apes native to the rainforests of Indonesia and Malaysia, found only on the islands of Borneo and Sumatra.</p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-[#586132] mb-2">Did You Know?</h4>
+                        <p class="text-gray-700">Orangutans share approximately 97% of their DNA with humans. They're the most arboreal of the great apes, spending nearly their entire lives in trees and building new nests each night for sleeping.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Javan Rhino -->
+            <div class="animal-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300">
+                <img src="https://rhinos.org/wp-content/uploads/2020/09/Hero-BlackRhino.jpg" alt="Javan Rhino" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#586132] mb-2">Javan Rhino</h3>
+                    <p class="text-gray-600 mb-4">The Javan rhinoceros is one of the most endangered large mammals in the world, with only about 75 individuals surviving in the wild.</p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-[#586132] mb-2">Did You Know?</h4>
+                        <p class="text-gray-700">Javan rhinos are so rare that many wildlife biologists have never seen one in person. They are extremely shy and can be distinguished from other rhino species by their single horn and skin folds that give them an armored appearance.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bali Mynah -->
+            <div class="animal-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300">
+                <img src="https://animals.sandiegozoo.org/sites/default/files/2016-09/animals_hero_balimyna.jpg" alt="Bali Mynah" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#586132] mb-2">Bali Mynah</h3>
+                    <p class="text-gray-600 mb-4">The Bali mynah, also known as the Bali starling, is a critically endangered bird endemic to Bali, Indonesia.</p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-[#586132] mb-2">Did You Know?</h4>
+                        <p class="text-gray-700">With fewer than 100 birds remaining in the wild, the Bali mynah is one of the rarest birds in the world. Their striking white plumage and blue eye patches made them popular in the pet trade, contributing to their endangered status.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Elephant -->
+            <div class="animal-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300">
+                <img src="https://cms.bbcearth.com//sites/default/files/factfiles/2024-07/el2.jpg" alt="Sumatran Elephant" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#586132] mb-2">Sumatran Elephant</h3>
+                    <p class="text-gray-600 mb-4">The Sumatran elephant is one of three recognized subspecies of the Asian elephant, and native to the island of Sumatra.</p>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-[#586132] mb-2">Did You Know?</h4>
+                        <p class="text-gray-700">Sumatran elephants are the smallest of the Asian elephants and have relatively brighter skin. They can consume up to 150kg of vegetation daily and drink as much as 200 liters of water. Their population has declined by 80% in less than 25 years.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-<div class="text-center py-8">
-    
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 px-4 md:px-8">
-</div>
-
-<section class="bg-white">
-    
+<!-- CTA Section -->
+<section class="container mx-auto px-4 py-16 text-center">
+    <h2 class="text-4xl font-bold text-[#586132] mb-6">Plan Your Visit Today</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto mb-8">Embark on an unforgettable journey through Sizopi. Book your tickets now for an adventure that combines education, conservation, and entertainment!</p>
+    <div class="flex justify-center gap-4 flex-wrap">
+        <a href="#" class="bg-[#b47d2d] hover:bg-[#a97529] text-white py-3 px-6 rounded-lg font-semibold transition duration-300">Book Tickets</a>
+    </div>
 </section>
-
 {% endblock content %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-hide messages after 5 seconds
+        const messages = document.querySelectorAll('.messages div');
+        messages.forEach(message => {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 500);
+            }, 5000);
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const carouselContainer = document.querySelector('.carousel-container');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const slidesPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+        const slides = document.querySelectorAll('.facility-card');
+        let currentIndex = 0;
+        
+        // Set initial width based on slides per view
+        slides.forEach(slide => {
+            slide.style.width = `calc(100% / ${slidesPerView})`;
+        });
+        
+        function updateCarousel() {
+            const slideWidth = slides[0].offsetWidth;
+            carouselContainer.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+        }
+        
+        // Previous slide
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+        
+        // Next slide
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < slides.length - slidesPerView) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+        
+        // Click on indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index * slidesPerView;
+                if (currentIndex > slides.length - slidesPerView) {
+                    currentIndex = slides.length - slidesPerView;
+                }
+                updateCarousel();
+            });
+        });
+        
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            const newSlidesPerView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+            if (newSlidesPerView !== slidesPerView) {
+                location.reload(); 
+            }
+        });
+        
+        // Initialize carousel
+        updateCarousel();
+    });
+</script>
+{% endblock script %}

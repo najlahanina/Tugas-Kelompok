@@ -1,4 +1,3 @@
-from django.urls import path
 from .views import HabitatListView, HabitatDetailView, HabitatCreateView, HabitatUpdateView, HabitatDeleteView
 
 app_name = 'habitats'
