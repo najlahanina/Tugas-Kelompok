@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <h4>Selamat datang, {{ user.first_name }} {{ user.last_name }}!</h4>
+                    <p>Anda login sebagai: <strong>{{ user.profile.get_role_display }}</strong></p>
+                    
+                    {% if role == 'veterinarian' %}
+                        <div class="alert alert-info">
+                            <h5>Menu Dokter Hewan</h5>
+                            <p>Anda dapat mengakses rekam medis hewan di sini.</p>
+                        </div>
+                    {% elif role == 'animal_keeper' %}
+                        <div class="alert alert-info">
+                            <h5>Menu Penjaga Hewan</h5>
+                            <p>Anda dapat mengakses catatan perawatan hewan di sini.</p>
+                        </div>
+                    {% elif role == 'admin_staff' %}
+                        <div class="alert alert-info">
+                            <h5>Menu Staf Administrasi</h5>
+                            <p>Anda dapat mengelola pengunjung, adopsi, dan adopter di sini.</p>
+                        </div>
+                    {% elif role == 'trainer' %}
+                        <div class="alert alert-info">
+                            <h5>Menu Pelatih Pertunjukan</h5>
+                            <p>Anda dapat mengakses jadwal pertunjukan di sini.</p>
+                        </div>
+                    {% elif role == 'visitor' %}
+                        <div class="alert alert-info">
+                            <h5>Menu Pengunjung</h5>
+                            <p>Anda dapat mengakses informasi kebun binatang di sini.</p>
+                            
+                            {% if is_adopter %}
+                                <div class="mt-3">
+                                    <h6>Menu Adopter</h6>
+                                    <p>Anda juga terdaftar sebagai adopter dan dapat mengakses informasi hewan adopsi di sini.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
