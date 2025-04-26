@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>DATA SATWA</h4>
+            <a href="{% url 'animal-add' %}" class="btn btn-primary">+ Tambah Satwa</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nama Individu</th>
+                            <th>Spesies</th>
+                            <th>Asal Hewan</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Status Kesehatan</th>
+                            <th>Habitat</th>
+                            <th>Foto</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for animal in animals %}
+                        <tr>
+                            <td>{{ animal.name|default:"-" }}</td>
+                            <td>{{ animal.species }}</td>
+                            <td>{{ animal.origin }}</td>
+                            <td>{{ animal.birth_date|date:"Y-m-d"|default:"-" }}</td>
+                            <td>{{ animal.health_status }}</td>
+                            <td>{{ animal.habitat.name }}</td>
+                            <td>
+                                {% if animal.photo_url %}
+                                <a href="{{ animal.photo_url }}" target="_blank">Lihat foto</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'animal-edit' animal.id %}" class="btn btn-sm btn-info">[Edit]</a>
+                                <a href="{% url 'animal-delete' animal.id %}" class="btn btn-sm btn-danger">[Hapus]</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Tidak ada data satwa</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
