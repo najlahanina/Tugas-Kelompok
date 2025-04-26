@@ -83,6 +83,45 @@
                             {% endif %}
                         </div>
                         
+                        {% if role == 'Staff' %}
+                        <div class="mb-3">
+                            <label>Peran Staff:</label><br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="staff_role" id="pjh" value="animal_keeper">
+                                <label class="form-check-label" for="pjh">
+                                    Penjaga Hewan (PJHXXX)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="staff_role" id="adm" value="admin_staff">
+                                <label class="form-check-label" for="adm">
+                                    Staf Administrasi (ADMXXX)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="staff_role" id="plp" value="trainer">
+                                <label class="form-check-label" for="plp">
+                                    Pelatih Pertunjukan (PLPXXX)
+                                </label>
+                            </div>
+                            {% if form.staff_role.errors %}
+                            <div class="text-danger">{{ form.staff_role.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        <div class="mb-3">
+                            <label for="id_staff_id">ID Staff:</label>
+                            <div class="input-group">
+                                {{ form.staff_id }}
+                                <button type="button" class="btn btn-outline-secondary" id="generateStaffId">Generate ID</button>
+                            </div>
+                            {% if form.staff_id.errors %}
+                            <div class="text-danger">{{ form.staff_id.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
                         {% if role == 'Pengunjung' %}
                         <div class="mb-3">
                             <label for="id_address">Alamat Lengkap:</label>
@@ -124,27 +163,6 @@
                         </div>
                         {% endif %}
                         
-                        {% if role == 'Penjaga Hewan' or role == 'Staf Administrasi' or role == 'Pelatih Pertunjukan' %}
-                        <div class="mb-3">
-                            <label for="id_staff_role">Peran Staff:</label>
-                            {{ form.staff_role }}
-                            {% if form.staff_role.errors %}
-                            <div class="text-danger">{{ form.staff_role.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_staff_id">ID Staff:</label>
-                            <div class="input-group">
-                                {{ form.staff_id }}
-                                <button type="button" class="btn btn-outline-secondary" id="generateStaffId">Generate ID</button>
-                            </div>
-                            {% if form.staff_id.errors %}
-                            <div class="text-danger">{{ form.staff_id.errors }}</div>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        
                         <button type="submit" class="btn btn-primary btn-block mt-4">DAFTAR</button>
                     </form>
                     <div class="text-center mt-3">
@@ -158,7 +176,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // For Veterinarian - show/hide other specialization field
+        // Untuk Veterinarian - spesialisasi lainnya
         var specializationSelect = document.getElementById('id_specialization');
         var otherSpecializationContainer = document.getElementById('other_specialization_container');
         
@@ -171,25 +189,28 @@
                 }
             });
             
-            // Initial check
             if (specializationSelect.value === 'other') {
                 otherSpecializationContainer.style.display = 'block';
             }
         }
         
-        // For Staff - generate staff ID
+        // Untuk Staff - generate ID otomatis
         var generateBtn = document.getElementById('generateStaffId');
-        var staffRoleSelect = document.getElementById('id_staff_role');
         var staffIdInput = document.getElementById('id_staff_id');
+        var staffRoleRadios = document.querySelectorAll('input[name="staff_role"]');
         
-        if (generateBtn && staffRoleSelect && staffIdInput) {
+        if (generateBtn && staffIdInput && staffRoleRadios.length > 0) {
             generateBtn.addEventListener('click', function() {
-                var role = staffRoleSelect.value;
-                fetch('/generate-staff-id/?role=' + role)
-                    .then(response => response.json())
-                    .then(data => {
-                        staffIdInput.value = data.staff_id;
-                    });
+                var selectedRole = Array.from(staffRoleRadios).find(radio => radio.checked)?.value;
+                if (selectedRole) {
+                    fetch('/generate-staff-id/?role=' + encodeURIComponent(selectedRole))
+                        .then(response => response.json())
+                        .then(data => {
+                            staffIdInput.value = data.staff_id;
+                        });
+                } else {
+                    alert('Silakan pilih peran staff terlebih dahulu.');
+                }
             });
         }
     });

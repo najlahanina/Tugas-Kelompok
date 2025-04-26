@@ -56,7 +56,7 @@ def register_step2(request):
         return register_visitor(request)
     elif role == 'veterinarian':
         return register_veterinarian(request)
-    elif role in ['animal_keeper', 'admin_staff', 'trainer']:
+    elif role == 'staff':
         return register_staff(request, role)
     else:
         return redirect('main:register_step1')
@@ -125,7 +125,7 @@ def register_veterinarian(request):
     
     return render(request, 'register.html', {'form': form, 'role': 'Dokter Hewan'})
 
-def register_staff(request, staff_role):
+def register_staff(request, staff_role=None):
     if request.method == 'POST':
         form = StaffRegistrationForm(request.POST)
         if form.is_valid():
@@ -134,6 +134,9 @@ def register_staff(request, staff_role):
             user.last_name = form.cleaned_data['last_name']
             user.email = form.cleaned_data['email']
             user.save()
+            
+            # Get staff role from the form
+            staff_role = form.cleaned_data['staff_role']
             
             profile = UserProfile.objects.create(
                 user=user,
@@ -149,30 +152,13 @@ def register_staff(request, staff_role):
             )
             
             login(request, user)
-            return redirect('main:dashboard')
+            return redirect('main:dashboard')  # Note: using 'main:dashboard' namespace
     else:
-        form = StaffRegistrationForm(initial={'staff_role': staff_role})
-        # Generate a default staff ID
-        prefix_map = {
-            'animal_keeper': 'PJH',
-            'admin_staff': 'ADM',
-            'trainer': 'PLP'
-        }
-        prefix = prefix_map.get(staff_role, 'STF')
-        random_suffix = ''.join(random.choices(string.digits, k=3))
-        staff_id = f"{prefix}{random_suffix}"
-        form.initial['staff_id'] = staff_id
-    
-    role_display = {
-        'animal_keeper': 'Penjaga Hewan',
-        'admin_staff': 'Staf Administrasi',
-        'trainer': 'Pelatih Pertunjukan'
-    }
+        form = StaffRegistrationForm(initial={'staff_role': staff_role} if staff_role else {})
     
     return render(request, 'register.html', {
         'form': form, 
-        'role': role_display.get(staff_role, 'Staff'),
-        'staff_id': form.initial.get('staff_id')
+        'role': 'Staff',
     })
 
 def generate_staff_id(request):

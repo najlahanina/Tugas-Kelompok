@@ -14,13 +14,12 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ('username', 'password1', 'password2', 'first_name', 'middle_name', 'last_name', 'email')
 
+
 class RoleSelectionForm(forms.Form):
     ROLE_CHOICES = (
         ('visitor', 'Pengunjung'),
         ('veterinarian', 'Dokter Hewan'),
-        ('animal_keeper', 'Penjaga Hewan'),
-        ('admin_staff', 'Staf Administrasi'),
-        ('trainer', 'Pelatih Pertunjukan'),
+        ('staff', 'Staff'),
     )
     role = forms.ChoiceField(choices=ROLE_CHOICES, label="Pilih Peran")
 
@@ -50,5 +49,5 @@ class StaffRegistrationForm(UserRegistrationForm):
         ('admin_staff', 'Staf Administrasi (ADMXXX)'),
         ('trainer', 'Pelatih Pertunjukan (PLPXXX)'),
     )
-    staff_role = forms.ChoiceField(choices=STAFF_ROLE_CHOICES)
+    staff_role = forms.ChoiceField(choices=STAFF_ROLE_CHOICES, widget=forms.RadioSelect)
     staff_id = forms.CharField(max_length=10, required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
