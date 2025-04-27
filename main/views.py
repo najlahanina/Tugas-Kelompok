@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 import random
 import string
+from django.contrib.auth.forms import PasswordChangeForm
 from .forms import (
     RoleSelectionForm, VisitorRegistrationForm, VeterinarianRegistrationForm,
-    StaffRegistrationForm
+    StaffRegistrationForm, UserProfileUpdateForm, VisitorProfileUpdateForm, VeterinarianProfileUpdateForm
 )
 from .models import UserProfile, Visitor, Veterinarian, Staff
 
@@ -191,3 +192,104 @@ def dashboard(request):
         # Handle case where user doesn't have a profile
         messages.error(request, 'Profil pengguna tidak ditemukan')
         return redirect('main:login')
+    
+@login_required
+def profile_settings(request):
+    """View for updating user profile information based on their role"""
+    try:
+        profile = request.user.profile
+        role = profile.role
+        
+        if request.method == 'POST':
+            profile_form = UserProfileUpdateForm(request.POST, instance=profile)
+            
+            # Role-specific forms
+            role_form = None
+            if role == 'visitor':
+                try:
+                    visitor_profile = profile.visitor_profile
+                    role_form = VisitorProfileUpdateForm(request.POST, instance=visitor_profile)
+                except:
+                    messages.error(request, 'Profil pengunjung tidak ditemukan')
+            elif role == 'veterinarian':
+                try:
+                    vet_profile = profile.vet_profile
+                    role_form = VeterinarianProfileUpdateForm(request.POST, instance=vet_profile)
+                except:
+                    messages.error(request, 'Profil dokter hewan tidak ditemukan')
+            
+            forms_valid = profile_form.is_valid()
+            if role_form:
+                forms_valid = forms_valid and role_form.is_valid()
+                
+            if forms_valid:
+                # Update user model fields
+                user = request.user
+                user.email = profile_form.cleaned_data['email']
+                user.first_name = profile_form.cleaned_data['first_name']
+                if 'last_name' in profile_form.cleaned_data:
+                    user.last_name = profile_form.cleaned_data['last_name']
+                user.save()
+                
+                profile_form.save()
+                
+                # Save role-specific form if exists
+                if role_form:
+                    role_form.save()
+                    
+                messages.success(request, 'Profil berhasil diperbarui')
+                return redirect('main:dashboard')
+        else:
+            initial_data = {
+                'email': request.user.email,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'middle_name': profile.middle_name,
+                'phone_number': profile.phone_number,
+            }
+            
+            profile_form = UserProfileUpdateForm(instance=profile, initial=initial_data)
+            role_form = None
+            
+            if role == 'visitor':
+                try:
+                    visitor_profile = profile.visitor_profile
+                    role_form = VisitorProfileUpdateForm(instance=visitor_profile)
+                except:
+                    pass
+            elif role == 'veterinarian':
+                try:
+                    vet_profile = profile.vet_profile
+                    role_form = VeterinarianProfileUpdateForm(instance=vet_profile)
+                except:
+                    pass
+        
+        context = {
+            'profile_form': profile_form,
+            'role_form': role_form,
+            'role': role,
+            'user': request.user,
+        }
+        
+        return render(request, 'profile_settings.html', context)
+    except UserProfile.DoesNotExist:
+        messages.error(request, 'Profil pengguna tidak ditemukan')
+        return redirect('main:dashboard')
+
+@login_required
+def change_password(request):
+    """View for changing user password"""
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Keep the user logged in after password change
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Password berhasil diubah')
+            return redirect('main:dashboard')
+        else:
+            messages.error(request, 'Silakan perbaiki kesalahan di bawah ini.')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    return render(request, 'change_password.html', {'form': form})

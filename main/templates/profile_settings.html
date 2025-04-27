@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Pengaturan Profil | SIZOPI</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="min-h-screen bg-[#f8f5f0] py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8 text-center">
+                <h1 class="text-3xl font-bold text-[#586132] font-['Gabarito']">Pengaturan Profil</h1>
+                <p class="text-gray-600 mt-2 font-['Raleway']">Perbarui informasi profil Anda</p>
+            </div>
+            
+            <!-- Card Container -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Navigation Tabs -->
+                <div class="flex border-b border-gray-200">
+                    <button class="flex-1 py-4 px-6 text-center font-medium bg-[#586132] text-white">
+                        Informasi Profil
+                    </button>
+                    <a href="{% url 'main:change_password' %}" class="flex-1 py-4 px-6 text-center font-medium text-gray-600 hover:bg-gray-100 transition duration-150">
+                        Ubah Password
+                    </a>
+                </div>
+                
+                <!-- Form Content -->
+                <div class="p-6">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="mb-6 p-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-700 border border-green-300{% elif message.tags == 'error' %}bg-red-100 text-red-700 border border-red-300{% else %}bg-blue-100 text-blue-700 border border-blue-300{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <!-- Basic Profile Section -->
+                        <div class="space-y-4 mb-8">
+                            <h2 class="text-xl font-semibold text-[#586132] border-b pb-2 font-['Gabarito']">Informasi Dasar</h2>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Username (Read-only) -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                        <input type="text" value="{{ user.username }}" class="bg-gray-100 focus:ring-[#586132] focus:border-[#586132] block w-full pl-3 pr-12 py-2 sm:text-sm border-gray-300 rounded-md" disabled>
+                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.9 9.5c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM16 15v2a2 2 0 01-2 2H8a2 2 0 01-2-2v-2M9 9.5v-1.3M13 9.5v-1.3"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500">(tidak dapat diubah)</p>
+                                </div>
+                                
+                                <!-- Email -->
+                                <div>
+                                    <label for="{{ profile_form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                        {{ profile_form.email.errors }}
+                                        <input type="email" name="{{ profile_form.email.html_name }}" value="{{ profile_form.email.value|default:'' }}" id="{{ profile_form.email.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full pl-3 pr-12 py-2 sm:text-sm border-gray-300 rounded-md" required>
+                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Name Fields -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- First Name -->
+                                <div>
+                                    <label for="{{ profile_form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Nama Depan</label>
+                                    {{ profile_form.first_name.errors }}
+                                    <input type="text" name="{{ profile_form.first_name.html_name }}" value="{{ profile_form.first_name.value|default:'' }}" id="{{ profile_form.first_name.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md" required>
+                                </div>
+                                
+                                <!-- Middle Name -->
+                                <div>
+                                    <label for="{{ profile_form.middle_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Nama Tengah <span class="text-gray-500">(opsional)</span></label>
+                                    {{ profile_form.middle_name.errors }}
+                                    <input type="text" name="{{ profile_form.middle_name.html_name }}" value="{{ profile_form.middle_name.value|default:'' }}" id="{{ profile_form.middle_name.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                                
+                                <!-- Last Name -->
+                                <div>
+                                    <label for="{{ profile_form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Nama Belakang</label>
+                                    {{ profile_form.last_name.errors }}
+                                    <input type="text" name="{{ profile_form.last_name.html_name }}" value="{{ profile_form.last_name.value|default:'' }}" id="{{ profile_form.last_name.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Phone Number -->
+                            <div>
+                                <label for="{{ profile_form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
+                                {{ profile_form.phone_number.errors }}
+                                <div class="mt-1 relative rounded-md shadow-sm">
+                                    <input type="text" name="{{ profile_form.phone_number.html_name }}" value="{{ profile_form.phone_number.value|default:'' }}" id="{{ profile_form.phone_number.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full pl-3 pr-12 py-2 sm:text-sm border-gray-300 rounded-md" required>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Role-Specific Information -->
+                        {% if role == 'visitor' %}
+                            <div class="space-y-4 mb-8">
+                                <h2 class="text-xl font-semibold text-[#586132] border-b pb-2 font-['Gabarito']">Informasi Pengunjung</h2>
+                                
+                                <!-- Address -->
+                                <div>
+                                    <label for="{{ role_form.address.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                                    {{ role_form.address.errors }}
+                                    <textarea name="{{ role_form.address.html_name }}" id="{{ role_form.address.id_for_label }}" rows="3" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md">{{ role_form.address.value|default:'' }}</textarea>
+                                </div>
+                                
+                                <!-- Birth Date -->
+                                <div>
+                                    <label for="{{ role_form.birth_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                    {{ role_form.birth_date.errors }}
+                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                        <input type="date" name="{{ role_form.birth_date.html_name }}" value="{{ role_form.birth_date.value|date:'Y-m-d'|default:'' }}" id="{{ role_form.birth_date.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md" required>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Veterinarian Information -->
+                        {% if role == 'veterinarian' %}
+                            <div class="space-y-4 mb-8">
+                                <h2 class="text-xl font-semibold text-[#586132] border-b pb-2 font-['Gabarito']">Informasi Dokter Hewan</h2>
+                                
+                                <!-- Certification Number (Read-only) -->
+                                {% if profile_form.certification_number %}
+                                <div>
+                                    <label for="{{ profile_form.certification_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Nomor Sertifikasi Profesional</label>
+                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                        <input type="text" value="{{ profile_form.certification_number.value|default:'' }}" id="{{ profile_form.certification_number.id_for_label }}" class="bg-gray-100 focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md" disabled>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500">(tidak dapat diubah)</p>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Specialization -->
+                                <div>
+                                    <label for="{{ role_form.specialization.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Spesialisasi</label>
+                                    {{ role_form.specialization.errors }}
+                                    <select name="{{ role_form.specialization.html_name }}" id="{{ role_form.specialization.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md">
+                                        {% for value, text in role_form.fields.specialization.choices %}
+                                            <option value="{{ value }}" {% if role_form.specialization.value == value %}selected{% endif %}>{{ text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <!-- Other Specialization -->
+                                <div id="other-specialization-div" class="{% if role_form.specialization.value != 'other' %}hidden{% endif %}">
+                                    <label for="{{ role_form.other_specialization.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Spesialisasi Lainnya</label>
+                                    {{ role_form.other_specialization.errors }}
+                                    <input type="text" name="{{ role_form.other_specialization.html_name }}" value="{{ role_form.other_specialization.value|default:'' }}" id="{{ role_form.other_specialization.id_for_label }}" class="focus:ring-[#586132] focus:border-[#586132] block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Staff Information -->
+                        {% if role == 'animal_keeper' or role == 'admin_staff' or role == 'trainer' %}
+                            <div class="space-y-4 mb-8">
+                                <h2 class="text-xl font-semibold text-[#586132] border-b pb-2 font-['Gabarito']">Informasi Staff</h2>
+                                
+                                <!-- Staff ID (Read-only) -->
+                                {% if profile_form.staff_id %}
+                                <div>
+                                    <label for="{{ profile_form.staff_id.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">ID Staff</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                                            {% if role == 'animal_keeper' %}PJH
+                                            {% elif role == 'admin_staff' %}ADM
+                                            {% elif role == 'trainer' %}PLP
+                                            {% else %}STF{% endif %}
+                                        </span>
+                                        <input type="text" value="{{ profile_form.staff_id.value|default:''|slice:'3:' }}" id="{{ profile_form.staff_id.id_for_label }}" class="bg-gray-100 focus:ring-[#586132] focus:border-[#586132] flex-1 block w-full py-2 px-3 sm:text-sm border-gray-300 rounded-r-md" disabled>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500">(tidak dapat diubah)</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Form Actions -->
+                        <div class="pt-4 flex justify-end space-x-4">
+                            <a href="{% url 'main:dashboard' %}" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150">
+                                Batal
+                            </a>
+                            <button type="submit" class="py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#586132] hover:bg-[#6a7339] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#586132] transition duration-150">
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to toggle other specialization field visibility
+    document.addEventListener('DOMContentLoaded', function() {
+        const specializationSelect = document.getElementById('{{ role_form.specialization.id_for_label }}');
+        const otherSpecializationDiv = document.getElementById('other-specialization-div');
+        
+        if (specializationSelect && otherSpecializationDiv) {
+            // Add change event listener
+            specializationSelect.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    otherSpecializationDiv.classList.remove('hidden');
+                } else {
+                    otherSpecializationDiv.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Auto-hide messages after 5 seconds
+        const messages = document.querySelectorAll('.messages .message');
+        messages.forEach(function(message) {
+            setTimeout(function() {
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.style.display = 'none';
+                }, 500);
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

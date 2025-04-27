@@ -41,7 +41,7 @@
                     {% endif %}
                 {% endif %}
 
-                <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Pengaturan Profil</a></li>
+                <li><a href="{% url 'main:profile_settings' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Pengaturan Profil</a></li>
                 <li><a href="{% url 'main:logout' %}" class="text-[#e0cfc2] hover:text-white active:text-white">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'main:login' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Login</a></li>
