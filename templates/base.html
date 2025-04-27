@@ -15,6 +15,7 @@
         <!-- Menu Kiri -->
         <ul class="flex gap-6 items-center">
             {% if user.is_authenticated %}
+                <li><a href="{% url 'main:show_main' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Home</a></li>
                 <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Dashboard</a></li>
 
                 {% comment %} GANTIII DI SINI UNTUK NAVBAR {% endcomment %}
