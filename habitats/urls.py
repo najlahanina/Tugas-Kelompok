@@ -1,3 +1,4 @@
+from django.urls import path
 from .views import HabitatListView, HabitatDetailView, HabitatCreateView, HabitatUpdateView, HabitatDeleteView
 from django.urls import path
 

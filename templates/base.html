@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    {% load static %}
     {% include "head.html" %}
     {% block meta %}
     {% endblock meta %}
@@ -10,46 +11,49 @@
 <body>
     
     <!-- Navbar Section -->
-    <nav class="bg-white p-4 shadow-md">
-        <ul class="flex gap-6">
+    <nav class="bg-[#586132] p-4 shadow-md flex items-center justify-between">
+        <!-- Menu Kiri -->
+        <ul class="flex gap-6 items-center">
             {% if user.is_authenticated %}
-                <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Dashboard</a></li>
-                
+                <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Dashboard</a></li>
+
                 {% comment %} GANTIII DI SINI UNTUK NAVBAR {% endcomment %}
                 {% if user.profile.role == "veterinarian" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Rekam Medis Hewan</a></li>
-                    <li><a href="{% url 'animals:animal_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
-    
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Rekam Medis Hewan</a></li>
+                    <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
                 {% elif user.profile.role == "animal_keeper" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Catatan Perawatan Hewan</a></li>
-                    <li><a href="{% url 'animals:animal_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
-                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Habitat</a></li>
-    
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Catatan Perawatan Hewan</a></li>
+                    <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
+                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Habitat</a></li>
                 {% elif user.profile.role == "admin_staff" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Kelola Pengunjung</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Kelola Adopsi</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Kelola Adopter</a></li>
-                    <li><a href="{% url 'animals:animal_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Satwa</a></li>
-                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-blue-500 hover:text-blue-700">Manajemen Habitat</a></li>
-    
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Pengunjung</a></li>
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopter</a></li>
+                    <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
+                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Habitat</a></li>
                 {% elif user.profile.role == "trainer" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Jadwal Pertunjukan</a></li>
-    
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
                 {% elif user.profile.role == "visitor" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Informasi Kebun Binatang</a></li>
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Informasi Kebun Binatang</a></li>
                     {% if user.profile.visitor_profile.is_adopter %}
-                        <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Hewan Adopsi</a></li>
+                        <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Hewan Adopsi</a></li>
                     {% endif %}
                 {% endif %}
-                
-                <li><a href="{% url 'main:dashboard' %}" class="text-blue-500 hover:text-blue-700">Pengaturan Profil</a></li>
-                <li><a href="{% url 'main:logout' %}" class="text-red-500 hover:text-red-700">Logout</a></li>
+
+                <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Pengaturan Profil</a></li>
+                <li><a href="{% url 'main:logout' %}" class="text-[#e0cfc2] hover:text-white active:text-white">Logout</a></li>
             {% else %}
-                <li><a href="{% url 'main:login' %}" class="text-blue-500 hover:text-blue-700">Login</a></li>
-                <li><a href="{% url 'main:register_step1' %}" class="text-blue-500 hover:text-blue-700">Registrasi</a></li>
+                <li><a href="{% url 'main:login' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Login</a></li>
+                <li><a href="{% url 'main:register_step1' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Registrasi</a></li>
             {% endif %}
         </ul>
-    </nav>    
+
+        <!-- Logo Kanan -->
+        <div class="flex items-center ml-4">
+            <img src="{% static 'images/logo_sizopi.png' %}" alt="Logo" class="h-10">
+        </div>
+    </nav>
+
 
     <!-- Messages Section -->
     {% if messages %}

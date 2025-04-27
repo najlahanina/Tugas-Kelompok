@@ -1,3 +1,4 @@
+from django.urls import path
 from .views import AnimalListView, AnimalCreateView, AnimalUpdateView, AnimalDeleteView
 from django.urls import path
 
