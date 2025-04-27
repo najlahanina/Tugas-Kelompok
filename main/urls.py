@@ -11,4 +11,6 @@ urlpatterns = [
     path('register/form/', views.register_step2, name='register_step2'),
     path('generate-staff-id/', views.generate_staff_id, name='generate_staff_id'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('profile/settings/', views.profile_settings, name='profile_settings'),
+    path('profile/change-password/', views.change_password, name='change_password'),
 ]
