@@ -30,8 +30,22 @@
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Pengunjung</a></li>
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopter</a></li>
-                    <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
-                    <li><a href="{% url 'habitats:habitat_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Habitat</a></li>
+                   <!-- Dropdown Menu -->
+                    <li class="relative group" id="dropdownMenu1">
+                        <a href="#" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa & Habitat</a>
+                        <ul class="absolute hidden bg-[#f8f5f0] text-white rounded shadow-lg w-40 mt-2 z-50" id="dropdownList1">
+                            <li><a href="{% url 'animals:animal_list' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Satwa</a></li>
+                            <li><a href="{% url 'habitats:habitat_list' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Habitat</a></li>
+                        </ul>
+                    </li>
+                    <li class="relative group" id="dropdownMenu2">
+                        <a href="#" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Atraksi & Layanan</a>
+                        <ul class="absolute hidden bg-[#f8f5f0] text-white rounded shadow-lg w-40 mt-2 z-50" id="dropdownList2">
+                            <li><a href="{% url 'attractions:list_atraksi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Atraksi</a></li>
+                            <li><a href="{% url 'attractions:list_wahana' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Wahana</a></li>
+                            <li><a href="{% url 'attractions:list_wahana' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Reservasi</a></li>
+                        </ul>
+                    </li>
                 {% elif user.profile.role == "trainer" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
                 {% elif user.profile.role == "visitor" %}
@@ -73,6 +87,36 @@
     {% include "footer.html" %}
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Dropdown Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle multiple dropdowns
+            function setupDropdown(menuId, listId) {
+                const dropdownMenu = document.getElementById(menuId);
+                const dropdownList = document.getElementById(listId);
+                
+                if (!dropdownMenu || !dropdownList) return;
+
+                // Toggle dropdown on click
+                dropdownMenu.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    dropdownList.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (dropdownMenu && !dropdownMenu.contains(event.target)) {
+                        dropdownList.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Setup each dropdown
+            setupDropdown('dropdownMenu1', 'dropdownList1');
+            setupDropdown('dropdownMenu2', 'dropdownList2');
+        });
+    </script>
+
     
     {% block script %}
     {% endblock script %}

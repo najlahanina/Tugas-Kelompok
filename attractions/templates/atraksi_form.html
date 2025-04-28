@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-[#f8f5f0] min-h-screen py-10 px-4">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-center text-[#586132] text-3xl font-bold mb-6">
+      {% if edit_mode %}
+        Edit Atraksi
+      {% else %}
+        Tambah Atraksi
+      {% endif %}
+    </h1>
+    <p class="text-center text-gray-600 mb-10">
+      {% if edit_mode %}
+        Perbarui informasi atraksi yang sudah ada
+      {% else %}
+        Tambahkan atraksi baru ke dalam sistem
+      {% endif %}
+    </p>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-[#586132] p-4">
+        <h2 class="text-white text-lg font-medium text-center">
+          {% if edit_mode %}
+            FORM EDIT ATRAKSI
+          {% else %}
+            FORM TAMBAH ATRAKSI
+          {% endif %}
+        </h2>
+      </div>
+
+      <form method="post" class="p-6 space-y-6">
+        {% csrf_token %}
+        
+        {% if not edit_mode %}
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label for="id_nama_atraksi" class="block text-sm font-medium text-gray-700 mb-1">Nama Atraksi</label>
+              {{ form.nama_atraksi|safe }}
+            </div>
+            <div>
+              <label for="id_lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
+              {{ form.lokasi|safe }}
+            </div>
+          </div>
+        {% else %}
+          <!-- Tampilan data yang readonly untuk edit mode -->
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nama Atraksi</label>
+              <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">{{ readonly_data.nama_atraksi }}</div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
+              <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">{{ readonly_data.lokasi }}</div>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="id_kapasitas_max" class="block text-sm font-medium text-gray-700 mb-1">Kapasitas Maksimum (orang)</label>
+            {{ form.kapasitas_max|safe }}
+          </div>
+          <div>
+            <label for="id_jadwal" class="block text-sm font-medium text-gray-700 mb-1">Jadwal</label>
+            {{ form.jadwal|safe }}
+          </div>
+        </div>
+
+        {% if not edit_mode %}
+          <div>
+            <label for="id_pelatih" class="block text-sm font-medium text-gray-700 mb-1">Pelatih Pertunjukan</label>
+            {{ form.pelatih|safe }}
+          </div>
+          <div>
+            <label for="id_hewan" class="block text-sm font-medium text-gray-700 mb-1">Hewan yang Terlibat</label>
+            <div class="mt-1 bg-gray-50 p-3 rounded-md">
+              {{ form.hewan|safe }}
+            </div>
+          </div>
+        {% else %}
+          <!-- Tampilan data readonly untuk pelatih dan hewan -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Pelatih Pertunjukan</label>
+            <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">{{ readonly_data.pelatih }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Hewan yang Terlibat</label>
+            <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">
+              {% for hewan in readonly_data.hewan %}
+                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ hewan }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <a href="{% url 'attractions:list_atraksi' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md transition duration-300">
+            Batal
+          </a>
+          <button type="submit" class="bg-[#586132] hover:bg-[#4a5229] text-white py-2 px-4 rounded-md transition duration-300">
+            Simpan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
