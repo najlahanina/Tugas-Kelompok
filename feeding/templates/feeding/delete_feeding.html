@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Hapus Pemberian Pakan</h2>
+<p>Apakah anda yakin ingin menghapus data pemberian pakan ini?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">[YA]</button>
+    <a href="{% url 'feeding_list' %}">[TIDAK]</a>
+</form>
+{% endblock %}
