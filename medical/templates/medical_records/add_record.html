@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>FORM PENAMBAHAN REKAM MEDIS</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">[SIMPAN]</button>
+    <a href="{% url 'record_list' %}">[BATAL]</a>
+</form>
+{% endblock %}

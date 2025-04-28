@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="feeding-container">
+    <div class="page-header">
+        <h1>Pemberian Pakan</h1>
+        <a href="{% url 'add_feeding' %}" class="add-button">+ Tambah Jadwal Pemberian Pakan</a>
+    </div>
+
+    <div class="table-container">
+        <table class="feeding-table">
+            <thead>
+                <tr>
+                    <th>Jenis Pakan</th>
+                    <th>Jumlah Pakan (g)</th>
+                    <th>Jadwal</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feed in feedings %}
+                <tr>
+                    <td>{{ feed.jenis_pakan }}</td>
+                    <td>{{ feed.jumlah_pakan }}</td>
+                    <td>{{ feed.jadwal|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <span class="status-badge status-{{ feed.status|slugify }}">
+                            {{ feed.status }}
+                        </span>
+                    </td>
+                    <td class="action-cell">
+                        {% if feed.status == "Menunggu Diberikan" %}
+                        <a href="{% url 'mark_as_done' feed.id %}" class="action-button feed-button">
+                            Beri Pakan
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'edit_feeding' feed.id %}" class="action-button edit-button">
+                            Edit
+                        </a>
+                        <a href="{% url 'delete_feeding' feed.id %}" class="action-button delete-button">
+                            Hapus
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-message">
+                        Belum ada jadwal pemberian pakan.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .feeding-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    h1 {
+        color: #333;
+        margin: 0;
+        font-size: 24px;
+    }
+    
+    .add-button {
+        display: inline-block;
+        background-color: #4a6da7;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 3px;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .feeding-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .feeding-table th, 
+    .feeding-table td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .feeding-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .feeding-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .feeding-table tr:hover {
+        background-color: #f9f9f9;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+    
+    .status-menunggu-diberikan {
+        background-color: #f5f5f5;
+        color: #666;
+    }
+    
+    .status-sudah-diberikan {
+        background-color: #e8f0e8;
+        color: #3a6a3a;
+    }
+    
+    .action-cell {
+        white-space: nowrap;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 4px 8px;
+        margin-right: 5px;
+        border-radius: 3px;
+        text-decoration: none;
+        font-size: 13px;
+        color: white;
+    }
+    
+    .feed-button {
+        background-color: #5a8a5a;
+    }
+    
+    .edit-button {
+        background-color: #4a6da7;
+    }
+    
+    .delete-button {
+        background-color: #a75a5a;
+    }
+    
+    .empty-message {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}

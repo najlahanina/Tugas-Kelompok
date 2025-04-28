@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>REKAM MEDIS</h2>
+
+<div class="action-buttons">
+    <a href="{% url 'add_record' %}" class="add-button">[+ Tambah Rekam Medis]</a>
+</div>
+
+<div class="table-container">
+    <table class="medical-records-table">
+        <thead>
+            <tr>
+                <th>Tanggal Pemeriksaan</th>
+                <th>Nama Dokter</th>
+                <th>Status Kesehatan</th>
+                <th>Diagnosis</th>
+                <th>Pengobatan</th>
+                <th>Catatan Tindak Lanjut</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.tanggal_pemeriksaan }}</td>
+                <td>{{ record.nama_dokter }}</td>
+                <td>{{ record.status_kesehatan }}</td>
+                <td>{{ record.diagnosis|default:"-" }}</td>
+                <td>{{ record.pengobatan|default:"-" }}</td>
+                <td>{{ record.catatan_tindak_lanjut|default:"-" }}</td>
+                <td class="action-cell">
+                    <a href="{% url 'edit_record' record.id %}" class="edit-button">[Edit]</a>
+                    <a href="{% url 'delete_record' record.id %}" class="delete-button">[Hapus]</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+    
+    .medical-records-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    
+    .medical-records-table th, 
+    .medical-records-table td {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    
+    .medical-records-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .medical-records-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+    .medical-records-table tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .action-buttons {
+        margin-bottom: 15px;
+    }
+    
+    .add-button {
+        display: inline-block;
+        padding: 6px 12px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    
+    .action-cell {
+        white-space: nowrap;
+    }
+    
+    .edit-button, .delete-button {
+        display: inline-block;
+        margin-right: 5px;
+        padding: 3px 8px;
+        text-decoration: none;
+        border-radius: 3px;
+    }
+    
+    .edit-button {
+        background-color: #2196F3;
+        color: white;
+    }
+    
+    .delete-button {
+        background-color: #f44336;
+        color: white;
+    }
+</style>
+{% endblock %}

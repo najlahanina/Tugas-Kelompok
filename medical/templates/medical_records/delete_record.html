@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>HAPUS REKAM MEDIS</h2>
+<p>Apakah anda yakin ingin menghapus rekam medis ini?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">[YA]</button>
+    <a href="{% url 'record_list' %}">[TIDAK]</a>
+</form>
+{% endblock %}

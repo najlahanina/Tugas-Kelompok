@@ -22,10 +22,13 @@
                 {% if user.profile.role == "veterinarian" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Rekam Medis Hewan</a></li>
                     <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
+                    <li><a href="{% url 'medical:record_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Rekam Medis</a></li>
+                    <li><a href="{% url 'medical:health_check_schedule' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pemeriksaan</a></li>
                 {% elif user.profile.role == "animal_keeper" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Catatan Perawatan Hewan</a></li>
                     <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
                     <li><a href="{% url 'habitats:habitat_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Habitat</a></li>
+                    <li><a href="{% url 'feeding:feeding_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Pemberian Pakan</a></li>
                 {% elif user.profile.role == "admin_staff" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Pengunjung</a></li>
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>

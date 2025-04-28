@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Tambah Jadwal Pemberian Pakan</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Simpan</button>
+    <a href="{% url 'feeding_list' %}">Batal</a>
+</form>
+{% endblock %}
