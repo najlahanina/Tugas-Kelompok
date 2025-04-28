@@ -1,218 +1,239 @@
 {% extends "base.html" %}
 
+{% block meta %}
+<title>Register to Sizopi</title>
+<meta name="description" content="Register for an account at Sizopi, a world-class conservation and recreation facility.">
+{% endblock meta %}
+
 {% block content %}
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Registrasi {{ role }}</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        {% if messages %}
-                        <div class="alert alert-danger">
-                            {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="id_first_name">Nama Depan:</label>
-                                {{ form.first_name }}
-                                {% if form.first_name.errors %}
-                                <div class="text-danger">{{ form.first_name.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="id_middle_name">Nama Tengah (opsional):</label>
-                                {{ form.middle_name }}
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="id_last_name">Nama Belakang:</label>
-                                {{ form.last_name }}
-                                {% if form.last_name.errors %}
-                                <div class="text-danger">{{ form.last_name.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="id_username">Username:</label>
-                                {{ form.username }}
-                                {% if form.username.errors %}
-                                <div class="text-danger">{{ form.username.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="id_email">Email:</label>
-                                {{ form.email }}
-                                {% if form.email.errors %}
-                                <div class="text-danger">{{ form.email.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="id_password1">Password:</label>
-                                {{ form.password1 }}
-                                {% if form.password1.errors %}
-                                <div class="text-danger">{{ form.password1.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="id_password2">Konfirmasi Password:</label>
-                                {{ form.password2 }}
-                                {% if form.password2.errors %}
-                                <div class="text-danger">{{ form.password2.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_phone_number">Nomor Telepon:</label>
-                            {{ form.phone_number }}
-                            {% if form.phone_number.errors %}
-                            <div class="text-danger">{{ form.phone_number.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        {% if role == 'Staff' %}
-                        <div class="mb-3">
-                            <label>Peran Staff:</label><br>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="staff_role" id="pjh" value="animal_keeper">
-                                <label class="form-check-label" for="pjh">
-                                    Penjaga Hewan (PJHXXX)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="staff_role" id="adm" value="admin_staff">
-                                <label class="form-check-label" for="adm">
-                                    Staf Administrasi (ADMXXX)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="staff_role" id="plp" value="trainer">
-                                <label class="form-check-label" for="plp">
-                                    Pelatih Pertunjukan (PLPXXX)
-                                </label>
-                            </div>
-                            {% if form.staff_role.errors %}
-                            <div class="text-danger">{{ form.staff_role.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        
-                        <div class="mb-3">
-                            <label for="id_staff_id">ID Staff:</label>
-                            <div class="input-group">
-                                {{ form.staff_id }}
-                                <button type="button" class="btn btn-outline-secondary" id="generateStaffId">Generate ID</button>
-                            </div>
-                            {% if form.staff_id.errors %}
-                            <div class="text-danger">{{ form.staff_id.errors }}</div>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        
-                        {% if role == 'Pengunjung' %}
-                        <div class="mb-3">
-                            <label for="id_address">Alamat Lengkap:</label>
-                            {{ form.address }}
-                            {% if form.address.errors %}
-                            <div class="text-danger">{{ form.address.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_birth_date">Tanggal Lahir:</label>
-                            {{ form.birth_date }}
-                            {% if form.birth_date.errors %}
-                            <div class="text-danger">{{ form.birth_date.errors }}</div>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        
-                        {% if role == 'Dokter Hewan' %}
-                        <div class="mb-3">
-                            <label for="id_certification_number">Nomor Sertifikasi Profesional:</label>
-                            {{ form.certification_number }}
-                            {% if form.certification_number.errors %}
-                            <div class="text-danger">{{ form.certification_number.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_specialization">Spesialisasi:</label>
-                            {{ form.specialization }}
-                            {% if form.specialization.errors %}
-                            <div class="text-danger">{{ form.specialization.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3" id="other_specialization_container" style="display: none;">
-                            <label for="id_other_specialization">Spesialisasi Lainnya:</label>
-                            {{ form.other_specialization }}
-                        </div>
-                        {% endif %}
-                        
-                        <button type="submit" class="btn btn-primary btn-block mt-4">DAFTAR</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <p>Sudah punya akun? <a href="{% url 'main:login' %}">Login di sini</a></p>
-                    </div>
-                </div>
-            </div>
+<!-- Hero Section -->
+<div class="hero-section flex items-center justify-center text-center mb-4 h-40">
+  <div class="container mx-auto px-6">
+    <h1 class="text-5xl font-bold text-[#586132] mb-1">Register</h1>
+    <p class="text-lg text-[#586132]">Registrasi {{ role }}</p>
+  </div>
+</div>
+
+<!-- Registration Form Section -->
+<div class="container mx-auto px-4 min-h-[calc(100vh-theme(spacing.40)-theme(spacing.footer,6rem))] mb-10">
+  <div class="flex justify-center">
+    <div class="w-full max-w-4xl">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-[#586132] p-5">
+          <h3 class="text-center text-white text-2xl font-semibold">Registrasi {{ role }}</h3>
         </div>
+        <div class="p-6">
+          <form method="post">
+            {% csrf_token %}
+            
+            {% if messages %}
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+              {% for message in messages %}
+                {{ message }}
+              {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="mb-3">
+                <label for="id_first_name" class="block text-gray-700 mb-2">Nama Depan:</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <div class="text-red-600 text-sm">{{ form.first_name.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label for="id_middle_name" class="block text-gray-700 mb-2">Nama Tengah (opsional):</label>
+                {{ form.middle_name }}
+              </div>
+              <div class="mb-3">
+                <label for="id_last_name" class="block text-gray-700 mb-2">Nama Belakang:</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                <div class="text-red-600 text-sm">{{ form.last_name.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="mb-3">
+                <label for="id_username" class="block text-gray-700 mb-2">Username:</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <div class="text-red-600 text-sm">{{ form.username.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label for="id_email" class="block text-gray-700 mb-2">Email:</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="text-red-600 text-sm">{{ form.email.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="mb-3">
+                <label for="id_password1" class="block text-gray-700 mb-2">Password:</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <div class="text-red-600 text-sm">{{ form.password1.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label for="id_password2" class="block text-gray-700 mb-2">Konfirmasi Password:</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <div class="text-red-600 text-sm">{{ form.password2.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label for="id_phone_number" class="block text-gray-700 mb-2">Nomor Telepon:</label>
+              {{ form.phone_number }}
+              {% if form.phone_number.errors %}
+              <div class="text-red-600 text-sm">{{ form.phone_number.errors }}</div>
+              {% endif %}
+            </div>
+            
+            {% if role == 'Staff' %}
+            <div class="mb-4">
+              <label class="block text-gray-700 mb-2">Peran Staff:</label>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="staff_role" id="pjh" value="animal_keeper">
+                  <label class="text-gray-700" for="pjh">
+                    Penjaga Hewan (PJHXXX)
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="staff_role" id="adm" value="admin_staff">
+                  <label class="text-gray-700" for="adm">
+                    Staf Administrasi (ADMXXX)
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="staff_role" id="plp" value="trainer">
+                  <label class="text-gray-700" for="plp">
+                    Pelatih Pertunjukan (PLPXXX)
+                  </label>
+                </div>
+              </div>
+              {% if form.staff_role.errors %}
+              <div class="text-red-600 text-sm">{{ form.staff_role.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="mb-4">
+              <label for="id_staff_id" class="block text-gray-700 mb-2">ID Staff:</label>
+              <div class="flex">
+                {{ form.staff_id }}
+                <button type="button" class="ml-2 px-4 py-2 bg-[#586132] hover:bg-[#4a5429] text-white font-semibold rounded-lg transition duration-300" id="generateStaffId">Generate ID</button>
+              </div>
+              {% if form.staff_id.errors %}
+              <div class="text-red-600 text-sm">{{ form.staff_id.errors }}</div>
+              {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if role == 'Pengunjung' %}
+            <div class="mb-4">
+              <label for="id_address" class="block text-gray-700 mb-2">Alamat Lengkap:</label>
+              {{ form.address }}
+              {% if form.address.errors %}
+              <div class="text-red-600 text-sm">{{ form.address.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="mb-4">
+              <label for="id_birth_date" class="block text-gray-700 mb-2">Tanggal Lahir:</label>
+              {{ form.birth_date }}
+              {% if form.birth_date.errors %}
+              <div class="text-red-600 text-sm">{{ form.birth_date.errors }}</div>
+              {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if role == 'Dokter Hewan' %}
+            <div class="mb-4">
+              <label for="id_certification_number" class="block text-gray-700 mb-2">Nomor Sertifikasi Profesional:</label>
+              {{ form.certification_number }}
+              {% if form.certification_number.errors %}
+              <div class="text-red-600 text-sm">{{ form.certification_number.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="mb-4">
+              <label for="id_specialization" class="block text-gray-700 mb-2">Spesialisasi:</label>
+              {{ form.specialization }}
+              {% if form.specialization.errors %}
+              <div class="text-red-600 text-sm">{{ form.specialization.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="mb-4" id="other_specialization_container" style="display: none;">
+              <label for="id_other_specialization" class="block text-gray-700 mb-2">Spesialisasi Lainnya:</label>
+              {{ form.other_specialization }}
+            </div>
+            {% endif %}
+            
+            <button type="submit" class="w-full py-2 bg-[#b47d2d] hover:bg-[#a97529] text-white font-semibold rounded-lg transition duration-300 mt-6">
+              DAFTAR
+            </button>
+          </form>
+          
+          <div class="text-center mt-6">
+            <p class="text-gray-600">
+              Sudah punya akun?
+              <a href="{% url 'main:login' %}" class="text-[#586132] font-semibold hover:underline">Login di sini</a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Untuk Veterinarian - spesialisasi lainnya
-        var specializationSelect = document.getElementById('id_specialization');
-        var otherSpecializationContainer = document.getElementById('other_specialization_container');
-        
-        if (specializationSelect && otherSpecializationContainer) {
-            specializationSelect.addEventListener('change', function() {
-                if (this.value === 'other') {
-                    otherSpecializationContainer.style.display = 'block';
-                } else {
-                    otherSpecializationContainer.style.display = 'none';
-                }
-            });
-            
-            if (specializationSelect.value === 'other') {
-                otherSpecializationContainer.style.display = 'block';
-            }
+  document.addEventListener('DOMContentLoaded', function() {
+    // Untuk Veterinarian - spesialisasi lainnya
+    var specializationSelect = document.getElementById('id_specialization');
+    var otherSpecializationContainer = document.getElementById('other_specialization_container');
+    
+    if (specializationSelect && otherSpecializationContainer) {
+      specializationSelect.addEventListener('change', function() {
+        if (this.value === 'other') {
+          otherSpecializationContainer.style.display = 'block';
+        } else {
+          otherSpecializationContainer.style.display = 'none';
         }
-        
-        // Untuk Staff - generate ID otomatis
-        var generateBtn = document.getElementById('generateStaffId');
-        var staffIdInput = document.getElementById('id_staff_id');
-        var staffRoleRadios = document.querySelectorAll('input[name="staff_role"]');
-        
-        if (generateBtn && staffIdInput && staffRoleRadios.length > 0) {
-            generateBtn.addEventListener('click', function() {
-                var selectedRole = Array.from(staffRoleRadios).find(radio => radio.checked)?.value;
-                if (selectedRole) {
-                    fetch('/generate-staff-id/?role=' + encodeURIComponent(selectedRole))
-                        .then(response => response.json())
-                        .then(data => {
-                            staffIdInput.value = data.staff_id;
-                        });
-                } else {
-                    alert('Silakan pilih peran staff terlebih dahulu.');
-                }
+      });
+      
+      if (specializationSelect.value === 'other') {
+        otherSpecializationContainer.style.display = 'block';
+      }
+    }
+    
+    // Untuk Staff - generate ID otomatis
+    var generateBtn = document.getElementById('generateStaffId');
+    var staffIdInput = document.getElementById('id_staff_id');
+    var staffRoleRadios = document.querySelectorAll('input[name="staff_role"]');
+    
+    if (generateBtn && staffIdInput && staffRoleRadios.length > 0) {
+      generateBtn.addEventListener('click', function() {
+        var selectedRole = Array.from(staffRoleRadios).find(radio => radio.checked)?.value;
+        if (selectedRole) {
+          fetch('/generate-staff-id/?role=' + encodeURIComponent(selectedRole))
+            .then(response => response.json())
+            .then(data => {
+              staffIdInput.value = data.staff_id;
             });
+        } else {
+          alert('Silakan pilih peran staff terlebih dahulu.');
         }
-    });
+      });
+    }
+  });
 </script>
 {% endblock %}

@@ -1,28 +1,48 @@
 {% extends "base.html" %}
 
+{% block meta %}
+<title>Select Role - Sizopi</title>
+<meta name="description" content="Select your role for registration at Sizopi.">
+{% endblock meta %}
+
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Pilih Peran</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            {{ form.role.label_tag }}
-                            {{ form.role }}
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Lanjutkan</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <p>Sudah punya akun? <a href="{% url 'main:login' %}">Login di sini</a></p>
-                    </div>
-                </div>
-            </div>
+<!-- Hero Section -->
+<div class="hero-section flex items-center justify-center text-center mb-4 h-40">
+  <div class="container mx-auto px-6">
+    <h1 class="text-5xl font-bold text-[#586132] mb-1">Register</h1>
+    <p class="text-lg text-[#586132]">Please select your role to continue registration</p>
+  </div>
+</div>
+
+<!-- Role Selection Form Section -->
+<div class="container mx-auto px-4 min-h-[calc(100vh-theme(spacing.40)-theme(spacing.footer,6rem))]">
+  <div class="flex justify-center">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-[#586132] p-5">
+          <h3 class="text-center text-white text-2xl font-semibold">Pilih Peran</h3>
         </div>
+        <div class="p-6">
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="{{ form.role.id_for_label }}" class="block text-gray-700 mb-2">{{ form.role.label }}</label>
+              {{ form.role }}
+            </div>
+            <button type="submit" class="w-full py-2 bg-[#b47d2d] hover:bg-[#a97529] text-white font-semibold rounded-lg transition duration-300 mt-4">
+              Lanjutkan
+            </button>
+          </form>
+          
+          <div class="text-center mt-6">
+            <p class="text-gray-600">
+              Sudah punya akun?
+              <a href="{% url 'main:login' %}" class="text-[#586132] font-semibold hover:underline">Login di sini</a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
