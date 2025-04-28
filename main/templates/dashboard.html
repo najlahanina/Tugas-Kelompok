@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <div class="min-h-screen bg-[#f8f5f0] py-10 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
@@ -11,7 +10,6 @@
             <p class="text-gray-600 mt-2 font-raleway">Selamat datang, {{ user.first_name }}!</p>
             <div class="h-1 w-16 bg-[#586132] mt-2"></div>
         </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Profile Card -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-[#586132]">
@@ -51,7 +49,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Role-specific Content -->
             <div class="lg:col-span-2">
                 {% if role == 'visitor' %}
@@ -71,7 +68,6 @@
                                 <p class="font-medium">{{ user.profile.birth_date|date:"d F Y"|default:"Belum diisi" }}</p>
                             </div>
                         </div>
-
                         <!-- Riwayat Kunjungan -->
                         <div class="mb-6">
                             <h3 class="text-lg font-gabarito text-[#586132] mb-3">Riwayat Kunjungan</h3>
@@ -94,7 +90,6 @@
                                 </table>
                             </div>
                         </div>
-
                         <!-- Informasi Tiket -->
                         <div>
                             <h3 class="text-lg font-gabarito text-[#586132] mb-3">Informasi Tiket</h3>
@@ -120,7 +115,6 @@
                         </div>
                     </div>
                 </div>
-
                 {% elif role == 'veterinarian' %}
                 <!-- Dashboard untuk Dokter Hewan -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6 border-t-4 border-[#7d8b48]">
@@ -145,7 +139,6 @@
                                 </p>
                             </div>
                         </div>
-
                         <h3 class="text-lg font-gabarito text-[#586132] mb-3">Jumlah Hewan yang Ditangani</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div class="bg-[#f8f5f0] p-4 rounded-lg text-center">
@@ -161,7 +154,6 @@
                                 <p class="text-sm text-gray-500">Sembuh</p>
                             </div>
                         </div>
-
                         <h3 class="text-lg font-gabarito text-[#586132] mb-3">Rekam Medis Terbaru</h3>
                         <div class="bg-[#f8f5f0] rounded-lg overflow-hidden">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -185,13 +177,178 @@
                         {% endwith %}
                     </div>
                 </div>
+
+                {% elif role == 'animal_keeper' %}
+                <!-- Dashboard untuk Penjaga Hewan -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6 border-t-4 border-[#7d8b48]">
+                    <div class="bg-[#7d8b48] py-4 px-6">
+                        <h2 class="text-xl font-gabarito text-white">Informasi Penjaga Hewan</h2>
+                    </div>
+                    <div class="p-6">
+                        {% with staff=user.profile.staff_profile %}
+                        <!-- Menampilkan ID Staff -->
+                        <div class="mb-6">
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">ID Staff</p>
+                                <p class="font-medium">{{ user.profile.staff_profile.staff_id}}</p> 
+                            </div>
+                        </div>
+                        <!-- Jumlah hewan yang sudah diberi pakan -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-gabarito text-[#586132] mb-3">Jumlah Hewan yang Sudah Diberi Pakan</h3>
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg text-center">
+                                <p class="text-3xl font-bold text-[#586132]">{{ staff.fed_animals_count|default:"0" }}</p> <!-- kalau ada -->
+                                <p class="text-sm text-gray-500">Total Hari Ini</p>
+                            </div>
+                        </div>
+                        {% endwith %}
+                    </div>
+                </div>
+                                
+
+                {% elif role == 'admin_staff' %}
+                <!-- Dashboard untuk Staf Administrasi -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6 border-t-4 border-[#7d8b48]">
+                    <div class="bg-[#7d8b48] py-4 px-6">
+                        <h2 class="text-xl font-gabarito text-white">Informasi Staf Administrasi</h2>
+                    </div>
+                    <div class="p-6">
+                        {% with admin=user.profile.admin_profile %}
+                        <div class="mb-6">
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">ID Staff</p>
+                                <p class="font-medium">{{ user.profile.staff_profile.staff_id}}</p> 
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-gabarito text-[#586132] mb-3">Ringkasan Penjualan Tiket Hari Ini</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg text-center">
+                                <p class="text-3xl font-bold text-[#586132]">{{ admin.today_ticket_count }}</p>
+                                <p class="text-sm text-gray-500">Jumlah Tiket</p>
+                            </div>
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg text-center">
+                                <p class="text-3xl font-bold text-[#586132]">Rp {{ admin.today_revenue|floatformat:0 }}</p>
+                                <p class="text-sm text-gray-500">Pendapatan</p>
+                            </div>
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg text-center">
+                                <p class="text-3xl font-bold text-[#586132]">{{ admin.today_visitor_count }}</p>
+                                <p class="text-sm text-gray-500">Jumlah Pengunjung</p>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-gabarito text-[#586132] mb-3">Laporan Pendapatan Mingguan</h3>
+                        <div class="bg-[#f8f5f0] p-4 rounded-lg mb-6">
+                            <div class="h-64 w-full">
+                                <!-- Placeholder for chart -->
+                                <div class="h-full w-full bg-gray-100 rounded flex items-center justify-center">
+                                    <p class="text-gray-500">Grafik pendapatan mingguan</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endwith %}
+                    </div>
+                </div>
+                {% elif role == 'trainer' %}
+                <!-- Dashboard untuk Staf Pelatih Pertunjukan -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6 border-t-4 border-[#7d8b48]">
+                    <div class="bg-[#7d8b48] py-4 px-6">
+                        <h2 class="text-xl font-gabarito text-white">Informasi Pelatih Pertunjukan</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <div class="bg-[#f8f5f0] p-4 rounded-lg">
+                                <p class="text-sm text-gray-500">ID Staff</p>
+                                <p class="font-medium">{{ user.profile.staff_profile.staff_id}}</p> 
+                            </div>
+                        </div>
+                        <!-- Jadwal Pertunjukan Hari Ini -->
+                        <h3 class="text-lg font-gabarito text-[#586132] mb-3">Jadwal Pertunjukan Hari Ini</h3>
+                        <div class="bg-[#f8f5f0] rounded-lg overflow-hidden mb-6">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pertunjukan</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% if shows %}
+                                        {% for show in shows %}
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ show.time }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ show.name }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ show.location }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {% if show.status == 'upcoming' %}
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    Akan Datang
+                                                </span>
+                                                {% elif show.status == 'ongoing' %}
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Sedang Berlangsung
+                                                </span>
+                                                {% else %}
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                    Selesai
+                                                </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                                Tidak ada pertunjukan terjadwal hari ini
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Daftar Hewan yang Dilatih -->
+                        <h3 class="text-lg font-gabarito text-[#586132] mb-3">Daftar Hewan yang Dilatih</h3>
+                        <div class="bg-[#f8f5f0] rounded-lg overflow-hidden mb-6">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Hewan</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pertunjukan</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kemajuan Latihan</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% if trained_animals %}
+                                        {% for animal in trained_animals %}
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ animal.name }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ animal.species }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ animal.show }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                    <div class="bg-[#586132] h-2.5 rounded-full" style="width: {{ animal.progress }}%"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-500">{{ animal.progress }}%</span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                                Tidak ada hewan dalam pelatihan
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
 {% block script %}
 <script>
     // Auto-dismiss messages after 5 seconds
