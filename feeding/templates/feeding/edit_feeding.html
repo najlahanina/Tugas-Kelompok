@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="edit-feeding-container">
+    <div class="page-header">
+        <h1>Edit Jadwal Pemberian Pakan</h1>
+    </div>
+    
+    <div class="form-container">
+        <form method="post" class="feeding-form">
+            {% csrf_token %}
+            
+            <div class="form-fields">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="field-label">{{ field.label }}:</label>
+                        <div class="field-input">
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="field-error">
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if field.help_text %}
+                                <div class="field-help">{{ field.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Simpan</button>
+                <a href="{% url 'feeding_list' %}" class="btn-cancel">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .edit-feeding-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .form-container {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 20px;
+    }
+    
+    .feeding-form {
+        width: 100%;
+    }
+    
+    .form-fields {
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        display: flex;
+        margin-bottom: 15px;
+        align-items: flex-start;
+    }
+    
+    .field-label {
+        width: 200px;
+        padding-top: 8px;
+        padding-right: 15px;
+        text-align: right;
+        font-weight: bold;
+        color: #586132;
+    }
+    
+    .field-input {
+        flex: 1;
+    }
+    
+    .field-input input,
+    .field-input select,
+    .field-input textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #e0cfc2;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .field-input input:focus,
+    .field-input select:focus,
+    .field-input textarea:focus {
+        border-color: #586132;
+        outline: none;
+        box-shadow: 0 0 3px rgba(88, 97, 50, 0.3);
+    }
+    
+    .field-input textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .field-error {
+        color: #a67c52;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .field-help {
+        color: #7d8b4e;
+        font-size: 12px;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    .form-actions {
+        display: flex;
+        padding-top: 15px;
+        margin-top: 20px;
+        border-top: 1px solid #e0cfc2;
+    }
+    
+    .btn-save, .btn-cancel {
+        padding: 8px 20px;
+        margin-right: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-save {
+        background-color: #586132;
+        color: white;
+        border: none;
+    }
+    
+    .btn-save:hover {
+        background-color: #6a7339;
+    }
+    
+    .btn-cancel {
+        background-color: #e0cfc2;
+        color: #586132;
+        text-decoration: none;
+        border: 1px solid #586132;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #d6c5b8;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .edit-feeding-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .form-group {
+            flex-direction: column;
+        }
+        
+        .field-label {
+            width: 100%;
+            text-align: left;
+            padding-bottom: 5px;
+            padding-top: 0;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn-save, .btn-cancel {
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}

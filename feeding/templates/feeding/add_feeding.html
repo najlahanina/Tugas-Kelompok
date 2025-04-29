@@ -1,70 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="habitat-form-container">
+<div class="feeding-form-container">
     <div class="page-header">
-        <h1>{{ title }}</h1>
-        <a href="{% url 'habitats:habitat_list' %}" class="back-button">Kembali ke Daftar</a>
+        <h1>Tambah Jadwal Pemberian Pakan</h1>
+        <a href="{% url 'feeding_list' %}" class="back-button">Kembali ke Daftar</a>
     </div>
     
     <div class="form-container">
         <form method="post">
             {% csrf_token %}
             
+            {% for field in form %}
             <div class="form-group">
-                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 <div class="input-container">
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                    <div class="error-message">{{ form.name.errors }}</div>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="error-message">{{ field.errors }}</div>
                     {% endif %}
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.area.id_for_label }}">{{ form.area.label }}</label>
-                <div class="input-container">
-                    {{ form.area }}
-                    <span class="unit-label">m²</span>
-                    {% if form.area.errors %}
-                    <div class="error-message">{{ form.area.errors }}</div>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.max_capacity.id_for_label }}">{{ form.max_capacity.label }}</label>
-                <div class="input-container">
-                    {{ form.max_capacity }}
-                    <span class="unit-label">hewan</span>
-                    {% if form.max_capacity.errors %}
-                    <div class="error-message">{{ form.max_capacity.errors }}</div>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.environment_status.id_for_label }}">{{ form.environment_status.label }}</label>
-                <div class="input-container">
-                    {{ form.environment_status }}
-                    {% if form.environment_status.errors %}
-                    <div class="error-message">{{ form.environment_status.errors }}</div>
-                    {% endif %}
-                </div>
-            </div>
+            {% endfor %}
             
             <div class="form-actions">
-                <button type="submit" class="action-button submit-button">
-                    {% if is_add %}Tambah Habitat{% else %}Simpan Perubahan{% endif %}
-                </button>
-                <a href="{% url 'habitats:habitat_list' %}" class="action-button cancel-button">Batal</a>
+                <button type="submit" class="action-button submit-button">Simpan</button>
+                <a href="{% url 'feeding_list' %}" class="action-button cancel-button">Batal</a>
             </div>
         </form>
     </div>
 </div>
 
 <style>
-    .habitat-form-container {
+    .feeding-form-container {
         max-width: 800px;
         margin: 30px auto;
         padding: 20px;
@@ -131,17 +102,9 @@
         position: relative;
     }
     
-    .unit-label {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #666;
-        font-size: 14px;
-    }
-    
     input[type="text"],
     input[type="number"],
+    input[type="datetime-local"],
     select,
     textarea {
         width: 100%;
@@ -154,11 +117,19 @@
     
     input[type="text"]:focus,
     input[type="number"]:focus,
+    input[type="datetime-local"]:focus,
     select:focus,
     textarea:focus {
         border-color: #586132;
         outline: none;
         box-shadow: 0 0 5px rgba(88, 97, 50, 0.3);
+    }
+    
+    .help-text {
+        color: #666;
+        font-size: 12px;
+        margin-top: 5px;
+        font-style: italic;
     }
     
     .error-message {
@@ -204,9 +175,21 @@
         background-color: #b58a60;
     }
     
+    /* Styling untuk select */
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23586132' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+        padding-right: 30px;
+    }
+    
     /* Responsif untuk layar kecil */
     @media (max-width: 768px) {
-        .habitat-form-container {
+        .feeding-form-container {
             margin: 20px 10px;
             padding: 15px;
         }
@@ -246,7 +229,7 @@
     // Menambahkan class untuk styling form elements
     document.addEventListener('DOMContentLoaded', function() {
         // Styling input fields
-        const inputs = document.querySelectorAll('input, select');
+        const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
             if (!input.classList.contains('form-control')) {
                 input.classList.add('form-control');

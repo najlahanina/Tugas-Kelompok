@@ -1,43 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="habitat-container">
+<div class="feeding-container">
     <div class="page-header">
-        <h1>DAFTAR HABITAT</h1>
-        <a href="{% url 'habitats:habitat_add' %}" class="add-button">+ Tambah Habitat</a>
+        <h1>Pemberian Pakan</h1>
+        <a href="{% url 'add_feeding' %}" class="add-button">+ Tambah Jadwal Pemberian Pakan</a>
     </div>
-    
+
     <div class="table-container">
-        <table class="habitat-table">
+        <table class="feeding-table">
             <thead>
                 <tr>
-                    <th>Nama Habitat</th>
-                    <th>Luas Area</th>
-                    <th>Kapasitas Maksimal</th>
-                    <th>Status Lingkungan</th>
+                    <th>Jenis Pakan</th>
+                    <th>Jumlah Pakan (g)</th>
+                    <th>Jadwal</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {% for habitat in habitats %}
+                {% for feed in feedings %}
                 <tr>
-                    <td>{{ habitat.name }}</td>
-                    <td>{{ habitat.area }} m²</td>
-                    <td>{{ habitat.max_capacity }} hewan</td>
+                    <td>{{ feed.jenis_pakan }}</td>
+                    <td>{{ feed.jumlah_pakan }}</td>
+                    <td>{{ feed.jadwal|date:"Y-m-d H:i" }}</td>
                     <td>
-                        <span class="status-badge status-{{ habitat.environment_status|slugify }}">
-                            {{ habitat.environment_status }}
+                        <span class="status-badge status-{{ feed.status|slugify }}">
+                            {{ feed.status }}
                         </span>
                     </td>
                     <td class="action-cell">
-                        <a href="{% url 'habitats:habitat_detail' habitat.id %}" class="action-button detail-button">Detail</a>
-                        <a href="{% url 'habitats:habitat_edit' habitat.id %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'habitats:habitat_delete' habitat.id %}" class="action-button delete-button">Hapus</a>
+                        {% if feed.status == "Menunggu Diberikan" %}
+                        <a href="{% url 'mark_as_done' feed.id %}" class="action-button feed-button">
+                            Beri Pakan
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'edit_feeding' feed.id %}" class="action-button edit-button">
+                            Edit
+                        </a>
+                        <a href="{% url 'delete_feeding' feed.id %}" class="action-button delete-button">
+                            Hapus
+                        </a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-message">Tidak ada data habitat.</td>
+                    <td colspan="5" class="empty-message">
+                        Belum ada jadwal pemberian pakan.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -46,7 +56,7 @@
 </div>
 
 <style>
-    .habitat-container {
+    .feeding-container {
         max-width: 1100px;
         margin: 30px auto;
         padding: 20px;
@@ -93,29 +103,29 @@
         background-color: white;
     }
     
-    .habitat-table {
+    .feeding-table {
         width: 100%;
         border-collapse: collapse;
     }
     
-    .habitat-table th,
-    .habitat-table td {
+    .feeding-table th,
+    .feeding-table td {
         padding: 12px 15px;
         text-align: left;
         border-bottom: 1px solid #e0cfc2;
     }
     
-    .habitat-table th {
+    .feeding-table th {
         background-color: #586132;
         color: white;
         font-weight: bold;
     }
     
-    .habitat-table tr:last-child td {
+    .feeding-table tr:last-child td {
         border-bottom: none;
     }
     
-    .habitat-table tr:hover {
+    .feeding-table tr:hover {
         background-color: #f8f5f0;
     }
     
@@ -127,22 +137,15 @@
         font-weight: bold;
     }
     
-    .status-baik {
-        background-color: #d1e7dd;
-        color: #0f5132;
-        border: 1px solid #0f5132;
+    .status-menunggu-diberikan {
+        background-color: #f8f5f0;
+        color: #586132;
+        border: 1px solid #586132;
     }
     
-    .status-perlu-perawatan {
-        background-color: #fff3cd;
-        color: #856404;
-        border: 1px solid #856404;
-    }
-    
-    .status-rusak {
-        background-color: #f8d7da;
-        color: #842029;
-        border: 1px solid #842029;
+    .status-sudah-diberikan {
+        background-color: #e0cfc2;
+        color: #586132;
     }
     
     .action-cell {
@@ -160,11 +163,11 @@
         transition: background-color 0.3s;
     }
     
-    .detail-button {
+    .feed-button {
         background-color: #586132;
     }
     
-    .detail-button:hover {
+    .feed-button:hover {
         background-color: #6a7339;
     }
     
@@ -193,7 +196,7 @@
     
     /* Responsif untuk layar kecil */
     @media (max-width: 768px) {
-        .habitat-container {
+        .feeding-container {
             margin: 20px 10px;
             padding: 15px;
         }
@@ -204,8 +207,8 @@
             gap: 10px;
         }
         
-        .habitat-table th,
-        .habitat-table td {
+        .feeding-table th,
+        .feeding-table td {
             padding: 10px;
         }
         

@@ -1,43 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="habitat-container">
+<div class="medical-records-container">
     <div class="page-header">
-        <h1>DAFTAR HABITAT</h1>
-        <a href="{% url 'habitats:habitat_add' %}" class="add-button">+ Tambah Habitat</a>
+        <h1>REKAM MEDIS</h1>
+        <a href="{% url 'add_record' %}" class="add-button">+ Tambah Rekam Medis</a>
     </div>
-    
+
     <div class="table-container">
-        <table class="habitat-table">
+        <table class="medical-records-table">
             <thead>
                 <tr>
-                    <th>Nama Habitat</th>
-                    <th>Luas Area</th>
-                    <th>Kapasitas Maksimal</th>
-                    <th>Status Lingkungan</th>
+                    <th>Tanggal Pemeriksaan</th>
+                    <th>Nama Dokter</th>
+                    <th>Status Kesehatan</th>
+                    <th>Diagnosis</th>
+                    <th>Pengobatan</th>
+                    <th>Catatan Tindak Lanjut</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {% for habitat in habitats %}
+                {% for record in records %}
                 <tr>
-                    <td>{{ habitat.name }}</td>
-                    <td>{{ habitat.area }} m²</td>
-                    <td>{{ habitat.max_capacity }} hewan</td>
-                    <td>
-                        <span class="status-badge status-{{ habitat.environment_status|slugify }}">
-                            {{ habitat.environment_status }}
-                        </span>
-                    </td>
+                    <td>{{ record.tanggal_pemeriksaan }}</td>
+                    <td>{{ record.nama_dokter }}</td>
+                    <td>{{ record.status_kesehatan }}</td>
+                    <td>{{ record.diagnosis|default:"-" }}</td>
+                    <td>{{ record.pengobatan|default:"-" }}</td>
+                    <td>{{ record.catatan_tindak_lanjut|default:"-" }}</td>
                     <td class="action-cell">
-                        <a href="{% url 'habitats:habitat_detail' habitat.id %}" class="action-button detail-button">Detail</a>
-                        <a href="{% url 'habitats:habitat_edit' habitat.id %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'habitats:habitat_delete' habitat.id %}" class="action-button delete-button">Hapus</a>
+                        <a href="{% url 'edit_record' record.id %}" class="action-button edit-button">Edit</a>
+                        <a href="{% url 'delete_record' record.id %}" class="action-button delete-button">Hapus</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-message">Tidak ada data habitat.</td>
+                    <td colspan="7" class="empty-message">Belum ada data rekam medis</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -46,8 +45,8 @@
 </div>
 
 <style>
-    .habitat-container {
-        max-width: 1100px;
+    .medical-records-container {
+        max-width: 1200px;
         margin: 30px auto;
         padding: 20px;
         font-family: Arial, sans-serif;
@@ -79,6 +78,7 @@
         padding: 8px 12px;
         text-decoration: none;
         border-radius: 4px;
+        font-weight: bold;
         transition: background-color 0.3s;
     }
     
@@ -93,56 +93,38 @@
         background-color: white;
     }
     
-    .habitat-table {
+    .medical-records-table {
         width: 100%;
         border-collapse: collapse;
     }
     
-    .habitat-table th,
-    .habitat-table td {
+    .medical-records-table th,
+    .medical-records-table td {
         padding: 12px 15px;
         text-align: left;
         border-bottom: 1px solid #e0cfc2;
     }
     
-    .habitat-table th {
+    .medical-records-table th {
         background-color: #586132;
         color: white;
         font-weight: bold;
     }
     
-    .habitat-table tr:last-child td {
+    .medical-records-table tr:last-child td {
         border-bottom: none;
     }
     
-    .habitat-table tr:hover {
+    .medical-records-table tr:nth-child(even) {
         background-color: #f8f5f0;
     }
     
-    .status-badge {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+    .medical-records-table tr:nth-child(odd) {
+        background-color: white;
     }
     
-    .status-baik {
-        background-color: #d1e7dd;
-        color: #0f5132;
-        border: 1px solid #0f5132;
-    }
-    
-    .status-perlu-perawatan {
-        background-color: #fff3cd;
-        color: #856404;
-        border: 1px solid #856404;
-    }
-    
-    .status-rusak {
-        background-color: #f8d7da;
-        color: #842029;
-        border: 1px solid #842029;
+    .medical-records-table tr:hover {
+        background-color: #f0f2e6;
     }
     
     .action-cell {
@@ -158,14 +140,6 @@
         font-size: 13px;
         color: white;
         transition: background-color 0.3s;
-    }
-    
-    .detail-button {
-        background-color: #586132;
-    }
-    
-    .detail-button:hover {
-        background-color: #6a7339;
     }
     
     .edit-button {
@@ -187,13 +161,13 @@
     .empty-message {
         text-align: center;
         padding: 20px;
-        color: #666;
+        color: #7f8c8d;
         font-style: italic;
     }
     
     /* Responsif untuk layar kecil */
     @media (max-width: 768px) {
-        .habitat-container {
+        .medical-records-container {
             margin: 20px 10px;
             padding: 15px;
         }
@@ -204,8 +178,8 @@
             gap: 10px;
         }
         
-        .habitat-table th,
-        .habitat-table td {
+        .medical-records-table th,
+        .medical-records-table td {
             padding: 10px;
         }
         

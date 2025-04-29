@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="schedule-container">
+    <div class="page-header">
+        <h1>Jadwal Pemeriksaan Kesehatan</h1>
+        <p class="subtitle">Kelola jadwal pemeriksaan kesehatan hewan</p>
+    </div>
+    
+    <div class="content-card">
+        <div class="info-box">
+            <p>Frekuensi Pemeriksaan Rutin: <strong>3 bulan sekali</strong></p>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="add-button" onclick="document.getElementById('formModal').style.display='block'">
+                + Tambah Jadwal Pemeriksaan
+            </button>
+        </div>
+        
+        <div class="section-header">
+            <h2>Jadwal Mendatang</h2>
+        </div>
+        
+        <div class="schedule-list">
+            {% for schedule in schedules %}
+                <div class="schedule-card">
+                    <div class="schedule-date">
+                        <i class="calendar-icon">📅</i>
+                        {{ schedule.tanggal_pemeriksaan_selanjutnya }}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-schedule">
+                    <p>Belum ada jadwal pemeriksaan</p>
+                    <p class="empty-hint">Klik tombol "Tambah Jadwal Pemeriksaan" untuk membuat jadwal baru</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Modal Form -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tambah Jadwal Pemeriksaan</h2>
+                <span class="close" onclick="document.getElementById('formModal').style.display='none'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-fields">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="document.getElementById('formModal').style.display='none'">Batal</button>
+                        <button type="submit" class="save-btn">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'Raleway', Arial, sans-serif;
+    }
+    
+    .schedule-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+        font-family: 'Gabarito', Arial, sans-serif;
+    }
+    
+    .subtitle {
+        color: #6b7280;
+        margin-top: 8px;
+        font-size: 16px;
+    }
+    
+    .content-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .section-header {
+        margin: 25px 0 15px 0;
+    }
+    
+    h2 {
+        color: #586132;
+        margin: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 20px;
+        font-family: 'Gabarito', Arial, sans-serif;
+    }
+    
+    .info-box {
+        background-color: #f9fafb;
+        border-left: 4px solid #7d8b4e;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+    
+    .info-box p {
+        margin: 0;
+        color: #4b5563;
+    }
+    
+    .info-box strong {
+        color: #586132;
+    }
+    
+    .action-buttons {
+        margin-bottom: 20px;
+    }
+    
+    .add-button {
+        background-color: #586132;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    
+    .add-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .schedule-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .schedule-card {
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    
+    .schedule-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-color: #7d8b4e;
+    }
+    
+    .schedule-date {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: #4b5563;
+    }
+    
+    .calendar-icon {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+    
+    .schedule-actions {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .empty-schedule {
+        background-color: #f9fafb;
+        border: 1px dashed #e5e7eb;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        color: #6b7280;
+    }
+    
+    .empty-hint {
+        font-size: 14px;
+        margin-top: 10px;
+        color: #9ca3af;
+        font-style: italic;
+    }
+    
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        overflow: auto;
+    }
+    
+    .modal-content {
+        background-color: white;
+        margin: 10% auto;
+        width: 50%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        animation: modalFade 0.3s;
+    }
+    
+    @keyframes modalFade {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9fafb;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .modal-header h2 {
+        margin: 0;
+        font-size: 20px;
+        border: none;
+        padding: 0;
+        color: #586132;
+        font-family: 'Gabarito', Arial, sans-serif;
+    }
+    
+    .close {
+        color: #6b7280;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    
+    .close:hover {
+        color: #4b5563;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .form-fields {
+        margin-bottom: 20px;
+    }
+    
+    .form-fields p {
+        margin-bottom: 15px;
+    }
+    
+    .form-fields label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #4b5563;
+    }
+    
+    .form-fields input,
+    .form-fields select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    .form-fields input:focus,
+    .form-fields select:focus {
+        border-color: #586132;
+        outline: none;
+        box-shadow: 0 0 5px rgba(88, 97, 50, 0.3);
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    
+    .save-btn,
+    .cancel-btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: medium;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+    
+    .save-btn {
+        background-color: #586132;
+        color: white;
+        border: none;
+    }
+    
+    .save-btn:hover {
+        background-color: #6a7339;
+    }
+    
+    .cancel-btn {
+        background-color: #f3f4f6;
+        color: #4b5563;
+        border: none;
+    }
+    
+    .cancel-btn:hover {
+        background-color: #e5e7eb;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .schedule-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .modal-content {
+            width: 90%;
+            margin: 20% auto;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .save-btn,
+        .cancel-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}
