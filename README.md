@@ -2,7 +2,7 @@
 
 ```credential
 Nomor Kelompok  : 4
-Asdos           : Monica Oktaviona 
+Asdos           : DDL
 Kelas           : BasDat-A
 Anggota Kelompok:
     - Rizki Hidayatul Laeli 2306245491
