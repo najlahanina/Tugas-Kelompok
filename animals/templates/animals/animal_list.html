@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 <div class="habitat-container">
     <div class="page-header">
         <h1>DATA SATWA</h1>
@@ -30,7 +31,7 @@
                     <td>{{ animal.birth_date }}</td>
                     <td>{{ animal.health_status }}</td>
                     <td>{{ animal.habitat }}</td>
-                    <td><img src="{{ animal.photo_url }}" alt="Foto {{ animal.name }}" width="50" height="50"></td>
+                    <td><img src="{% static 'images/hewan.jpeg' %}" alt="Foto {{ animal.name }}" width="50" height="50"></td>
                     <td class="action-cell">
                         <a href="{% url 'animals:animal_edit' animal.id %}" class="action-button edit-button">Edit</a>
                         <a href="{% url 'animals:animal_delete' animal.id %}" class="action-button delete-button">Hapus</a>
