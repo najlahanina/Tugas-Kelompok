@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tambah Reservasi Baru{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center bg-[#f8f5f0] min-h-screen py-12">
+    <!-- Header -->
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-[#586132]">Reservasi Tiket</h1>
+        <p class="text-gray-600">Lakukan pemesanan tiket atraksi</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Tab Navigation -->
+        <div class="flex">
+            <div class="w-full bg-[#586132] text-white p-4 text-center font-medium">
+                Form Reservasi
+            </div>
+        </div>
+
+        <!-- Form Content -->
+        <div class="p-6">
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="p-4 mb-4 rounded {% if message.tags == 'success' %}bg-green-100 text-green-700 border border-green-200{% elif message.tags == 'error' %}bg-red-100 text-red-700 border border-red-200{% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label for="id_nama_atraksi" class="block text-[#586132] font-medium mb-1">Nama Atraksi</label>
+                    <select name="nama_atraksi" id="id_nama_atraksi" 
+                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
+                            required onchange="updateAttractionInfo()">
+                        <option value="">----- Pilih Atraksi -----</option>
+                        {% for atraksi in atraksi_list %}
+                            <option value="{{ atraksi.nama }}" 
+                                    data-lokasi="{{ atraksi.lokasi }}" 
+                                    data-jadwal="{{ atraksi.jadwal }}">
+                                {{ atraksi.nama }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-[#586132] font-medium mb-1">Lokasi</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded bg-gray-50" id="lokasi_display" readonly>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-[#586132] font-medium mb-1">Jam</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded bg-gray-50" id="jam_display" readonly>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_tanggal_kunjungan" class="block text-[#586132] font-medium mb-1">Tanggal</label>
+                    <input type="date" name="tanggal_kunjungan" id="id_tanggal_kunjungan" 
+                           class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
+                           required min="{{ today_date }}">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_jumlah_tiket" class="block text-[#586132] font-medium mb-1">Jumlah Tiket</label>
+                    <input type="number" name="jumlah_tiket" id="id_jumlah_tiket" 
+                           class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
+                           required min="1">
+                </div>
+                
+                <div class="flex justify-between pt-4">
+                    <a href="{% url 'tickets:tambah_reservasi' %}" 
+                       class="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+                        Batal
+                    </a>
+                    <button type="submit" 
+                            class="px-6 py-2 bg-[#586132] text-white rounded hover:bg-[#485129] transition-colors">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateAttractionInfo() {
+        const selectElement = document.getElementById('id_nama_atraksi');
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        document.getElementById('lokasi_display').value = selectedOption.dataset.lokasi || '';
+        document.getElementById('jam_display').value = selectedOption.dataset.jadwal || '';
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', updateAttractionInfo);
+</script>
+{% endblock %}
