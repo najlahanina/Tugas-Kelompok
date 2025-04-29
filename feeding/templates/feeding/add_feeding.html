@@ -1,11 +1,240 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Tambah Jadwal Pemberian Pakan</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Simpan</button>
-    <a href="{% url 'feeding_list' %}">Batal</a>
-</form>
+<div class="feeding-form-container">
+    <div class="page-header">
+        <h1>Tambah Jadwal Pemberian Pakan</h1>
+        <a href="{% url 'feeding_list' %}" class="back-button">Kembali ke Daftar</a>
+    </div>
+    
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="input-container">
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="error-message">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="form-actions">
+                <button type="submit" class="action-button submit-button">Simpan</button>
+                <a href="{% url 'feeding_list' %}" class="action-button cancel-button">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .feeding-form-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .back-button {
+        display: inline-block;
+        background-color: #7d8b4e;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .back-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .form-container {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .form-group label {
+        display: block;
+        width: 30%;
+        padding-right: 15px;
+        font-weight: bold;
+        color: #586132;
+        padding-top: 8px;
+    }
+    
+    .input-container {
+        width: 70%;
+        position: relative;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e0cfc2;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="datetime-local"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #586132;
+        outline: none;
+        box-shadow: 0 0 5px rgba(88, 97, 50, 0.3);
+    }
+    
+    .help-text {
+        color: #666;
+        font-size: 12px;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    .error-message {
+        color: #a94442;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    
+    .submit-button {
+        background-color: #586132;
+        color: white;
+    }
+    
+    .submit-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .cancel-button {
+        background-color: #a67c52;
+        color: white;
+    }
+    
+    .cancel-button:hover {
+        background-color: #b58a60;
+    }
+    
+    /* Styling untuk select */
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23586132' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+        padding-right: 30px;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .feeding-form-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .form-group {
+            flex-direction: column;
+        }
+        
+        .form-group label,
+        .input-container {
+            width: 100%;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .action-button {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<script>
+    // Menambahkan class untuk styling form elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Styling input fields
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            if (!input.classList.contains('form-control')) {
+                input.classList.add('form-control');
+            }
+        });
+    });
+</script>
 {% endblock %}
