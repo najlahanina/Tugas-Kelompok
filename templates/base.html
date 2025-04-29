@@ -51,7 +51,7 @@
                 {% elif user.profile.role == "trainer" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
                 {% elif user.profile.role == "visitor" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Informasi Kebun Binatang</a></li>
+                    {% comment %} <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Informasi Kebun Binatang</a></li> {% endcomment %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
                     <li><a href="{% url 'tickets:tambah_reservasi' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Reservasi Tiket</a></li>
                     {% if user.profile.visitor_profile.is_adopter %}
