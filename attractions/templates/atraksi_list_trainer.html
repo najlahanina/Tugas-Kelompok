@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-[#f8f5f0] min-h-screen pt-4 pb-10">
+  <div class="text-center py-6">
+    <h1 class="text-3xl font-semibold text-[#586132] mb-2">Jadwal Pertunjukan</h1>
+  </div>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      {% if user.profile.role == "trainer" %}
+      <div class="flex justify-end p-4 bg-white border-b">
+        <a href="{% url 'attractions:tambah_atraksi_trainer' %}" class="flex items-center px-4 py-2 bg-[#586132] hover:bg-[#4a5229] text-white rounded font-medium transition duration-200">
+          <span class="mr-1">+</span> Tambah Atraksi
+        </a>
+      </div>
+      {% endif %}
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="uppercase text-xs font-medium text-gray-600 bg-gray-100 border-b">
+              <th class="px-6 py-3 text-left">Nama Atraksi</th>
+              <th class="px-6 py-3 text-left">Lokasi</th>
+              <th class="px-6 py-3 text-left">Kapasitas</th>
+              <th class="px-6 py-3 text-left">Jadwal</th>
+              {% if user.profile.role == "trainer" %}
+              <th class="px-6 py-3 text-left">Aksi</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for atraksi in data_atraksi %}
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-6 py-4">{{ atraksi.nama }}</td>
+              <td class="px-6 py-4">{{ atraksi.lokasi }}</td>
+              <td class="px-6 py-4">{{ atraksi.kapasitas }} orang</td>
+              <td class="px-6 py-4">{{ atraksi.jadwal }}</td>
+              {% if user.profile.role == "trainer"%}
+              <td class="px-6 py-4">
+                <div class="flex space-x-3">
+                  <a href="{% url 'attractions:edit_atraksi_trainer' forloop.counter0 %}" class="text-blue-500 hover:underline">Edit</a>
+                  <form action="{% url 'attractions:hapus_atraksi_trainer' forloop.counter0 %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-500 hover:underline">Hapus</button>
+                  </form>
+                </div>
+              </td>
+              {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="{% if user.profile.role == 'trainer' %}5{% else %}4{% endif %}" class="px-6 py-8 text-center text-gray-500">
+                Belum ada data atraksi.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

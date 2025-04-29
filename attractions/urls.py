@@ -12,4 +12,10 @@ urlpatterns = [
     path('wahana/tambah/', views.tambah_wahana, name='tambah_wahana'),
     path('wahana/edit/<int:index>/', views.edit_wahana, name='edit_wahana'),
     path('wahana/hapus/<int:index>/', views.hapus_wahana, name='hapus_wahana'),
+
+    path('atraksi-trainer/', views.list_atraksi_trainer, name='list_atraksi_trainer'),
+    path('atraksi-trainer/tambah/', views.tambah_atraksi_trainer, name='tambah_atraksi_trainer'),
+    path('atraksi-trainer/edit/<int:index>/', views.edit_atraksi_trainer, name='edit_atraksi_trainer'),
+    path('atraksi-trainer/hapus/<int:index>/', views.hapus_atraksi_trainer, name='hapus_atraksi_trainer'),
+
 ]

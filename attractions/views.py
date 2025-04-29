@@ -155,3 +155,58 @@ def hapus_wahana(request, index):
             DATA_WAHANA.pop(index)
         return redirect('attractions:list_wahana')
     return redirect('attractions:list_wahana')
+
+DATA_ATRAKSI_TRAINER = [
+    {
+        'nama': 'Pertunjukan lumba-lumba',
+        'lokasi': 'Area Akuatik',
+        'kapasitas': 100,
+        'jadwal': '10:00'
+    },
+    {
+        'nama': 'Feeding time harimau',
+        'lokasi': 'Zona Harimau',
+        'kapasitas': 75,
+        'jadwal': '11:30'
+    },
+    {
+        'nama': 'Bird show',
+        'lokasi': 'Amphitheater utama',
+        'kapasitas': 150,
+        'jadwal': '09:30'
+    }
+]
+def list_atraksi_trainer(request):
+    return render(request, 'atraksi_list_trainer.html', {'data_atraksi': DATA_ATRAKSI_TRAINER})
+
+def tambah_atraksi_trainer(request):
+    if request.method == 'POST':
+        nama = request.POST.get('nama')
+        lokasi = request.POST.get('lokasi')
+        kapasitas = request.POST.get('kapasitas')
+        jadwal = request.POST.get('jadwal')
+        DATA_ATRAKSI_TRAINER.append({
+            'nama': nama,
+            'lokasi': lokasi,
+            'kapasitas': kapasitas,
+            'jadwal': jadwal,
+        })
+        return redirect('attractions:list_atraksi_trainer')
+    return render(request, 'atraksi_form_trainer.html')
+
+def edit_atraksi_trainer(request, index):
+    atraksi = DATA_ATRAKSI_TRAINER[index]
+    if request.method == 'POST':
+        atraksi['lokasi'] = request.POST.get('lokasi')
+        atraksi['kapasitas'] = request.POST.get('kapasitas')
+        atraksi['jadwal'] = request.POST.get('jadwal')
+        return redirect('attractions:list_atraksi_trainer')
+    return render(request, 'atraksi_form_trainer.html', {
+        'edit_mode': True,
+        'index': index,
+        'data': atraksi
+    })
+
+def hapus_atraksi_trainer(request, index):
+    DATA_ATRAKSI_TRAINER.pop(index)
+    return redirect('attractions:list_atraksi_trainer')
