@@ -58,9 +58,12 @@
 <style>
     .feeding-container {
         max-width: 1100px;
-        margin: 0 auto;
+        margin: 30px auto;
         padding: 20px;
         font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     
     .page-header {
@@ -69,28 +72,35 @@
         align-items: center;
         margin-bottom: 20px;
         padding-bottom: 10px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 2px solid #586132;
     }
     
     h1 {
-        color: #333;
+        color: #586132;
         margin: 0;
         font-size: 24px;
+        font-weight: bold;
     }
     
     .add-button {
         display: inline-block;
-        background-color: #4a6da7;
+        background-color: #586132;
         color: white;
         padding: 8px 12px;
         text-decoration: none;
-        border-radius: 3px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .add-button:hover {
+        background-color: #6a7339;
     }
     
     .table-container {
         overflow-x: auto;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        background-color: white;
     }
     
     .feeding-table {
@@ -98,17 +108,17 @@
         border-collapse: collapse;
     }
     
-    .feeding-table th, 
+    .feeding-table th,
     .feeding-table td {
-        padding: 10px 12px;
+        padding: 12px 15px;
         text-align: left;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #e0cfc2;
     }
     
     .feeding-table th {
-        background-color: #f5f5f5;
+        background-color: #586132;
+        color: white;
         font-weight: bold;
-        color: #333;
     }
     
     .feeding-table tr:last-child td {
@@ -116,24 +126,26 @@
     }
     
     .feeding-table tr:hover {
-        background-color: #f9f9f9;
+        background-color: #f8f5f0;
     }
     
     .status-badge {
         display: inline-block;
-        padding: 4px 8px;
-        border-radius: 3px;
+        padding: 5px 10px;
+        border-radius: 20px;
         font-size: 12px;
+        font-weight: bold;
     }
     
     .status-menunggu-diberikan {
-        background-color: #f5f5f5;
-        color: #666;
+        background-color: #f8f5f0;
+        color: #586132;
+        border: 1px solid #586132;
     }
     
     .status-sudah-diberikan {
-        background-color: #e8f0e8;
-        color: #3a6a3a;
+        background-color: #e0cfc2;
+        color: #586132;
     }
     
     .action-cell {
@@ -142,38 +154,68 @@
     
     .action-button {
         display: inline-block;
-        padding: 4px 8px;
+        padding: 6px 10px;
         margin-right: 5px;
-        border-radius: 3px;
+        border-radius: 4px;
         text-decoration: none;
         font-size: 13px;
         color: white;
+        transition: background-color 0.3s;
     }
     
     .feed-button {
-        background-color: #5a8a5a;
+        background-color: #586132;
+    }
+    
+    .feed-button:hover {
+        background-color: #6a7339;
     }
     
     .edit-button {
-        background-color: #4a6da7;
+        background-color: #7d8b4e;
+    }
+    
+    .edit-button:hover {
+        background-color: #8c9a5d;
     }
     
     .delete-button {
-        background-color: #a75a5a;
+        background-color: #a67c52;
+    }
+    
+    .delete-button:hover {
+        background-color: #b58a60;
     }
     
     .empty-message {
         text-align: center;
         padding: 20px;
         color: #666;
+        font-style: italic;
     }
     
     /* Responsif untuk layar kecil */
     @media (max-width: 768px) {
+        .feeding-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
         .page-header {
             flex-direction: column;
             align-items: flex-start;
             gap: 10px;
+        }
+        
+        .feeding-table th,
+        .feeding-table td {
+            padding: 10px;
+        }
+        
+        .action-button {
+            margin-bottom: 5px;
+            display: block;
+            text-align: center;
         }
     }
 </style>

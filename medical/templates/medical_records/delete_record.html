@@ -1,11 +1,127 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>HAPUS REKAM MEDIS</h2>
-<p>Apakah anda yakin ingin menghapus rekam medis ini?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">[YA]</button>
-    <a href="{% url 'record_list' %}">[TIDAK]</a>
-</form>
+<div class="delete-record-container">
+    <h2 class="page-title">HAPUS REKAM MEDIS</h2>
+    
+    <div class="confirmation-box">
+        <div class="warning-icon">⚠️</div>
+        <p class="confirmation-message">Apakah anda yakin ingin menghapus rekam medis ini?</p>
+        <p class="warning-text">Tindakan ini tidak dapat dibatalkan.</p>
+    </div>
+    
+    <form method="post" class="delete-form">
+        {% csrf_token %}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-red">[YA]</button>
+            <a href="{% url 'record_list' %}" class="btn-blue">[TIDAK]</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .delete-record-container {
+        max-width: 600px;
+        margin: 30px auto 0;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .page-title {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #3498db;
+        font-size: 24px;
+    }
+    
+    .confirmation-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid #e74c3c;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .warning-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+    
+    .confirmation-message {
+        font-size: 18px;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .warning-text {
+        color: #7f8c8d;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+    
+    .delete-form {
+        width: 100%;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .btn-red, .btn-blue {
+        padding: 10px 30px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-red {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    .btn-red:hover {
+        background-color: #c0392b;
+    }
+    
+    .btn-blue {
+        background-color: #3498db;
+        color: white;
+    }
+    
+    .btn-blue:hover {
+        background-color: #2980b9;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .delete-record-container {
+            margin: 20px 10px 0;
+            padding: 15px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .btn-red, .btn-blue {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 {% endblock %}

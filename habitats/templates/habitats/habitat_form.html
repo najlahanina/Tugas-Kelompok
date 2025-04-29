@@ -1,53 +1,257 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h4>{{ title }}</h4>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                
-                <div class="mb-3 row">
-                    <label for="{{ form.name.id_for_label }}" class="col-sm-3 col-form-label">{{ form.name.label }}</label>
-                    <div class="col-sm-9">
-                        {{ form.name }}
-                    </div>
-                </div>
-                
-                <div class="mb-3 row">
-                    <label for="{{ form.area.id_for_label }}" class="col-sm-3 col-form-label">{{ form.area.label }}</label>
-                    <div class="col-sm-9">
-                        {{ form.area }}
-                    </div>
-                </div>
-                
-                <div class="mb-3 row">
-                    <label for="{{ form.max_capacity.id_for_label }}" class="col-sm-3 col-form-label">{{ form.max_capacity.label }}</label>
-                    <div class="col-sm-9">
-                        {{ form.max_capacity }}
-                    </div>
-                </div>
-                
-                <div class="mb-3 row">
-                    <label for="{{ form.environment_status.id_for_label }}" class="col-sm-3 col-form-label">{{ form.environment_status.label }}</label>
-                    <div class="col-sm-9">
-                        {{ form.environment_status }}
-                    </div>
-                </div>
-                
-                <div class="d-flex justify-content-center mt-4">
-                    {% if is_add %}
-                    <button type="submit" class="btn btn-primary">[Tambah Habitat]</button>
-                    {% else %}
-                    <button type="submit" class="btn btn-primary">[SIMPAN PERUBAHAN]</button>
+<div class="habitat-form-container">
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+        <a href="{% url 'habitats:habitat_list' %}" class="back-button">Kembali ke Daftar</a>
+    </div>
+    
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                <div class="input-container">
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <div class="error-message">{{ form.name.errors }}</div>
                     {% endif %}
-                    <a href="{% url 'habitats:habitat_list' %}" class="btn btn-secondary ms-2">[BATAL]</a>
                 </div>
-            </form>
-        </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.area.id_for_label }}">{{ form.area.label }}</label>
+                <div class="input-container">
+                    {{ form.area }}
+                    <span class="unit-label">m²</span>
+                    {% if form.area.errors %}
+                    <div class="error-message">{{ form.area.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.max_capacity.id_for_label }}">{{ form.max_capacity.label }}</label>
+                <div class="input-container">
+                    {{ form.max_capacity }}
+                    <span class="unit-label">hewan</span>
+                    {% if form.max_capacity.errors %}
+                    <div class="error-message">{{ form.max_capacity.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.environment_status.id_for_label }}">{{ form.environment_status.label }}</label>
+                <div class="input-container">
+                    {{ form.environment_status }}
+                    {% if form.environment_status.errors %}
+                    <div class="error-message">{{ form.environment_status.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="action-button submit-button">
+                    {% if is_add %}Tambah Habitat{% else %}Simpan Perubahan{% endif %}
+                </button>
+                <a href="{% url 'habitats:habitat_list' %}" class="action-button cancel-button">Batal</a>
+            </div>
+        </form>
     </div>
 </div>
+
+<style>
+    .habitat-form-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .back-button {
+        display: inline-block;
+        background-color: #7d8b4e;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .back-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .form-container {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .form-group label {
+        display: block;
+        width: 30%;
+        padding-right: 15px;
+        font-weight: bold;
+        color: #586132;
+        padding-top: 8px;
+    }
+    
+    .input-container {
+        width: 70%;
+        position: relative;
+    }
+    
+    .unit-label {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 14px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e0cfc2;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #586132;
+        outline: none;
+        box-shadow: 0 0 5px rgba(88, 97, 50, 0.3);
+    }
+    
+    .error-message {
+        color: #a94442;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    
+    .submit-button {
+        background-color: #586132;
+        color: white;
+    }
+    
+    .submit-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .cancel-button {
+        background-color: #a67c52;
+        color: white;
+    }
+    
+    .cancel-button:hover {
+        background-color: #b58a60;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .habitat-form-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .form-group {
+            flex-direction: column;
+        }
+        
+        .form-group label,
+        .input-container {
+            width: 100%;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .action-button {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<script>
+    // Menambahkan class untuk styling form elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Styling input fields
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (!input.classList.contains('form-control')) {
+                input.classList.add('form-control');
+            }
+        });
+    });
+</script>
 {% endblock %}
