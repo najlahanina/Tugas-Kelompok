@@ -130,20 +130,23 @@ def edit_wahana(request, index):
                 'nama': form.cleaned_data['nama_wahana'],
                 'kapasitas': form.cleaned_data['kapasitas_max'],
                 'jadwal': form.cleaned_data['jadwal'].strftime('%H:%M'),
-                'peraturan': wahana.get('peraturan', []) 
+                'peraturan': form.cleaned_data['peraturan'],
             }
             return redirect('attractions:list_wahana')
     else:
         initial_data = {
-            'nama_wahana': wahana['nama'],
             'kapasitas_max': wahana['kapasitas'],
             'jadwal': wahana['jadwal'],
         }
         form = EditWahanaForm(initial=initial_data)
     
+    readonly_data = {
+        'nama_wahana': wahana['nama'] 
+    }
     return render(request, 'wahana_form.html', {
         'form': form,
-        'edit_mode': True
+        'edit_mode': True,
+        'readonly_data': readonly_data
     })
 
 def hapus_wahana(request, index):

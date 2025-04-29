@@ -1,3 +1,4 @@
+<!-- base.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +9,7 @@
     {% endblock meta %}
 </head>
 
-<body>
+<body class="flex flex-col min-h-screen">
     
     <nav class="bg-[#586132] p-4 shadow-md flex items-center justify-between">
         <ul class="flex gap-6 items-center">
@@ -44,13 +45,15 @@
                         <ul class="absolute hidden bg-[#f8f5f0] text-white rounded shadow-lg w-40 mt-2 z-50" id="dropdownList2">
                             <li><a href="{% url 'attractions:list_atraksi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Atraksi</a></li>
                             <li><a href="{% url 'attractions:list_wahana' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Wahana</a></li>
-                            <li><a href="{% url 'attractions:list_wahana' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Reservasi</a></li>
+                            <li><a href="{% url 'tickets:admin_list_reservasi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Reservasi</a></li>
                         </ul>
                     </li>
                 {% elif user.profile.role == "trainer" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
                 {% elif user.profile.role == "visitor" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Informasi Kebun Binatang</a></li>
+                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
+                    <li><a href="{% url 'tickets:tambah_reservasi' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Reservasi Tiket</a></li>
                     {% if user.profile.visitor_profile.is_adopter %}
                         <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Hewan Adopsi</a></li>
                     {% endif %}
@@ -82,8 +85,10 @@
         </div>
     {% endif %}
 
-    {% block content %}
-    {% endblock content %}
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock content %}
+    </main>
     
     {% include "footer.html" %}
 
@@ -121,6 +126,7 @@
     
     {% block script %}
     {% endblock script %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

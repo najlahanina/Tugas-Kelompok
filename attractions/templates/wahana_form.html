@@ -35,7 +35,11 @@
                 <!-- Nama Wahana -->
                 <div>
                     <label for="id_nama_wahana" class="block text-sm font-medium text-gray-700 mb-1">Nama Wahana</label>
-                    {{ form.nama_wahana|safe }}
+                    {% if edit_mode %}
+                        <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">{{ readonly_data.nama_wahana }}</div>
+                    {% else %}
+                        {{ form.nama_wahana|safe }}
+                    {% endif %}
                 </div>
                 
                 <!-- Kapasitas & Jadwal -->
