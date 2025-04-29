@@ -1,60 +1,263 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h4>{{ title }}</h4>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                
-                <div class="mb-3">
-                    <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+<div class="animal-form-container">
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+        <a href="{% url 'animals:animal_list' %}" class="back-button">Kembali ke Daftar</a>
+    </div>
+    
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                <div class="input-container">
                     {{ form.name }}
-                </div>
-                
-                <div class="mb-3">
-                    <label for="{{ form.species.id_for_label }}" class="form-label">{{ form.species.label }}</label>
-                    {{ form.species }}
-                </div>
-                
-                <div class="mb-3">
-                    <label for="{{ form.origin.id_for_label }}" class="form-label">{{ form.origin.label }}</label>
-                    {{ form.origin }}
-                </div>
-                
-                <div class="mb-3">
-                    <label for="{{ form.birth_date.id_for_label }}" class="form-label">{{ form.birth_date.label }} (opsional)</label>
-                    {{ form.birth_date }}
-                </div>
-                
-                <div class="mb-3">
-                    <label for="{{ form.health_status.id_for_label }}" class="form-label">{{ form.health_status.label }}</label>
-                    {{ form.health_status }}
-                </div>
-                
-                <div class="mb-3">
-                    <label for="{{ form.habitat.id_for_label }}" class="form-label">{{ form.habitat.label }}</label>
-                    {{ form.habitat }}
-                </div>
-                
-                <div class="mb-3">
-                    <label for="{{ form.photo_url.id_for_label }}" class="form-label">{{ form.photo_url.label }}</label>
-                    {{ form.photo_url }}
-                </div>
-                
-                <div class="d-flex justify-content-center">
-                    {% if is_add %}
-                    <button type="submit" class="btn btn-primary mx-2">[TAMBAH]</button>
-                    {% else %}
-                    <button type="submit" class="btn btn-primary mx-2">[SIMPAN PERUBAHAN]</button>
+                    {% if form.name.errors %}
+                    <div class="error-message">{{ form.name.errors }}</div>
                     {% endif %}
-                    <a href="{% url 'animals:animal_list' %}" class="btn btn-secondary mx-2">[BATAL]</a>
                 </div>
-            </form>
-        </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.species.id_for_label }}">{{ form.species.label }}</label>
+                <div class="input-container">
+                    {{ form.species }}
+                    {% if form.species.errors %}
+                    <div class="error-message">{{ form.species.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.origin.id_for_label }}">{{ form.origin.label }}</label>
+                <div class="input-container">
+                    {{ form.origin }}
+                    {% if form.origin.errors %}
+                    <div class="error-message">{{ form.origin.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.birth_date.id_for_label }}">{{ form.birth_date.label }} (opsional)</label>
+                <div class="input-container">
+                    {{ form.birth_date }}
+                    {% if form.birth_date.errors %}
+                    <div class="error-message">{{ form.birth_date.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.health_status.id_for_label }}">{{ form.health_status.label }}</label>
+                <div class="input-container">
+                    {{ form.health_status }}
+                    {% if form.health_status.errors %}
+                    <div class="error-message">{{ form.health_status.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.habitat.id_for_label }}">{{ form.habitat.label }}</label>
+                <div class="input-container">
+                    {{ form.habitat }}
+                    {% if form.habitat.errors %}
+                    <div class="error-message">{{ form.habitat.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.photo_url.id_for_label }}">{{ form.photo_url.label }}</label>
+                <div class="input-container">
+                    {{ form.photo_url }}
+                    {% if form.photo_url.errors %}
+                    <div class="error-message">{{ form.photo_url.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="action-button submit-button">
+                    {% if is_add %}Tambah Satwa{% else %}Simpan Perubahan{% endif %}
+                </button>
+                <a href="{% url 'animals:animal_list' %}" class="action-button cancel-button">Batal</a>
+            </div>
+        </form>
     </div>
 </div>
+
+<style>
+    .animal-form-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .back-button {
+        display: inline-block;
+        background-color: #7d8b4e;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .back-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .form-container {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .form-group label {
+        display: block;
+        width: 30%;
+        padding-right: 15px;
+        font-weight: bold;
+        color: #586132;
+        padding-top: 8px;
+    }
+    
+    .input-container {
+        width: 70%;
+        position: relative;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e0cfc2;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #586132;
+        outline: none;
+        box-shadow: 0 0 5px rgba(88, 97, 50, 0.3);
+    }
+    
+    .error-message {
+        color: #a94442;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    
+    .submit-button {
+        background-color: #586132;
+        color: white;
+    }
+    
+    .submit-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .cancel-button {
+        background-color: #a67c52;
+        color: white;
+    }
+    
+    .cancel-button:hover {
+        background-color: #b58a60;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .animal-form-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .form-group {
+            flex-direction: column;
+        }
+        
+        .form-group label,
+        .input-container {
+            width: 100%;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .action-button {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    }
+</style>
 {% endblock %}

@@ -1,21 +1,204 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h4>Konfirmasi Hapus Data Satwa</h4>
+<div class="animal-delete-container">
+    <div class="page-header">
+        <h1>Konfirmasi Hapus Satwa</h1>
+        <a href="{% url 'animals:animal_list' %}" class="back-button">Kembali ke Daftar</a>
+    </div>
+    
+    <div class="delete-container">
+        <div class="delete-message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a67c52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <p class="confirm-text">Apakah Anda yakin ingin menghapus satwa "<strong>{{ object.name }}</strong>"?</p>
         </div>
-        <div class="card-body">
-            <p>Apakah Anda yakin ingin menghapus data satwa "{{ object.name|default:object.species }}"?</p>
-            <form method="post">
-                {% csrf_token %}
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-danger mx-2">Ya, Hapus</button>
-                    <a href="{% url 'animal-list' %}" class="btn btn-secondary mx-2">Batal</a>
-                </div>
-            </form>
+        
+        {% if object.habitat %}
+        <div class="warning-alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div>
+                <strong>Perhatian!</strong> 
+                <p>Satwa ini terhubung dengan habitat <strong>{{ object.habitat.name }}</strong>. Menghapus satwa ini akan mempengaruhi data habitat tersebut.</p>
+            </div>
         </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="action-button delete-button">Ya, Hapus</button>
+                <a href="{% url 'animals:animal_list' %}" class="action-button cancel-button">Batal</a>
+            </div>
+        </form>
     </div>
 </div>
+
+<style>
+    .animal-delete-container {
+        max-width: 700px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .back-button {
+        display: inline-block;
+        background-color: #7d8b4e;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .back-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .delete-container {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 25px;
+    }
+    
+    .delete-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0cfc2;
+    }
+    
+    .confirm-text {
+        font-size: 18px;
+        color: #333;
+        margin-top: 15px;
+    }
+    
+    .warning-alert {
+        display: flex;
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 25px;
+        color: #856404;
+        align-items: flex-start;
+    }
+    
+    .warning-alert svg {
+        margin-right: 15px;
+        flex-shrink: 0;
+        color: #856404;
+    }
+    
+    .warning-alert strong {
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .warning-alert p {
+        margin: 0;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    
+    .delete-button {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .delete-button:hover {
+        background-color: #c82333;
+    }
+    
+    .cancel-button {
+        background-color: #a67c52;
+        color: white;
+    }
+    
+    .cancel-button:hover {
+        background-color: #b58a60;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .animal-delete-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .warning-alert {
+            flex-direction: column;
+        }
+        
+        .warning-alert svg {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .action-button {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    }
+</style>
 {% endblock %}
