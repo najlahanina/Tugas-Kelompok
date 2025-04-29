@@ -22,71 +22,21 @@
                 </tr>
             </thead>
             <tbody>
+                {% for animal in animals %}
                 <tr>
-                    <td>Simba</td>
-                    <td>Singa</td>
-                    <td>Afrika</td>
-                    <td>2018-05-12</td>
-                    <td>Sehat</td>
-                    <td>Savana</td>
-                    <td><img src="[foto simba]" alt="Foto Simba" width="50" height="50"></td>
+                    <td>{{ animal.name }}</td>
+                    <td>{{ animal.species }}</td>
+                    <td>{{ animal.origin }}</td>
+                    <td>{{ animal.birth_date }}</td>
+                    <td>{{ animal.health_status }}</td>
+                    <td>{{ animal.habitat }}</td>
+                    <td><img src="{{ animal.photo_url }}" alt="Foto {{ animal.name }}" width="50" height="50"></td>
                     <td class="action-cell">
-                        <a href="{% url 'animals:animal_edit' 1 %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'animals:animal_delete' 1 %}" class="action-button delete-button">Hapus</a>
+                        <a href="{% url 'animals:animal_edit' animal.id %}" class="action-button edit-button">Edit</a>
+                        <a href="{% url 'animals:animal_delete' animal.id %}" class="action-button delete-button">Hapus</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Melly</td>
-                    <td>Gajah</td>
-                    <td>Sumatra</td>
-                    <td>2015-09-22</td>
-                    <td>Dalam Pemantauan</td>
-                    <td>Hutan Tropis</td>
-                    <td><img src="[foto melly]" alt="Foto Melly" width="50" height="50"></td>
-                    <td class="action-cell">
-                        <a href="{% url 'animals:animal_edit' 2 %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'animals:animal_delete' 2 %}" class="action-button delete-button">Hapus</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Rio</td>
-                    <td>Harimau</td>
-                    <td>Kalimantan</td>
-                    <td>2015-09-22</td>
-                    <td>Sakit</td>
-                    <td>Hutan Tropis</td>
-                    <td><img src="[foto rio]" alt="Foto Rio" width="50" height="50"></td>
-                    <td class="action-cell">
-                        <a href="{% url 'animals:animal_edit' 3 %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'animals:animal_delete' 3 %}" class="action-button delete-button">Hapus</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Nala</td>
-                    <td>Zebra</td>
-                    <td>Afrika</td>
-                    <td>2020-03-01</td>
-                    <td>Sehat</td>
-                    <td>Savana</td>
-                    <td><img src="[foto nala]" alt="Foto Nala" width="50" height="50"></td>
-                    <td class="action-cell">
-                        <a href="{% url 'animals:animal_edit' 4 %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'animals:animal_delete' 4 %}" class="action-button delete-button">Hapus</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Bimo</td>
-                    <td>Orangutan</td>
-                    <td>Kalimantan</td>
-                    <td>2016-07-19</td>
-                    <td>Sehat</td>
-                    <td>Hutan Tropis</td>
-                    <td><img src="[foto bimo]" alt="Foto Bimo" width="50" height="50"></td>
-                    <td class="action-cell">
-                        <a href="{% url 'animals:animal_edit' 5 %}" class="action-button edit-button">Edit</a>
-                        <a href="{% url 'animals:animal_delete' 5 %}" class="action-button delete-button">Hapus</a>
-                    </td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -166,32 +116,6 @@
         background-color: #f8f5f0;
     }
 
-    .status-badge {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .status-baik {
-        background-color: #d1e7dd;
-        color: #0f5132;
-        border: 1px solid #0f5132;
-    }
-
-    .status-perlu-perawatan {
-        background-color: #fff3cd;
-        color: #856404;
-        border: 1px solid #856404;
-    }
-
-    .status-rusak {
-        background-color: #f8d7da;
-        color: #842029;
-        border: 1px solid #842029;
-    }
-
     .action-cell {
         white-space: nowrap;
     }
@@ -221,38 +145,6 @@
 
     .delete-button:hover {
         background-color: #b58a60;
-    }
-
-    .empty-message {
-        text-align: center;
-        padding: 20px;
-        color: #666;
-        font-style: italic;
-    }
-
-    /* Responsif untuk layar kecil */
-    @media (max-width: 768px) {
-        .habitat-container {
-            margin: 20px 10px;
-            padding: 15px;
-        }
-
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .habitat-table th,
-        .habitat-table td {
-            padding: 10px;
-        }
-
-        .action-button {
-            margin-bottom: 5px;
-            display: block;
-            text-align: center;
-        }
     }
 </style>
 {% endblock %}
