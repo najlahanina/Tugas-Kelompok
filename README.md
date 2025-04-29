@@ -13,6 +13,6 @@ Anggota Kelompok:
 
 ## Pembagian Tugas
 - Rizki Hidayatul Laeli: Kuning, R-Login & Logout, CR-Registrasi
-- Nisa Najla Hanina Hasanah: Biru, Navbar
+- Nisa Najla Hanina Hasanah: Biru, Navbar, Dashboard, Pengaturan Profil
 - Abby Shelley Tampubolon: Hijau, Dashboard
-- Hubban Syadid: Merah, Profil
+- Hubban Syadid: Merah, Melakukan query SQL
