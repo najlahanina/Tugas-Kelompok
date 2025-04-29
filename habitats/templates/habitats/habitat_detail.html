@@ -1,62 +1,386 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h4>DETAIL HABITAT: {{ habitat.name }}</h4>
-            <div>
-                <a href="{% url 'habitat_edit' habitat.id %}" class="btn btn-sm btn-warning">[Edit Habitat]</a>
-                <a href="{% url 'habitat_delete' habitat.id %}" class="btn btn-sm btn-danger">[Hapus Habitat]</a>
-            </div>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <th>Luas Area</th>
-                    <td>{{ habitat.area }} m²</td>
-                </tr>
-                <tr>
-                    <th>Status Lingkungan</th>
-                    <td>{{ habitat.environment_status }}</td>
-                </tr>
-                <tr>
-                    <th>Kapasitas Maksimal</th>
-                    <td>{{ habitat.max_capacity }} hewan</td>
-                </tr>
-            </table>
-            
-            <h5 class="mt-4 mb-3">DAFTAR HEWAN DALAM HABITAT</h5>
-            
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Nama Individu</th>
-                            <th>Spesies</th>
-                            <th>Asal Hewan</th>
-                            <th>Tanggal Lahir</th>
-                            <th>Status Kesehatan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for animal in animals %}
-                        <tr>
-                            <td>{{ animal.name|default:"-" }}</td>
-                            <td>{{ animal.species }}</td>
-                            <td>{{ animal.origin }}</td>
-                            <td>{{ animal.birth_date|date:"Y-m-d"|default:"-" }}</td>
-                            <td>{{ animal.health_status }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center">Tidak ada hewan di habitat ini</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+<div class="habitat-detail-container">
+    <div class="page-header">
+        <h1>DETAIL HABITAT: SAVANA</h1>
+        <div class="header-actions">
+            <a href="{% url 'habitats:habitat_edit' 1 %}" class="action-button edit-button">Edit Habitat</a>
+            <a href="{% url 'habitats:habitat_delete' 1 %}" class="action-button delete-button">Hapus Habitat</a>
+            <a href="{% url 'habitats:habitat_list' %}" class="action-button back-button">Kembali ke Daftar</a>
         </div>
     </div>
+    
+    <div class="detail-section">
+        <h2>Informasi Habitat</h2>
+        <table class="detail-table">
+            <tr>
+                <th>Luas Area</th>
+                <td>5.000 m²</td>
+            </tr>
+            <tr>
+                <th>Status Lingkungan</th>
+                <td>
+                    <span class="status-badge status-baik">Baik</span>
+                    <div class="status-details">
+                        Suhu: 30°C, Kelembapan: 40%, Vegetasi: Rumput luas
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Kapasitas Maksimal</th>
+                <td>25 hewan</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="animal-section">
+        <div class="section-header">
+            <h2>Daftar Hewan dalam Habitat</h2>
+            <a href="#" class="add-button">+ Tambah Hewan</a>
+        </div>
+        
+        <div class="table-container">
+            <table class="animal-table">
+                <thead>
+                    <tr>
+                        <th>Nama Individu</th>
+                        <th>Spesies</th>
+                        <th>Asal Hewan</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Status Kesehatan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simba</td>
+                        <td>Singa</td>
+                        <td>Afrika</td>
+                        <td>2018-05-12</td>
+                        <td>
+                            <span class="health-badge health-sehat">Sehat</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nala</td>
+                        <td>Zebra</td>
+                        <td>Afrika</td>
+                        <td>2020-03-01</td>
+                        <td>
+                            <span class="health-badge health-sehat">Sehat</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Rio</td>
+                        <td>Harimau</td>
+                        <td>Kalimantan</td>
+                        <td>2020-03-03</td>
+                        <td>
+                            <span class="health-badge health-sakit">Sakit</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>            
+        </div>
+    </div>
+    
 </div>
+
+<style>
+    .habitat-detail-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+        flex-wrap: wrap;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+        margin-right: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    h2 {
+        color: #586132;
+        font-size: 18px;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    
+    .detail-section, 
+    .animal-section, 
+    .stats-section {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .detail-table th, 
+    .detail-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0cfc2;
+    }
+    
+    .detail-table th {
+        width: 200px;
+        color: #586132;
+        font-weight: bold;
+        background-color: #f8f5f0;
+    }
+    
+    .detail-table tr:last-child th,
+    .detail-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .status-baik {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border: 1px solid #0f5132;
+    }
+    
+    .status-perlu-perawatan {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #856404;
+    }
+    
+    .status-rusak {
+        background-color: #f8d7da;
+        color: #842029;
+        border: 1px solid #842029;
+    }
+    
+    .status-details {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+    }
+    
+    .animal-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .animal-table th,
+    .animal-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0cfc2;
+    }
+    
+    .animal-table th {
+        background-color: #586132;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .animal-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .animal-table tr:hover {
+        background-color: #f8f5f0;
+    }
+    
+    .health-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .health-sehat {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border: 1px solid #0f5132;
+    }
+    
+    .health-sakit {
+        background-color: #f8d7da;
+        color: #842029;
+        border: 1px solid #842029;
+    }
+    
+    .health-pemulihan {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #856404;
+    }
+    
+    .action-cell {
+        white-space: nowrap;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 6px 10px;
+        margin-right: 5px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 13px;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    
+    .detail-button {
+        background-color: #586132;
+    }
+    
+    .detail-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .edit-button {
+        background-color: #7d8b4e;
+    }
+    
+    .edit-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .delete-button {
+        background-color: #a67c52;
+    }
+    
+    .delete-button:hover {
+        background-color: #b58a60;
+    }
+    
+    .back-button {
+        background-color: #586132;
+    }
+    
+    .back-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .add-button {
+        display: inline-block;
+        background-color: #586132;
+        color: white;
+        padding: 6px 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        font-size: 13px;
+    }
+    
+    .add-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+    
+    .stats-card {
+        background-color: #f8f5f0;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+        border: 1px solid #e0cfc2;
+    }
+    
+    .stats-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #586132;
+        margin-bottom: 5px;
+    }
+    
+    .stats-label {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .habitat-detail-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .header-actions {
+            margin-top: 10px;
+        }
+        
+        .detail-table th {
+            width: 140px;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .action-button {
+            margin-bottom: 5px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}

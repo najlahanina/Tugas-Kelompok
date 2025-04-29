@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="habitat-form-container">
+    <div class="page-header">
+        <h1>Edit Habitat: SAVANA</h1>
+        <a href="{% url 'habitats:habitat_detail' 1 %}" class="back-button">Kembali ke Detail</a>
+    </div>
+    
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_name">Nama Habitat</label>
+                <div class="input-container">
+                    <input type="text" name="name" id="id_name" value="SAVANA" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_area">Luas Area</label>
+                <div class="input-container">
+                    <input type="number" name="area" id="id_area" value="5000" class="form-control" required>
+                    <span class="unit-label">m²</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_max_capacity">Kapasitas Maksimal</label>
+                <div class="input-container">
+                    <input type="number" name="max_capacity" id="id_max_capacity" value="25" class="form-control" required>
+                    <span class="unit-label">hewan</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_environment_status">Status Lingkungan</label>
+                <div class="input-container">
+                    <select name="environment_status" id="id_environment_status" class="form-control" required>
+                        <option value="Baik" selected>Baik</option>
+                        <option value="Perlu Perawatan">Perlu Perawatan</option>
+                        <option value="Rusak">Rusak</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_temperature">Suhu</label>
+                <div class="input-container">
+                    <input type="number" name="temperature" id="id_temperature" value="30" class="form-control" required>
+                    <span class="unit-label">°C</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_humidity">Kelembapan</label>
+                <div class="input-container">
+                    <input type="number" name="humidity" id="id_humidity" value="40" class="form-control" required>
+                    <span class="unit-label">%</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_vegetation">Vegetasi</label>
+                <div class="input-container">
+                    <input type="text" name="vegetation" id="id_vegetation" value="Rumput luas" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="action-button submit-button">Simpan Perubahan</button>
+                <a href="{% url 'habitats:habitat_detail' 1 %}" class="action-button cancel-button">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .habitat-form-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .back-button {
+        display: inline-block;
+        background-color: #7d8b4e;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .back-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .form-container {
+        background-color: white;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .form-group label {
+        display: block;
+        width: 30%;
+        padding-right: 15px;
+        font-weight: bold;
+        color: #586132;
+        padding-top: 8px;
+    }
+    
+    .input-container {
+        width: 70%;
+        position: relative;
+    }
+    
+    .unit-label {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 14px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e0cfc2;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #586132;
+        outline: none;
+        box-shadow: 0 0 5px rgba(88, 97, 50, 0.3);
+    }
+    
+    .error-message {
+        color: #a94442;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    
+    .submit-button {
+        background-color: #586132;
+        color: white;
+    }
+    
+    .submit-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .cancel-button {
+        background-color: #a67c52;
+        color: white;
+    }
+    
+    .cancel-button:hover {
+        background-color: #b58a60;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .habitat-form-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .form-group {
+            flex-direction: column;
+        }
+        
+        .form-group label,
+        .input-container {
+            width: 100%;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .action-button {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<script>
+    // Menambahkan class untuk styling form elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Styling input fields
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (!input.classList.contains('form-control')) {
+                input.classList.add('form-control');
+            }
+        });
+    });
+</script>
+{% endblock %}
