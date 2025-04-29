@@ -29,6 +29,8 @@ urlpatterns = [
     path('attractions/', include('attractions.urls')),
     path('tickets/', include('tickets.urls')),
     path('adoptions/', include('adoptions.urls')),
+    path('administrative-staff/', include('administrative_staff.urls')),
+    path('adopter/', include('adopter.urls')),
     path('feeding/', include(('feeding.urls', 'feeding'), namespace='feeding')),
     path('medical/', include(('medical.urls', 'medical'), namespace='medical')),
 ]

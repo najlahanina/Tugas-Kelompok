@@ -1,0 +1,84 @@
+{
+    "catata_kesehatan" : [
+        {
+         "id_hewan": "f2b3e7a9-6c7d-4a1e-8b5f-3c8a9d7e2b5f",
+         "username_dh": "jaeman999",
+         "tanggal_pemeriksaan": "2025-01-15",
+         "diagnosis": "Infeksi ringan",
+         "pengobatan": "Antibiotik injeksi hewan",
+         "status_kesehatan": "Dalam perawatan"
+        },
+        {
+         "id_hewan": "d3a5e2c7-5b8a-4f3d-9a0f-6c7f8d2a9f7e",
+         "username_dh": "kamaria551",
+         "tanggal_pemeriksaan": "2025-01-20",
+         "diagnosis": "Luka di kaki",
+         "pengobatan": "Pembersihan luka steril",
+         "status_kesehatan": "Cek rutin 6 bulan"
+        },
+        {
+         "id_hewan": "e9f7d2b8-1a9c-4f8e-9a7e-5b2a3c7d6f9f",
+         "username_dh": "agnes152",
+         "tanggal_pemeriksaan": "2025-01-25",
+         "diagnosis": "Demam tinggi",
+         "pengobatan": "Antipiretik",
+         "status_kesehatan": "Tidak diperlukan"
+        },
+        {
+         "id_hewan": "d7b8f2a9-3c5e-4a2b-8e1f-6c9b5e3a8d7b",
+         "username_dh": "karta183",
+         "tanggal_pemeriksaan": "2025-01-23",
+         "diagnosis": "Flu",
+         "pengobatan": "Vitamin dan istirahat",
+         "status_kesehatan": "Dalam perawatan"
+        },
+        {
+         "id_hewan": "a47c8f3d-6df5-4af4-bb25-8c0b7c92b8e0",
+         "username_dh": "dalimin202",
+         "tanggal_pemeriksaan": "2025-02-01",
+         "diagnosis": "Infeksi kulit",
+         "pengobatan": "Obat antiparasit",
+         "status_kesehatan": "Dalam perawatan"
+        },
+        {
+         "id_hewan": "6b1c76d2-f8b4-4bbb-8d79-ed35cc3680df",
+         "username_dh": "jasmin271",
+         "tanggal_pemeriksaan": "2025-02-05",
+         "diagnosis": "Cacingan",
+         "pengobatan": "Obat antiparasit",
+         "status_kesehatan": "Tidak diperlukan"
+        },
+        {
+         "id_hewan": "7a5c3e9f-2bd1-417d-9d8c-9f6a4f29c8c4",
+         "username_dh": "zelaya803",
+         "tanggal_pemeriksaan": "2025-03-01",
+         "diagnosis": "Gigitan serangga",
+         "pengobatan": "Obat antihistamin",
+         "status_kesehatan": "Dalam perawatan"
+        },
+        {
+         "id_hewan": "e2c9a2f5-3d6b-4c8e-b6f9-4f3c8d2a7e0b",
+         "username_dh": "farhunnisa580",
+         "tanggal_pemeriksaan": "2025-02-05",
+         "diagnosis": "Infeksi telinga",
+         "pengobatan": "Obat antiparasit",
+         "status_kesehatan": "Cek rutin 6 bulan"
+        },
+        {
+         "id_hewan": "f3c1b2e7-8a3d-4c9e-b6c4-9d6e4f7a3e0b",
+         "username_dh": "unggul816",
+         "tanggal_pemeriksaan": "2025-01-14",
+         "diagnosis": "Cacingan",
+         "pengobatan": "Obat antiparasit",
+         "status_kesehatan": "Dalam perawatan"
+        },
+        {
+         "id_hewan": "a1f9b0d8-2e5f-4a2b-3c4f-6d8a3b9e5c0f",
+         "username_dh": "yessi980",
+         "tanggal_pemeriksaan": "2025-04-05",
+         "diagnosis": "Gigitan serangga",
+         "pengobatan": "Obat antihistamin",
+         "status_kesehatan": "Tidak diperlukan"
+        }
+       ]
+}

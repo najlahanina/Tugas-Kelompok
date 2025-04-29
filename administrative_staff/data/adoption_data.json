@@ -1,0 +1,243 @@
+{  "adoptions": [
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-111111111111",
+     "id_hewan": "a47c8f3d-6df5-4af4-bb25-8c0b7c92b8e0",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-01-01",
+     "tgl_berhenti_adopsi": "2025-07-01",
+     "kontribusi_finansial": "1000000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-222222222222",
+     "id_hewan": "6b1c76d2-f8b4-4bbb-8d79-ed35cc3680df",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-01-02",
+     "tgl_berhenti_adopsi": "2025-07-02",
+     "kontribusi_finansial": "1500000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-333333333333",
+     "id_hewan": "7a5c3e9f-2bd1-417d-9d8c-9f6a4f29c8c4",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-01-03",
+     "tgl_berhenti_adopsi": "2025-07-03",
+     "kontribusi_finansial": "2000000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-444444444444",
+     "id_hewan": "e2c9a2f5-3d6b-4c8e-b6f9-4f3c8d2a7e0b",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-01-04",
+     "tgl_berhenti_adopsi": "2025-07-04",
+     "kontribusi_finansial": "1250000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-555555555555",
+     "id_hewan": "d1e8f7a6-5c4b-3a2e-9d8c-7b6a5f4d3c2b",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-01-05",
+     "tgl_berhenti_adopsi": "2025-07-05",
+     "kontribusi_finansial": "1750000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-666666666666",
+     "id_hewan": "b9c8d7e6-f5a4-3b2c-1d0e-9f8a7b6c5d4e",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-01-06",
+     "tgl_berhenti_adopsi": "2025-07-06",
+     "kontribusi_finansial": "950000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-777777777777",
+     "id_hewan": "3e4d5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-01-07",
+     "tgl_berhenti_adopsi": "2025-07-07",
+     "kontribusi_finansial": "100000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-888888888888",
+     "id_hewan": "9a8b7c6d-5e4f-3a2b-1c0d-8e7f6a5b4c3d",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-01-08",
+     "tgl_berhenti_adopsi": "2025-07-08",
+     "kontribusi_finansial": "120000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-999999999999",
+     "id_hewan": "b8d7c5f2-4e8a-6b9c-3f2d-1d7f8c9b1d5e",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-01-09",
+     "tgl_berhenti_adopsi": "2025-07-09",
+     "kontribusi_finansial": "135000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-aaaaaaaaaaaa",
+     "id_hewan": "f3c1b2e7-8a3d-4c9e-b6c4-9d6e4f7a3e0b",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-02-01",
+     "tgl_berhenti_adopsi": "2025-07-10",
+     "kontribusi_finansial": "140000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-bbbbbbbbbbbb",
+     "id_hewan": "a1f9b0d8-2e5f-4a2b-3c4f-6d8a3b9e5c0f",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-02-02",
+     "tgl_berhenti_adopsi": "2025-07-11",
+     "kontribusi_finansial": "150000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-cccccccccccc",
+     "id_hewan": "c3e2a1f0-7b8d-4d5a-2b9f-8a4e9c5a0c7b",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-02-03",
+     "tgl_berhenti_adopsi": "2025-08-01",
+     "kontribusi_finansial": "420000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-dddddddddddd",
+     "id_hewan": "d6f9c3a5-1a7b-5d8a-2c0f-7b9e2c8f9e4f",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-02-04",
+     "tgl_berhenti_adopsi": "2025-08-02",
+     "kontribusi_finansial": "750000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-eeeeeeeeeeee",
+     "id_hewan": "f7e2d9a8-5b3c-4d8a-2e1d-0f7c8b3d1f7e",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-02-05",
+     "tgl_berhenti_adopsi": "2025-08-03",
+     "kontribusi_finansial": "890000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-ffffffffffff",
+     "id_hewan": "a4c8b7f1-5e4a-4c7f-8d3c-6b5d1e2c4f8b",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-02-06",
+     "tgl_berhenti_adopsi": "2025-08-04",
+     "kontribusi_finansial": "980000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-121212121212",
+     "id_hewan": "e3b1c7a6-2b9d-4f5e-8a3f-5b4c7f9d3e8f",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-02-07",
+     "tgl_berhenti_adopsi": "2025-08-05",
+     "kontribusi_finansial": "890000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-131313131313",
+     "id_hewan": "c0e3f9b2-7e9f-4a0f-8d9e-6b2f5a8c0e2b",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-02-08",
+     "tgl_berhenti_adopsi": "2025-08-06",
+     "kontribusi_finansial": "540000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-141414141414",
+     "id_hewan": "f5c2e7a3-9f1d-4a4f-8c7e-9b8e1f5d6a2b",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-02-09",
+     "tgl_berhenti_adopsi": "2025-08-07",
+     "kontribusi_finansial": "230000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-151515151515",
+     "id_hewan": "d9f1e8c3-8e7b-4a9f-6c3e-7a0b3f9e7e8c",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-03-01",
+     "tgl_berhenti_adopsi": "2025-08-08",
+     "kontribusi_finansial": "120000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-161616161616",
+     "id_hewan": "b8c0e7d4-3a2e-4f8a-9e6d-6b5f2a4b3f5e",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-03-02",
+     "tgl_berhenti_adopsi": "2025-08-09",
+     "kontribusi_finansial": "140000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-171717171717",
+     "id_hewan": "e2f5b7a9-7b8c-4e0a-3d6f-8e7c9f0b6a5f",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-03-03",
+     "tgl_berhenti_adopsi": "2025-08-10",
+     "kontribusi_finansial": "789000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-181818181818",
+     "id_hewan": "f3a4c7d8-2e9d-5a0f-8d9a-3e6f7c8f2a6c",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-03-04",
+     "tgl_berhenti_adopsi": "2025-08-11",
+     "kontribusi_finansial": "675000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-191919191919",
+     "id_hewan": "d8e9c7f2-5f1d-4a4c-8e9b-3d9e5b2f7c5f",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-03-05",
+     "tgl_berhenti_adopsi": "2025-08-12",
+     "kontribusi_finansial": "666000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-202020202020",
+     "id_hewan": "a9f1e3b8-7c2d-4f5e-8c7b-2e4d3b6a8d0e",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-03-06",
+     "tgl_berhenti_adopsi": "2025-09-01",
+     "kontribusi_finansial": "888000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-212121212121",
+     "id_hewan": "b2e1f4c3-8d7a-4f9e-8c7b-6a9e3d7c9e5f",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-03-07",
+     "tgl_berhenti_adopsi": "2025-09-02",
+     "kontribusi_finansial": "150000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-272727272727",
+     "id_hewan": "c9d8e7f6-1a2b-4b9f-8e1d-7a8e5f6d3c5f",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-03-08",
+     "tgl_berhenti_adopsi": "2025-09-03",
+     "kontribusi_finansial": "350000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-232323232323",
+     "id_hewan": "d6b4e9a1-4f8e-4c0d-8a1d-5c8b9f0a7d2c",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-03-09",
+     "tgl_berhenti_adopsi": "2025-09-04",
+     "kontribusi_finansial": "900000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-242424242424",
+     "id_hewan": "e1a0b5f2-6a9e-4f5e-9a7d-6c9f8a2c7e1a",
+     "status_pembayaran": "tertunda",
+     "tgl_mulai_adopsi": "2025-03-10",
+     "tgl_berhenti_adopsi": "2025-09-05",
+     "kontribusi_finansial": "190000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-252525252525",
+     "id_hewan": "c2f5e3b7-9d1f-4a7e-8b0f-5a9d3e4c7a2f",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-03-11",
+     "tgl_berhenti_adopsi": "2025-09-06",
+     "kontribusi_finansial": "140000"
+    },
+    {
+     "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-262626262626",
+     "id_hewan": "f2b3e7a9-6c7d-4a1e-8b5f-3c8a9d7e2b5f",
+     "status_pembayaran": "lunas",
+     "tgl_mulai_adopsi": "2025-04-01",
+     "tgl_berhenti_adopsi": "2025-09-07",
+     "kontribusi_finansial": "150000"
+    }
+   ]
+}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Berhenti Adopsi{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-green-400">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Berhenti Adopsi</h1>
+            <a href="{% url 'adopter:animal_detail' animal.id %}" class="text-green-500 hover:text-green-700">
+                &larr; Kembali ke Detail Hewan
+            </a>
+        </div>
+        
+        <div class="text-center mb-8">
+            <p class="text-xl text-gray-700 mb-4">Apakah Anda yakin ingin berhenti mengadopsi satwa ini?</p>
+            <div class="w-32 h-32 mx-auto overflow-hidden rounded-full mb-4">
+                <img src="{{ animal.url_foto }}" alt="{{ animal.nama }}" class="w-full h-full object-cover">
+            </div>
+            <p class="text-lg font-semibold text-gray-800">{{ animal.nama|default:"(tidak ada nama)" }}</p>
+            <p class="text-gray-600">{{ animal.spesies }}</p>
+        </div>
+        
+        <form method="post" action="{% url 'adopter:stop_adoption' animal.id %}" class="flex justify-center gap-4">
+            {% csrf_token %}
+            <a href="{% url 'adopter:animal_detail' animal.id %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded">
+                [Batal]
+            </a>
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded">
+                [Iya]
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
