@@ -30,8 +30,8 @@
                     <li><a href="{% url 'feeding:feeding_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Pemberian Pakan</a></li>
                 {% elif user.profile.role == "admin_staff" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Pengunjung</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopter</a></li>
+                    <li><a href="{% url 'administrative_staff:adoption_admin' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>
+                    <li><a href="{% url 'administrative_staff:adopter_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopter</a></li>
                    <!-- Dropdown Menu -->
                     <li class="relative group" id="dropdownMenu1">
                         <a href="#" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa & Habitat</a>
