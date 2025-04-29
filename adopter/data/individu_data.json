@@ -1,0 +1,54 @@
+{
+    "individu" : [
+        {
+         "nik": "3201010101010001",
+         "nama": "Andi Santoso",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+        },
+        {
+         "nik": "3201010101010002",
+         "nama": "Pedro Saputra",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-222222222222"
+        },
+        {
+         "nik": "3201010101010003",
+         "nama": "Jeremi Sinaga",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-333333333333"
+        },
+        {
+         "nik": "3201010101010004",
+         "nama": "Theresia Berlin",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-444444444444"
+        },
+        {
+         "nik": "3201010101010005",
+         "nama": "Sella Agnesya",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-555555555555"
+        },
+        {
+         "nik": "3201010101010006",
+         "nama": "Laurencia Gracia",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-666666666666"
+        },
+        {
+         "nik": "3201010101010007",
+         "nama": "Agna Alicia",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-777777777777"
+        },
+        {
+         "nik": "3201010101010008",
+         "nama": "Gita Pramestya",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-888888888888"
+        },
+        {
+         "nik": "3201010101010009",
+         "nama": "Joko Prabowo",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-999999999999"
+        },
+        {
+         "nik": "3201010101010011",
+         "nama": "Exaudia Chiquita",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-aaaaaaaaaaaa"
+        }
+       ]
+}

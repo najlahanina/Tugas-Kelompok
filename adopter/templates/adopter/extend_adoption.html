@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perpanjang Periode Adopsi{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-green-400">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Form Perpanjang Periode Adopsi Satwa</h1>
+            <a href="{% url 'adopter:animal_detail' animal.id %}" class="text-green-500 hover:text-green-700">
+                &larr; Kembali ke Detail Hewan
+            </a>
+        </div>
+        
+        <form method="post" action="{% url 'adopter:extend_adoption' animal.id %}" class="mb-6">
+            {% csrf_token %}
+            
+            <div class="mb-6">
+                <p class="text-gray-700 mb-2">Pihak di bawah ini,</p>
+                
+                {% if adopter_type == 'individu' %}
+                    <div class="mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="adopterName" class="block text-gray-700 mb-1">Nama:</label>
+                                <input type="text" id="adopterName" name="adopterName" value="{{ adopter_info.name }}" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
+                            </div>
+                            <div>
+                                <label for="adopterNIK" class="block text-gray-700 mb-1">NIK:</label>
+                                <input type="text" id="adopterNIK" name="adopterNIK" value="{{ adopter_info.nik }}" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
+                            </div>
+                            <div>
+                                <label for="adopterAddress" class="block text-gray-700 mb-1">Alamat:</label>
+                                <input type="text" id="adopterAddress" name="adopterAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="[alamat di pengunjung]" required>
+                            </div>
+                            <div>
+                                <label for="adopterPhone" class="block text-gray-700 mb-1">Nomor telepon:</label>
+                                <input type="text" id="adopterPhone" name="adopterPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="[no_telepon di pengguna]" required>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mt-2">(selanjutnya disebut sebagai Adopter)</p>
+                    </div>
+                {% else %}
+                    <div class="mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="organizationName" class="block text-gray-700 mb-1">Nama:</label>
+                                <input type="text" id="organizationName" name="organizationName" value="{{ adopter_info.name }}" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
+                            </div>
+                            <div>
+                                <label for="organizationNPP" class="block text-gray-700 mb-1">NPP:</label>
+                                <input type="text" id="organizationNPP" name="organizationNPP" value="{{ adopter_info.npp }}" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
+                            </div>
+                            <div>
+                                <label for="organizationAddress" class="block text-gray-700 mb-1">Alamat:</label>
+                                <input type="text" id="organizationAddress" name="organizationAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="[alamat di pengunjung]" required>
+                            </div>
+                            <div>
+                                <label for="organizationPhone" class="block text-gray-700 mb-1">Kontak:</label>
+                                <input type="text" id="organizationPhone" name="organizationPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="[no_telepon di pengguna]" required>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mt-2">(selanjutnya disebut sebagai Adopter)</p>
+                    </div>
+                {% endif %}
+                
+                <p class="text-gray-700 my-2">dengan ini menyatakan kepedulian dan minat untuk lanjut mengadopsi secara simbolis satwa</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="animalName" class="block text-gray-700 mb-1">Nama:</label>
+                        <input type="text" id="animalName" name="animalName" value="{{ animal.nama|default:'(tidak ada nama)' }}" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
+                    </div>
+                    <div>
+                        <label for="animalType" class="block text-gray-700 mb-1">Jenis:</label>
+                        <input type="text" id="animalType" name="animalType" value="{{ animal.spesies }}" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 mb-2">Adopter juga bersedia memberikan kontribusi finansial kepada pihak taman safari sebagai dukungan untuk pemeliharaan satwa:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="contributionAmount" class="block text-gray-700 mb-1">Nominal:</label>
+                        <input type="number" id="contributionAmount" name="contributionAmount" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="[Isikan nominal kontribusi]" required>
+                    </div>
+                    <div>
+                        <label for="extensionPeriod" class="block text-gray-700 mb-1">Perpanjang periode adopsi selama:</label>
+                        <select id="extensionPeriod" name="extensionPeriod" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                            <option value="3">3 bulan</option>
+                            <option value="6">6 bulan</option>
+                            <option value="12">12 bulan</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between">
+                <a href="{% url 'adopter:animal_detail' animal.id %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded">
+                    [Batal]
+                </a>
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded">
+                    [Submit Form]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

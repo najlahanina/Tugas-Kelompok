@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detail Hewan - {{ animal.nama }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-green-400">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Informasi Hewan Adopsi</h1>
+            <a href="{% url 'adopter:adoption_program' %}" class="text-green-500 hover:text-green-700">
+                &larr; Kembali ke Program Adopsi
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-1">
+                <div class="w-full h-64 overflow-hidden rounded-lg mb-4">
+                    <img src="{{ animal.url_foto }}" alt="{{ animal.nama }}" class="w-full h-full object-cover">
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Informasi Dasar</h2>
+                    <p class="text-gray-700"><span class="font-semibold">Nama:</span> {{ animal.nama|default:"(tidak ada nama)" }}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Spesies:</span> {{ animal.spesies }}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Asal:</span> {{ animal.asal_hewan }}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Tanggal Lahir:</span> {{ animal.tanggal_lahir }}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Status Kesehatan:</span> {{ animal.status_kesehatan }}</p>
+                    <p class="text-gray-700"><span class="font-semibold">Habitat:</span> {{ animal.nama_habitat }}</p>
+                </div>
+            </div>
+            
+            <div class="md:col-span-2">
+                <div class="bg-green-50 p-4 rounded-lg mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Informasi Adopsi</h2>
+                    {% if adoption %}
+                        <p class="text-gray-700"><span class="font-semibold">Tanggal Mulai Adopsi:</span> {{ adoption.tgl_mulai_adopsi }}</p>
+                        <p class="text-gray-700"><span class="font-semibold">Tanggal Akhir Adopsi:</span> {{ adoption.tgl_berhenti_adopsi }}</p>
+                        <p class="text-gray-700"><span class="font-semibold">Kontribusi Finansial:</span> Rp {{ adoption.kontribusi_finansial|floatformat:0 }}</p>
+                        <p class="text-gray-700"><span class="font-semibold">Status Pembayaran:</span> {{ adoption.status_pembayaran|title }}</p>
+                    {% else %}
+                        <p class="text-gray-700">Tidak ada informasi adopsi untuk hewan ini.</p>
+                    {% endif %}
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="{% url 'adopter:adoption_certificate' animal.id %}" class="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded text-center">
+                        [Lihat Sertifikat Adopsi]
+                    </a>
+                    <a href="{% url 'adopter:animal_health_report' animal.id %}" class="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded text-center">
+                        [Pantau Kondisi Hewan]
+                    </a>
+                    <a href="{% url 'adopter:extend_adoption' animal.id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded text-center">
+                        [Perpanjang Periode Adopsi]
+                    </a>
+                    <a href="{% url 'adopter:stop_adoption' animal.id %}" class="bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded text-center">
+                        [Berhenti Adopsi]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

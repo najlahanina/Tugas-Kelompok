@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Riwayat Adopsi Adopter{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Riwayat Adopsi</h1>
+            <a href="{% url 'administrative_staff:adopter_list' %}" class="text-blue-500 hover:text-blue-700">[Kembali]</a>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Informasi Adopter</h2>
+            {% if adopter_info.type == 'individu' %}
+                <p class="text-gray-700"><span class="font-semibold">Nama Adopter:</span> {{ adopter_info.name }}</p>
+                <p class="text-gray-700"><span class="font-semibold">NIK:</span> {{ adopter_info.nik }}</p>
+            {% else %}
+                <p class="text-gray-700"><span class="font-semibold">Nama Adopter:</span> {{ adopter_info.name }}</p>
+                <p class="text-gray-700"><span class="font-semibold">NPP:</span> {{ adopter_info.npp }}</p>
+            {% endif %}
+            <p class="text-gray-700"><span class="font-semibold">Username:</span> {{ adopter_info.username }}</p>
+
+        </div>
+        
+        <div class="overflow-x-auto">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Daftar Hewan yang Diadopsi</h2>
+            
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Hewan</th>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Hewan</th>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Mulai Adopsi</th>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Akhir Adopsi</th>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal Kontribusi</th>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in adoption_history %}
+                        <tr>
+                            <td class="py-2 px-4 border-b border-gray-200">{{ item.animal.nama }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">{{ item.animal.spesies }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">{{ item.adoption.tgl_mulai_adopsi }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">{{ item.adoption.tgl_berhenti_adopsi }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">Rp{{ item.adoption.kontribusi_finansial|floatformat:0 }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">
+                                {% if item.adoption.status_pembayaran == 'lunas' %}
+                                    {% if item.adoption.tgl_berhenti_adopsi < '2025-01-01' %}
+                                        <a href="#" class="text-red-500 hover:text-red-700">[Hapus]</a>
+                                    {% else %}
+                                        <span class="text-green-500">[Sedang Berlangsung]</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-yellow-500">[Pembayaran Tertunda]</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-4 px-4 border-b border-gray-200 text-center text-gray-500">Tidak ada riwayat adopsi</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,404 @@
+{
+    "animals" : [
+        {
+         "id": "a47c8f3d-6df5-4af4-bb25-8c0b7c92b8e0",
+         "nama": "Leo",
+         "spesies": "Panthera leo",
+         "asal_hewan": "Afrika Timur",
+         "tanggal_lahir": "2021-05-12",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/7\/73\/Lion_waiting_in_Namibia.jpg\/1200px-Lion_waiting_in_Namibia.jpg"
+        },
+        {
+         "id": "6b1c76d2-f8b4-4bbb-8d79-ed35cc3680df",
+         "nama": "Pongo",
+         "spesies": "Pongo pygmaeus",
+         "asal_hewan": "Kalimantan",
+         "tanggal_lahir": "2020-11-24",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan Hujan",
+         "url_foto": "https:\/\/www.monaconatureencyclopedia.com\/wp-content\/uploads\/2016\/02\/19.jpg"
+        },
+        {
+         "id": "7a5c3e9f-2bd1-417d-9d8c-9f6a4f29c8c4",
+         "nama": "Jira",
+         "spesies": "Giraffa camelopardalis",
+         "asal_hewan": "Afrika",
+         "tanggal_lahir": "2022-02-15",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/c\/c6\/Rothschild%27s_giraffe_%28Giraffa_camelopardalis_rothschildi%29_-_Murchison_Falls_National_Park.jpg"
+        },
+        {
+         "id": "e2c9a2f5-3d6b-4c8e-b6f9-4f3c8d2a7e0b",
+         "nama": "Rex",
+         "spesies": "Panthera tigris sumatrae",
+         "asal_hewan": "Indonesia",
+         "tanggal_lahir": "2021-09-30",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan Tropis",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/e\/e1\/Sumatran_Tiger_Berlin_Tierpark.jpg"
+        },
+        {
+         "id": "d1e8f7a6-5c4b-3a2e-9d8c-7b6a5f4d3c2b",
+         "nama": "Gajah Kecil",
+         "spesies": "Elephas maximus",
+         "asal_hewan": "Sumatera",
+         "tanggal_lahir": "2019-08-17",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan Hujan",
+         "url_foto": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn:ANd9GcTUutueGq6hos0KVJ-YNcuTBehC1KkRMV98hg&s"
+        },
+        {
+         "id": "b9c8d7e6-f5a4-3b2c-1d0e-9f8a7b6c5d4e",
+         "nama": "Moo",
+         "spesies": "Bos taurus",
+         "asal_hewan": "Jawa",
+         "tanggal_lahir": "2022-01-10",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Padang Rumput",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/da\/Zebu.JPG\/1200px-Zebu.JPG"
+        },
+        {
+         "id": "3e4d5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
+         "nama": "Iggy",
+         "spesies": "Iguana iguana",
+         "asal_hewan": "Amerika Selatan",
+         "tanggal_lahir": "2021-03-22",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Terarium",
+         "url_foto": "https:\/\/d1bpj0tv6vfxyp.cloudfront.net\/articles\/455665_25-3-2021_11-46-24.jpeg"
+        },
+        {
+         "id": "9a8b7c6d-5e4f-3a2b-1c0d-8e7f6a5b4c3d",
+         "nama": "Nemo",
+         "spesies": "Amphiprion ocellaris",
+         "asal_hewan": "Indonesia",
+         "tanggal_lahir": "2023-01-05",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Akuarium",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/a\/ad\/Amphiprion_ocellaris_%28Clown_anemonefish%29_by_Nick_Hobgood.jpg"
+        },
+        {
+         "id": "b8d7c5f2-4e8a-6b9c-3f2d-1d7f8c9b1d5e",
+         "nama": "Cumil",
+         "spesies": "Equus quagga",
+         "asal_hewan": "Afrika Selatan",
+         "tanggal_lahir": "2022-05-16",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Padang Rumput",
+         "url_foto": "https:\/\/en.wikipedia.org\/wiki\/File:Quagga_photo.jpg"
+        },
+        {
+         "id": "f3c1b2e7-8a3d-4c9e-b6c4-9d6e4f7a3e0b",
+         "nama": "Koko",
+         "spesies": "Gorilla gorilla",
+         "asal_hewan": "Afrika Tengah",
+         "tanggal_lahir": "2018-06-28",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan Hujan",
+         "url_foto": "https:\/\/files.worldwildlife.org\/wwfcmsprod\/images\/Mountain_Gorilla_Silverback_WW22557\/story_full_width\/36fcoamev0_Mountain_Gorilla_Silverback_WW22557.jpg"
+        },
+        {
+         "id": "a1f9b0d8-2e5f-4a2b-3c4f-6d8a3b9e5c0f",
+         "nama": "Flipper",
+         "spesies": "Tursiops truncatus",
+         "asal_hewan": "Laut Jawa",
+         "tanggal_lahir": "2020-02-14",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Akuarium Laut",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/b\/bc\/Tursiops_truncatus_01-cropped.jpg"
+        },
+        {
+         "id": "c3e2a1f0-7b8d-4d5a-2b9f-8a4e9c5a0c7b",
+         "nama": "Rocky",
+         "spesies": "Puma concolor",
+         "asal_hewan": "Amerika Utara",
+         "tanggal_lahir": "2019-11-11",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Pegunungan",
+         "url_foto": "https:\/\/cdn.britannica.com\/20\/93520-050-3E663489\/Puma.jpg"
+        },
+        {
+         "id": "d6f9c3a5-1a7b-5d8a-2c0f-7b9e2c8f9e4f",
+         "nama": "Tweety",
+         "spesies": "Serinus canaria",
+         "asal_hewan": "Kepulauan Canary",
+         "tanggal_lahir": "2022-07-30",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Kandang Burung",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/8\/89\/Serinus_canaria_-Parque_Rural_del_Nublo_Gran_Canaria_Spain_-male-8a.jpg"
+        },
+        {
+         "id": "f7e2d9a8-5b3c-4d8a-2e1d-0f7c8b3d1f7e",
+         "nama": "Kaa",
+         "spesies": "Python reticulatus",
+         "asal_hewan": "Asia Tenggara",
+         "tanggal_lahir": "2021-04-18",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Terarium",
+         "url_foto": "https:\/\/cdn.britannica.com\/28\/239528-050-D89C8118\/reticulated-python-Malayopython-reticulatus.jpg"
+        },
+        {
+         "id": "a4c8b7f1-5e4a-4c7f-8d3c-6b5d1e2c4f8b",
+         "nama": "Simba",
+         "spesies": "Panthera leo",
+         "asal_hewan": "Tanzania",
+         "tanggal_lahir": "2020-10-08",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/a\/a6\/020_The_lion_king_Snyggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg"
+        },
+        {
+         "id": "e3b1c7a6-2b9d-4f5e-8a3f-5b4c7f9d3e8f",
+         "nama": "Bambi",
+         "spesies": "Cervus elaphus",
+         "asal_hewan": "Eropa",
+         "tanggal_lahir": "2021-01-25",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan",
+         "url_foto": "https:\/\/cdn.rri.co.id\/berita\/Cirebon\/o\/1725508297705-Cervus_elaphus_Luc_Viatour_6\/2gmsu583iuvhf8n.jpeg"
+        },
+        {
+         "id": "c0e3f9b2-7e9f-4a0f-8d9e-6b2f5a8c0e2b",
+         "nama": "Baloo",
+         "spesies": "Ursus arctos",
+         "asal_hewan": "Siberia",
+         "tanggal_lahir": "2019-05-02",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/7\/71\/2010-kodiak-bear-1.jpg"
+        },
+        {
+         "id": "f5c2e7a3-9f1d-4a4f-8c7e-9b8e1f5d6a2b",
+         "nama": "Nala",
+         "spesies": "Panthera leo",
+         "asal_hewan": "Kenya",
+         "tanggal_lahir": "2021-08-19",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/st2.depositphotos.com\/34351102\/42273\/i\/450\/depositphotos_422738120-stock-photo-lion-panthera-leo-female-lioness.jpg"
+        },
+        {
+         "id": "d9f1e8c3-8e7b-4a9f-6c3e-7a0b3f9e7e8c",
+         "nama": "Jumbo",
+         "spesies": "Loxodonta africana",
+         "asal_hewan": "Afrika",
+         "tanggal_lahir": "2018-12-03",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/cdn.britannica.com\/72\/272-050-E1965E27\/African-elephant-Kenya.jpg"
+        },
+        {
+         "id": "b8c0e7d4-3a2e-4f8a-9e6d-6b5f2a4b3f5e",
+         "nama": "Rango",
+         "spesies": "Chamaeleonidae",
+         "asal_hewan": "Madagaskar",
+         "tanggal_lahir": "2022-03-07",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Terarium",
+         "url_foto": "https:\/\/static.inaturalist.org\/photos\/13405824\/large.jpg"
+        },
+        {
+         "id": "e2f5b7a9-7b8c-4e0a-3d6f-8e7c9f0b6a5f",
+         "nama": "Squirtle",
+         "spesies": "Chelonia mydas",
+         "asal_hewan": "Laut Indonesia",
+         "tanggal_lahir": "2020-07-21",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Akuarium Laut",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/a\/a3\/Green_sea_turtle_%28Chelonia_mydas%29_Moorea.jpg"
+        },
+        {
+         "id": "f3a4c7d8-2e9d-5a0f-8d9a-3e6f7c8f2a6c",
+         "nama": "Zazu",
+         "spesies": "Bucorvus leadbeateri",
+         "asal_hewan": "Afrika Selatan",
+         "tanggal_lahir": "2021-06-14",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Kandang Burung",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/c\/c7\/Southern_Ground_Hornbill_%28Bucorvus_leadbeateri%29_male_%2812714625605%29_crop.jpg"
+        },
+        {
+         "id": "d8e9c7f2-5f1d-4a4c-8e9b-3d9e5b2f7c5f",
+         "nama": "Rafiki",
+         "spesies": "Papio anubis",
+         "asal_hewan": "Kenya",
+         "tanggal_lahir": "2019-09-27",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/3\/35\/Olive_baboon_Ngorongoro.jpg\/1200px-Olive_baboon_Ngorongoro.jpg"
+        },
+        {
+         "id": "a9f1e3b8-7c2d-4f5e-8c7b-2e4d3b6a8d0e",
+         "nama": "Timon",
+         "spesies": "Suricata suricatta",
+         "asal_hewan": "Kalahari",
+         "tanggal_lahir": "2022-04-11",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Padang Pasir",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/6\/65\/Meerkat_%28Suricata_suricatta%29_with_3_young.jpg"
+        },
+        {
+         "id": "b2e1f4c3-8d7a-4f9e-8c7b-6a9e3d7c9e5f",
+         "nama": "Pumbaa",
+         "spesies": "Phacochoerus africanus",
+         "asal_hewan": "Afrika",
+         "tanggal_lahir": "2020-12-20",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/4\/45\/Southern_warthog_%28Phacochoerus_africanus_sundevallii%29_male.jpg\/1200px-Southern_warthog_%28Phacochoerus_africanus_sundevallii%29_male.jpg"
+        },
+        {
+         "id": "c9d8e7f6-1a2b-4b9f-8e1d-7a8e5f6d3c5f",
+         "nama": "Sebastian",
+         "spesies": "Palinuridae",
+         "asal_hewan": "Laut Karibia",
+         "tanggal_lahir": "2022-02-28",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Akuarium Laut",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/1\/1f\/Monaco.Mus%C3%A9e_oc%C3%A9anographique089.jpg"
+        },
+        {
+         "id": "d6b4e9a1-4f8e-4c0d-8a1d-5c8b9f0a7d2c",
+         "nama": "Bagheera",
+         "spesies": "Panthera pardus",
+         "asal_hewan": "India",
+         "tanggal_lahir": "2019-10-15",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/1\/11\/Leopard_%28Panthera_pardus%29_%2852731299932%29.jpg"
+        },
+        {
+         "id": "e1a0b5f2-6a9e-4f5e-9a7d-6c9f8a2c7e1a",
+         "nama": "Shere Khan",
+         "spesies": "Panthera tigris",
+         "asal_hewan": "India",
+         "tanggal_lahir": "2018-07-09",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/4\/49\/Panthera_tigris_tigris.jpg"
+        },
+        {
+         "id": "c2f5e3b7-9d1f-4a7e-8b0f-5a9d3e4c7a2f",
+         "nama": "Ular Sanca",
+         "spesies": "Python molurus",
+         "asal_hewan": "India",
+         "tanggal_lahir": "2021-02-18",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Terarium",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/b\/bd\/Python_molurus_bivittatus_%281%29.jpg"
+        },
+        {
+         "id": "f2b3e7a9-6c7d-4a1e-8b5f-3c8a9d7e2b5f",
+         "nama": "Sid",
+         "spesies": "Bradypus variegatus",
+         "asal_hewan": "Amazon",
+         "tanggal_lahir": "2020-08-30",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan Hujan",
+         "url_foto": "https:\/\/static.inaturalist.org\/photos\/73892662\/large.jpg"
+        },
+        {
+         "id": "d3a5e2c7-5b8a-4f3d-9a0f-6c7f8d2a9f7e",
+         "nama": "Scrat",
+         "spesies": "Sciurus vulgaris",
+         "asal_hewan": "Eropa",
+         "tanggal_lahir": "2022-01-03",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/1\/1c\/Squirrel_posing.jpg\/1200px-Squirrel_posing.jpg"
+        },
+        {
+         "id": "e9f7d2b8-1a9c-4f8e-9a7e-5b2a3c7d6f9f",
+         "nama": "Manny",
+         "spesies": "Mammuthus",
+         "asal_hewan": "Zaman Es",
+         "tanggal_lahir": "2018-09-22",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Tundra",
+         "url_foto": "https:\/\/static.wikia.nocookie.net\/pkgame\/images\/3\/3a\/Screen_Shot_2020-11-12_at_7.52.40_PM.png\/revision\/latest\/scale-to-width-down\/250?cb=20101122212058"
+        },
+        {
+         "id": "d7b8f2a9-3c5e-4a2b-8e1f-6c9b5e3a8d7b",
+         "nama": "Diego",
+         "spesies": "Smilodon",
+         "asal_hewan": "Zaman Es",
+         "tanggal_lahir": "2019-04-05",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Tundra",
+         "url_foto": "https:\/\/static.wikia.nocookie.net\/primeval\/images\/9\/95\/Gallery_3_%2843%29.jpg\/revision\/latest?cb=20140309094953"
+        },
+        {
+         "id": "a6e9b0c8-5b4f-4a9b-8f7d-9c1a5d8e7f5f",
+         "nama": "Shira",
+         "spesies": "Ailurus fulgens",
+         "asal_hewan": "Himalaya",
+         "tanggal_lahir": "2021-07-12",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Pegunungan",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/e\/e6\/Red_Panda_%2824986761703%29.jpg\/250px-Red_Panda_%2824986761703%29.jpg"
+        },
+        {
+         "id": "f9a1b0d3-8d5e-4c8f-9e2d-6d4b5f2a9f2f",
+         "nama": "Crash",
+         "spesies": "Didelphidae",
+         "asal_hewan": "Amerika Selatan",
+         "tanggal_lahir": "2020-06-24",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/f\/fa\/Didelphis_albiventris_%28Lund%2C_1840%29_%283452477057%29.jpg"
+        },
+        {
+         "id": "b8e1f4a3-7b0c-4e9d-8f7e-6c3d8e7f3a4f",
+         "nama": "Eddie",
+         "spesies": "Axis axis",
+         "asal_hewan": "India",
+         "tanggal_lahir": "2020-06-24",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Padang Rumput",
+         "url_foto": "https:\/\/liburasik.com\/wp-content\/uploads\/2024\/07\/Keindahan-dan-Keunikan-Spesies-Rusa-Totol-yang-Menawan.jpg"
+        },
+        {
+         "id": "d6a5e4f3-1b9c-4a5d-8f4c-7c8b9e2c6f9f",
+         "nama": "Buck",
+         "spesies": "Bison bison",
+         "asal_hewan": "Amerika Utara",
+         "tanggal_lahir": "2021-11-07",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Savana",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/8\/8d\/American_bison_k5680-1.jpg"
+        },
+        {
+         "id": "e7d8c5b4-3f1a-4a7b-8f2e-5a9e2d7c8b7f",
+         "nama": "Peaches",
+         "spesies": "Mammuthus",
+         "asal_hewan": "Zaman Es",
+         "tanggal_lahir": "2022-05-29",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Tundra",
+         "url_foto": "https:\/\/static.wikia.nocookie.net\/walkingwith\/images\/c\/cc\/CGTPL_WoollyMammoth.jpg\/revision\/latest\/scale-to-width-down\/1200?cb=20131225214753"
+        },
+        {
+         "id": "a3b7c5e2-6b9f-4e1a-9c2f-8e3a7d8e5d7f",
+         "nama": "Ellie",
+         "spesies": "Danaus plexippus",
+         "asal_hewan": "Amerika Utara",
+         "tanggal_lahir": "2019-03-18",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Taman Bunga",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/7\/73\/Monarch_Butterfly_Danaus_plexippus_Male_2664px.jpg"
+        },
+        {
+         "id": "f5a6e9b0-7d4f-4b3d-8b5f-6c2d3f8a9d8f",
+         "nama": "Po",
+         "spesies": "Ailuropoda melanoleuca",
+         "asal_hewan": "China",
+         "tanggal_lahir": "2020-04-10",
+         "status_kesehatan": "Sehat",
+         "nama_habitat": "Hutan Bambu",
+         "url_foto": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/0\/0f\/Grosser_Panda.JPG"
+        }
+       ]
+}

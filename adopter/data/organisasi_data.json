@@ -1,0 +1,55 @@
+{
+    "organisasi" : [
+        {
+         "npp": "ORG00001",
+         "nama_organisasi": "Yayasan Satwa Nusantara",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+        },
+        {
+         "npp": "ORG00002",
+         "nama_organisasi": "Komunitas Peduli Alam",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-222222222222"
+        },
+        {
+         "npp": "ORG00003",
+         "nama_organisasi": "Wildlife Rescue Foundation",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-333333333333"
+        },
+        {
+         "npp": "ORG00004",
+         "nama_organisasi": "Flora & Fauna Preservation",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-444444444444"
+        },
+        {
+         "npp": "ORG00005",
+         "nama_organisasi": "Safari Animal Lovers",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-555555555555"
+        },
+        {
+         "npp": "ORG00006",
+         "nama_organisasi": "Animal Welfare Indonesia",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-666666666666"
+        },
+        {
+         "npp": "ORG00007",
+         "nama_organisasi": "Global Conservation Network",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-777777777777"
+        },
+        {
+         "npp": "ORG00008",
+         "nama_organisasi": "Sahabat Bumi",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-888888888888"
+        },
+        {
+         "npp": "ORG00009",
+         "nama_organisasi": "Earth Friends Organization",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-999999999999"
+        },
+        {
+         "npp": "ORG00010",
+         "nama_organisasi": "Green Planet Foundation",
+         "id_adopter": "5a1f43e5-b1e6-4c5c-bc5a-aaaaaaaaaaaa"
+        }
+       ]
+
+}

@@ -28,6 +28,8 @@ urlpatterns = [
     path('feeding/', include('feeding.urls')),
     path('attractions/', include('attractions.urls')),
     path('tickets/', include('tickets.urls')),
-    path('adoptions/', include('adoptions.urls'))
+    path('adoptions/', include('adoptions.urls')),
+    path('administrative-staff/', include('administrative_staff.urls')),
+    path('adopter/', include('adopter.urls')),
 ]
 
