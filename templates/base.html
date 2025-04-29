@@ -19,7 +19,6 @@
 
                 {% comment %} GANTIII DI SINI UNTUK NAVBAR {% endcomment %}
                 {% if user.profile.role == "veterinarian" %}
-                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Rekam Medis Hewan</a></li>
                     <li><a href="{% url 'animals:animal_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa</a></li>
                     <li><a href="{% url 'medical:record_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Rekam Medis</a></li>
                     <li><a href="{% url 'medical:health_check_schedule' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pemeriksaan</a></li>
@@ -30,8 +29,8 @@
                     <li><a href="{% url 'feeding:feeding_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Pemberian Pakan</a></li>
                 {% elif user.profile.role == "admin_staff" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Pengunjung</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>
-                    <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopter</a></li>
+                    <li><a href="{% url 'administrative_staff:adoption_admin' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopsi</a></li>
+                    <li><a href="{% url 'administrative_staff:adopter_list' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Kelola Adopter</a></li>
                    <!-- Dropdown Menu -->
                     <li class="relative group" id="dropdownMenu1">
                         <a href="#" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Manajemen Satwa & Habitat</a>
@@ -53,6 +52,7 @@
                 {% elif user.profile.role == "visitor" %}
                     <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Informasi Kebun Binatang</a></li>
                     <li><a href="{% url 'attractions:list_atraksi_trainer' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
+                    {% comment %} <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Informasi Kebun Binatang</a></li> {% endcomment %}
                     <li><a href="{% url 'tickets:tambah_reservasi' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Reservasi Tiket</a></li>
                     {% if user.profile.visitor_profile.is_adopter %}
                         <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Hewan Adopsi</a></li>
