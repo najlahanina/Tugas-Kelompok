@@ -1,46 +1,219 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h4>DAFTAR HABITAT</h4>
-            <a href="{% url 'habitats:habitat_add' %}" class="btn btn-primary">+ Tambah Habitat</a>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Nama Habitat</th>
-                            <th>Luas Area</th>
-                            <th>Kapasitas Maksimal</th>
-                            <th>Status Lingkungan</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for habitat in habitats %}
-                        <tr>
-                            <td>{{ habitat.name }}</td>
-                            <td>{{ habitat.area }} m²</td>
-                            <td>{{ habitat.max_capacity }} hewan</td>
-                            <td>{{ habitat.environment_status }}</td>
-                            <td>
-                                <a href="{% url 'habitats:habitat_detail' habitat.id %}" class="btn btn-sm btn-info">[Detail]</a>
-                                <a href="{% url 'habitats:habitat_edit' habitat.id %}" class="btn btn-sm btn-warning">[Edit]</a>
-                                <a href="{% url 'habitats:habitat_delete' habitat.id %}" class="btn btn-sm btn-danger">[Hapus]</a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center">Tidak ada data habitat</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class="habitat-container">
+    <div class="page-header">
+        <h1>DAFTAR HABITAT</h1>
+        <a href="{% url 'habitats:habitat_add' %}" class="add-button">+ Tambah Habitat</a>
+    </div>
+    
+    <div class="table-container">
+        <table class="habitat-table">
+            <thead>
+                <tr>
+                    <th>Nama Habitat</th>
+                    <th>Luas Area</th>
+                    <th>Kapasitas Maksimal</th>
+                    <th>Status Lingkungan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for habitat in habitats %}
+                <tr>
+                    <td>{{ habitat.name }}</td>
+                    <td>{{ habitat.area }} m²</td>
+                    <td>{{ habitat.max_capacity }} hewan</td>
+                    <td>
+                        <span class="status-badge status-{{ habitat.environment_status|slugify }}">
+                            {{ habitat.environment_status }}
+                        </span>
+                    </td>
+                    <td class="action-cell">
+                        <a href="{% url 'habitats:habitat_detail' habitat.id %}" class="action-button detail-button">Detail</a>
+                        <a href="{% url 'habitats:habitat_edit' habitat.id %}" class="action-button edit-button">Edit</a>
+                        <a href="{% url 'habitats:habitat_delete' habitat.id %}" class="action-button delete-button">Hapus</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-message">Tidak ada data habitat.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+
+<style>
+    .habitat-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+    
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .add-button {
+        display: inline-block;
+        background-color: #586132;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .add-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        background-color: white;
+    }
+    
+    .habitat-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .habitat-table th,
+    .habitat-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0cfc2;
+    }
+    
+    .habitat-table th {
+        background-color: #586132;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .habitat-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .habitat-table tr:hover {
+        background-color: #f8f5f0;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .status-baik {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border: 1px solid #0f5132;
+    }
+    
+    .status-perlu-perawatan {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #856404;
+    }
+    
+    .status-rusak {
+        background-color: #f8d7da;
+        color: #842029;
+        border: 1px solid #842029;
+    }
+    
+    .action-cell {
+        white-space: nowrap;
+    }
+    
+    .action-button {
+        display: inline-block;
+        padding: 6px 10px;
+        margin-right: 5px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 13px;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    
+    .detail-button {
+        background-color: #586132;
+    }
+    
+    .detail-button:hover {
+        background-color: #6a7339;
+    }
+    
+    .edit-button {
+        background-color: #7d8b4e;
+    }
+    
+    .edit-button:hover {
+        background-color: #8c9a5d;
+    }
+    
+    .delete-button {
+        background-color: #a67c52;
+    }
+    
+    .delete-button:hover {
+        background-color: #b58a60;
+    }
+    
+    .empty-message {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+    }
+    
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .habitat-container {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .habitat-table th,
+        .habitat-table td {
+            padding: 10px;
+        }
+        
+        .action-button {
+            margin-bottom: 5px;
+            display: block;
+            text-align: center;
+        }
+    }
+</style>
 {% endblock %}
