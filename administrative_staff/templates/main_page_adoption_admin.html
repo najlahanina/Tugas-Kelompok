@@ -306,7 +306,7 @@
                 <div class="mt-4">
                     <p class="text-sm text-gray-500">Status Pembayaran:</p>
                     <div class="flex items-center mt-1">
-                        <select id="paymentStatusSelect" class="shadow appearance-none border rounded py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2">
+                        <select id="paymentStatusSelect" class="shadow appearance-none border rounded py-1 w-[300px] text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2">
                             <option value="tertunda">Tertunda</option>
                             <option value="lunas">Lunas</option>
                         </select>
@@ -403,18 +403,48 @@
     }
 
     function submitIndividualForm() {
-        // Get the animal ID from the hidden input
+        // Get all form data
         const animalId = document.getElementById('individualAnimalId').value;
-        console.log("Submitting individual adoption form for animal ID:", animalId);
+        const username = document.getElementById('individualUsername').value;
+        const nama = document.getElementById('individualName').value;
+        const nik = document.getElementById('individualNIK').value;
+        const startDate = document.getElementById('individualStartDate').value;
+        const endDate = document.getElementById('individualEndDate').value;
+        const kontribusi = document.getElementById('individualContribution').value;
 
-        // Submit form logic here
-        // You would typically send this data to the server via AJAX or form submission
+        const data = {
+            adopter_type: 'individu',
+            username: username,
+            animal_id: animalId,
+            nama: nama,
+            nik: nik,
+            start_date: startDate,
+            end_date: endDate,
+            kontribusi: kontribusi
+        };
 
-        closeIndividualForm();
-        // Show success message or redirect
-        alert("Adopsi berhasil didaftarkan!");
-        // Reload the page to see the updated status
-        window.location.reload();
+        // Send data to server
+        fetch('/administrative-staff/submit-adoption/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeIndividualForm();
+                window.location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memproses adopsi');
+        });
     }
 
     // Organization Adoption Form
@@ -423,18 +453,48 @@
     }
 
     function submitOrganizationForm() {
-        // Get the animal ID from the hidden input
+        // Get all form data
         const animalId = document.getElementById('organizationAnimalId').value;
-        console.log("Submitting organization adoption form for animal ID:", animalId);
+        const username = document.getElementById('organizationUsername').value;
+        const namaOrganisasi = document.getElementById('organizationName').value;
+        const npp = document.getElementById('organizationNPP').value;
+        const startDate = document.getElementById('organizationStartDate').value;
+        const endDate = document.getElementById('organizationEndDate').value;
+        const kontribusi = document.getElementById('organizationContribution').value;
 
-        // Submit form logic here
-        // You would typically send this data to the server via AJAX or form submission
+        const data = {
+            adopter_type: 'organisasi',
+            username: username,
+            animal_id: animalId,
+            nama_organisasi: namaOrganisasi,
+            npp: npp,
+            start_date: startDate,
+            end_date: endDate,
+            kontribusi: kontribusi
+        };
 
-        closeOrganizationForm();
-        // Show success message or redirect
-        alert("Adopsi berhasil didaftarkan!");
-        // Reload the page to see the updated status
-        window.location.reload();
+        // Send data to server
+        fetch('/administrative-staff/submit-adoption/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeOrganizationForm();
+                window.location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memproses adopsi');
+        });
     }
 
     // Adoption Detail Modal
@@ -475,25 +535,42 @@
     }
 
     function savePaymentStatus() {
-        // Get the selected payment status
         const paymentStatus = document.getElementById('paymentStatusSelect').value;
         const animalId = document.getElementById('adoptionDetailModal').dataset.animalId;
-
-        console.log("Saving payment status for animal ID:", animalId, "Status:", paymentStatus);
-
-        // Get the adoption data
         const adoptionData = JSON.parse(document.getElementById('adoption-data').textContent);
+        const adoptionInfo = adoptionData[animalId];
 
-        // Update the payment status in the adoption data
-        if (adoptionData[animalId] && adoptionData[animalId].adoption) {
-            adoptionData[animalId].adoption.payment_status = paymentStatus;
-
-            // In a real application, you would send this data to the server
-            // For now, we'll just update the local data and show a success message
-            document.getElementById('adoption-data').textContent = JSON.stringify(adoptionData);
+        if (!adoptionInfo || !adoptionInfo.adoption) {
+            alert('Data adopsi tidak ditemukan');
+            return;
         }
 
-        alert("Status pembayaran berhasil diperbarui!");
+        const data = {
+            adoption_id: adoptionInfo.adoption.id,
+            status: paymentStatus
+        };
+
+        // Send update to server
+        fetch('/administrative-staff/update-payment-status/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memperbarui status pembayaran');
+        });
     }
 
     // Terminate Adoption Modal

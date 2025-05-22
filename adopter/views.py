@@ -1,48 +1,35 @@
 import json
-import os
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template.defaulttags import register
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from supabase_utils import (
+    get_all_adopsi, get_all_hewan, get_all_adopter,
+    get_all_individu, get_all_organisasi, get_all_catatan_medis,
+    get_hewan_by_id, get_individu_by_id, get_organisasi_by_id,
+    get_adopter_by_username
+)
 
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+def get_adopter_id_from_user(username):
+    # Get adopter data based on username
+    adopter = get_adopter_by_username(username)
+    if adopter:
+        return adopter['id_adopter']
+    return None
+
 def load_data():
-    base_dir = os.path.dirname(__file__)
-
-    adopter_json_path = os.path.join(base_dir, 'data', 'adopter_data.json')
-    with open(adopter_json_path, 'r', encoding='utf-8') as file:
-        adopter_data = json.load(file)
-
-    individu_json_path = os.path.join(base_dir, 'data', 'individu_data.json')
-    with open(individu_json_path, 'r', encoding='utf-8') as file:
-        individu_data = json.load(file)
-
-    organisasi_json_path = os.path.join(base_dir, 'data', 'organisasi_data.json')
-    with open(organisasi_json_path, 'r', encoding='utf-8') as file:
-        organisasi_data = json.load(file)
-
-    catatan_kesehatan_json_path = os.path.join(base_dir, 'data', 'catatan_kesehatan_data.json')
-    with open(catatan_kesehatan_json_path, 'r', encoding='utf-8') as file:
-        catatan_kesehatan_data = json.load(file)
-
-    admin_base_dir = os.path.dirname(os.path.dirname(__file__))
-    animals_json_path = os.path.join(admin_base_dir, 'administrative_staff', 'data', 'animals_data.json')
-    with open(animals_json_path, 'r', encoding='utf-8') as file:
-        animals_data = json.load(file)
-
-    adoption_json_path = os.path.join(admin_base_dir, 'administrative_staff', 'data', 'adoption_data.json')
-    with open(adoption_json_path, 'r', encoding='utf-8') as file:
-        adoption_data = json.load(file)
-
     return {
-        'adopters': adopter_data.get('adopter', []),
-        'individus': individu_data.get('individu', []),
-        'organisasis': organisasi_data.get('organisasi', []),
-        'catatan_kesehatans': catatan_kesehatan_data.get('catata_kesehatan', []),
-        'animals': animals_data.get('animals', []),
-        'adoptions': adoption_data.get('adoptions', [])
+        'adopters': get_all_adopter(),
+        'individus': get_all_individu(),
+        'organisasis': get_all_organisasi(),
+        'catatan_kesehatans': get_all_catatan_medis(),
+        'animals': get_all_hewan(),
+        'adoptions': get_all_adopsi()
     }
 
 def get_adopter_info(adopter_id, data):
@@ -104,14 +91,14 @@ def get_adopted_animals(adopter_id, data):
                 })
     return adopted_animals
 
+@login_required
 def adoption_program(request):
-
-    adopter_id = "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+    adopter_id = get_adopter_id_from_user(request.user.username)
+    if not adopter_id:
+        return HttpResponseForbidden("Access denied. User is not an adopter.")
 
     data = load_data()
-
     adopter_info = get_adopter_info(adopter_id, data)
-
     adopted_animals = get_adopted_animals(adopter_id, data)
 
     # Get health records for all animals
@@ -127,8 +114,12 @@ def adoption_program(request):
 
     return render(request, 'adopter/adoption_program.html', context)
 
+@login_required
 def animal_detail(request, animal_id):
-    adopter_id = "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+    adopter_id = get_adopter_id_from_user(request.user.username)
+    if not adopter_id:
+        return HttpResponseForbidden("Access denied. User is not an adopter.")
+
     data = load_data()
     animal = get_animal_info(animal_id, data)
     adoption = get_adoption_info(adopter_id, animal_id, data)
@@ -140,8 +131,12 @@ def animal_detail(request, animal_id):
 
     return render(request, 'adopter/adoption_program.html', context)
 
+@login_required
 def adoption_certificate(request, animal_id):
-    adopter_id = "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+    adopter_id = get_adopter_id_from_user(request.user.username)
+    if not adopter_id:
+        return HttpResponseForbidden("Access denied. User is not an adopter.")
+
     data = load_data()
     animal = get_animal_info(animal_id, data)
     adoption = get_adoption_info(adopter_id, animal_id, data)
@@ -155,8 +150,12 @@ def adoption_certificate(request, animal_id):
 
     return render(request, 'adopter/adoption_program.html', context)
 
+@login_required
 def animal_health_report(request, animal_id):
-    adopter_id = "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+    adopter_id = get_adopter_id_from_user(request.user.username)
+    if not adopter_id:
+        return HttpResponseForbidden("Access denied. User is not an adopter.")
+
     data = load_data()
     animal = get_animal_info(animal_id, data)
     health_records = get_health_records(animal_id, data)
@@ -168,8 +167,12 @@ def animal_health_report(request, animal_id):
 
     return render(request, 'adopter/adoption_program.html', context)
 
+@login_required
 def extend_adoption(request, animal_id):
-    adopter_id = "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+    adopter_id = get_adopter_id_from_user(request.user.username)
+    if not adopter_id:
+        return HttpResponseForbidden("Access denied. User is not an adopter.")
+
     data = load_data()
     animal = get_animal_info(animal_id, data)
     adoption = get_adoption_info(adopter_id, animal_id, data)
@@ -187,8 +190,12 @@ def extend_adoption(request, animal_id):
 
     return render(request, 'adopter/adoption_program.html', context)
 
+@login_required
 def stop_adoption(request, animal_id):
-    adopter_id = "5a1f43e5-b1e6-4c5c-bc5a-111111111111"
+    adopter_id = get_adopter_id_from_user(request.user.username)
+    if not adopter_id:
+        return HttpResponseForbidden("Access denied. User is not an adopter.")
+
     data = load_data()
     animal = get_animal_info(animal_id, data)
 

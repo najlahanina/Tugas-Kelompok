@@ -1,51 +1,32 @@
 import json
-import os
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaulttags import register
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
-from supabase_client import supabase
-from django.http import JsonResponse
-
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from supabase_utils import (
+    get_all_adopsi, get_all_hewan, get_all_adopter,
+    get_all_individu, get_all_organisasi, get_adopsi_by_id,
+    get_hewan_by_id, get_individu_by_id, get_organisasi_by_id,
+    create_complete_adopter, create_adopsi, update_adopsi,
+    delete_adopter
+)
 
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
 def load_data():
-    base_dir = os.path.dirname(__file__)
-
-    adoption_json_path = os.path.join(base_dir, 'data', 'adoption_data.json')
-    with open(adoption_json_path, 'r', encoding='utf-8') as file:
-        adoption_data = json.load(file)
-
-    animals_json_path = os.path.join(base_dir, 'data', 'animals_data.json')
-    with open(animals_json_path, 'r', encoding='utf-8') as file:
-        animals_data = json.load(file)
-
-    adopter_base_dir = os.path.dirname(os.path.dirname(__file__))
-    adopter_json_path = os.path.join(adopter_base_dir, 'adopter', 'data', 'adopter_data.json')
-    with open(adopter_json_path, 'r', encoding='utf-8') as file:
-        adopter_data = json.load(file)
-
-    individu_json_path = os.path.join(adopter_base_dir, 'adopter', 'data', 'individu_data.json')
-    with open(individu_json_path, 'r', encoding='utf-8') as file:
-        individu_data = json.load(file)
-
-    organisasi_json_path = os.path.join(adopter_base_dir, 'adopter', 'data', 'organisasi_data.json')
-    with open(organisasi_json_path, 'r', encoding='utf-8') as file:
-        organisasi_data = json.load(file)
-
     return {
-        'adoptions': adoption_data.get('adoptions', []),
-        'animals': animals_data.get('animals', []),
-        'adopters': adopter_data.get('adopter', []),
-        'individus': individu_data.get('individu', []),
-        'organisasis': organisasi_data.get('organisasi', [])
+        'adoptions': get_all_adopsi(),
+        'animals': get_all_hewan(),
+        'adopters': get_all_adopter(),
+        'individus': get_all_individu(),
+        'organisasis': get_all_organisasi()
     }
 
 def get_adopter_info(adopter_id, data):
-
     for individu in data['individus']:
         if individu['id_adopter'] == adopter_id:
             # Found individual adopter
@@ -100,19 +81,8 @@ def calculate_total_contribution(adopter_id, data):
     return total
 
 def adoption_admin_page(request):
-    base_dir = os.path.dirname(__file__)
-
-    adoption_json_path = os.path.join(base_dir, 'data', 'adoption_data.json')
-    with open(adoption_json_path, 'r', encoding='utf-8') as file:
-        adoption_data = json.load(file)
-
-    animals_json_path = os.path.join(base_dir, 'data', 'animals_data.json')
-    with open(animals_json_path, 'r', encoding='utf-8') as file:
-        animals_data = json.load(file)
-
-    animals = animals_data.get('animals', [])
-
-    adoptions = adoption_data.get('adoptions', [])
+    animals = get_all_hewan()
+    adoptions = get_all_adopsi()
 
     adoption_info = {}
     for adoption in adoptions:
@@ -137,7 +107,6 @@ def adoption_admin_page(request):
                 'adoption': None
             }
 
-    # Serialize the data for JavaScript
     animals_json = json.dumps(animals)
     adoption_info_json = json.dumps(adoption_info, cls=DjangoJSONEncoder)
 
@@ -151,38 +120,103 @@ def adoption_admin_page(request):
     return render(request, 'main_page_adoption_admin.html', context)
 
 def adopter_list(request):
-
     data = load_data()
+    current_date = datetime.now()
+    one_year_ago = current_date - timedelta(days=365)
 
-    adopter_list = []
-    for adopter in data['adopters']:
-        adopter_id = adopter['id_adopter']
-        adopter_info = get_adopter_info(adopter_id, data)
+    individual_adopters = []
+    organization_adopters = []
+    top_adopters = []
 
-        if adopter_info:
-            total_contribution = calculate_total_contribution(adopter_id, data)
+    # Process individual adopters
+    for individu in data['individus']:
+        adopter_id = individu['id_adopter']
+        # Get adopter base info
+        adopter_base = next((a for a in data['adopters'] if a['id_adopter'] == adopter_id), None)
+        
+        if adopter_base:
+            active_adoptions = []
+            yearly_contribution = 0
+            
+            # Calculate contributions
+            for adoption in data['adoptions']:
+                if adoption['id_adopter'] == adopter_id:
+                    start_date = datetime.strptime(adoption['tgl_mulai_adopsi'], '%Y-%m-%d')
+                    end_date = datetime.strptime(adoption['tgl_berhenti_adopsi'], '%Y-%m-%d')
+                    
+                    if end_date >= current_date:
+                        active_adoptions.append(adoption)
+                    
+                    if adoption['status_pembayaran'] == 'Lunas' and start_date >= one_year_ago:
+                        yearly_contribution += int(adoption['kontribusi_finansial'])
 
-            adopter_list.append({
+            adopter_data = {
                 'id': adopter_id,
-                'name': adopter_info['name'],
-                'type': adopter_info['type'],
-                'username': adopter_info['username'],
-                'total_kontribusi': total_contribution
-            })
+                'name': individu['nama'],
+                'type': 'individu',
+                'username': adopter_base['username_adopter'],
+                'total_kontribusi': adopter_base['total_kontribusi'],
+                'yearly_kontribusi': yearly_contribution,
+                'has_active_adoptions': len(active_adoptions) > 0,
+                'nik': individu['nik']
+            }
+            
+            individual_adopters.append(adopter_data)
+            if yearly_contribution > 0:
+                top_adopters.append(adopter_data)
 
-    adopter_list.sort(key=lambda x: x['total_kontribusi'], reverse=True)
+    # Process organization adopters
+    for organisasi in data['organisasis']:
+        adopter_id = organisasi['id_adopter']
+        # Get adopter base info
+        adopter_base = next((a for a in data['adopters'] if a['id_adopter'] == adopter_id), None)
+        
+        if adopter_base:
+            active_adoptions = []
+            yearly_contribution = 0
+            
+            # Calculate contributions
+            for adoption in data['adoptions']:
+                if adoption['id_adopter'] == adopter_id:
+                    start_date = datetime.strptime(adoption['tgl_mulai_adopsi'], '%Y-%m-%d')
+                    end_date = datetime.strptime(adoption['tgl_berhenti_adopsi'], '%Y-%m-%d')
+                    
+                    if end_date >= current_date:
+                        active_adoptions.append(adoption)
+                    
+                    if adoption['status_pembayaran'] == 'Lunas' and start_date >= one_year_ago:
+                        yearly_contribution += int(adoption['kontribusi_finansial'])
 
-    top_adopters = adopter_list[:5]
+            adopter_data = {
+                'id': adopter_id,
+                'name': organisasi['nama_organisasi'],
+                'type': 'organisasi',
+                'username': adopter_base['username_adopter'],
+                'total_kontribusi': adopter_base['total_kontribusi'],
+                'yearly_kontribusi': yearly_contribution,
+                'has_active_adoptions': len(active_adoptions) > 0,
+                'npp': organisasi['npp']
+            }
+            
+            organization_adopters.append(adopter_data)
+            if yearly_contribution > 0:
+                top_adopters.append(adopter_data)
+
+    # Sort adopters by contribution
+    individual_adopters.sort(key=lambda x: x['total_kontribusi'], reverse=True)
+    organization_adopters.sort(key=lambda x: x['total_kontribusi'], reverse=True)
+    top_adopters.sort(key=lambda x: x['yearly_kontribusi'], reverse=True)
+    top_adopters = top_adopters[:5]
 
     context = {
-        'adopter_list': adopter_list,
+        'individual_adopters': individual_adopters,
+        'organization_adopters': organization_adopters,
         'top_adopters': top_adopters
     }
 
     return render(request, 'administrative_staff/adopter_list.html', context)
 
 def adopter_detail(request, adopter_id):
-
     data = load_data()
 
     adopter_info = get_adopter_info(adopter_id, data)
@@ -199,12 +233,116 @@ def adopter_detail(request, adopter_id):
 
     return render(request, 'administrative_staff/adopter_detail.html', context)
 
-def get_adoption_data(request):
-    adoption_data = supabase.table('adoption').select('*').execute()
-    return JsonResponse(adoption_data)
+@csrf_exempt
+def submit_adoption(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+        adopter_type = data.get('adopter_type')
+        username = data.get('username')
+        animal_id = data.get('animal_id')
+        
+        adopter_data = {
+            'username_adopter': username,
+            'total_kontribusi': 0
+        }
+        
+        if adopter_type == 'individu':
+            type_data = {
+                'nama': data.get('nama'),
+                'nik': data.get('nik')
+            }
+            is_individual = True
+        else:
+            type_data = {
+                'nama_organisasi': data.get('nama_organisasi'),
+                'npp': data.get('npp')
+            }
+            is_individual = False
+            
+        new_adopter = create_complete_adopter(
+            adopter_data=adopter_data,
+            type_data=type_data,
+            is_individual=is_individual
+        )
+        
+        adoption_data = {
+            'id_adopter': new_adopter['id_adopter'],
+            'id_hewan': animal_id,
+            'tgl_mulai_adopsi': data.get('start_date'),
+            'tgl_berhenti_adopsi': data.get('end_date'),
+            'kontribusi_finansial': data.get('kontribusi'),
+            'status_pembayaran': 'Belum Lunas'  
+        }
+        
+        new_adoption = create_adopsi(adoption_data)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Adopsi berhasil didaftarkan',
+            'data': new_adoption
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=500)
 
-def get_animal_data(request):
-    animal_data = supabase.table('animals').select('*').execute()
-    return JsonResponse(animal_data)
+@csrf_exempt
+def update_payment_status(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+        adoption_id = data.get('adoption_id')
+        new_status = data.get('status')
+        
+        updated_adoption = update_adopsi(
+            adoption_id,
+            {'status_pembayaran': new_status}
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Status pembayaran berhasil diperbarui',
+            'data': updated_adoption
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=500)
 
+@csrf_exempt
+def delete_adopter_view(request, adopter_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    try:
+        data = load_data()
+        current_date = datetime.now()
+        
+        for adoption in data['adoptions']:
+            if adoption['id_adopter'] == adopter_id:
+                end_date = datetime.strptime(adoption['tgl_berhenti_adopsi'], '%Y-%m-%d')
+                if end_date >= current_date:
+                    return JsonResponse({
+                        'success': False,
+                        'message': 'Tidak dapat menghapus adopter yang masih aktif mengadopsi satwa.'
+                    }, status=400)
+        
+        delete_adopter(adopter_id)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Adopter berhasil dihapus'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=500)
 
