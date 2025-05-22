@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaulttags import register
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
+from supabase_client import supabase
+from django.http import JsonResponse
+
 
 @register.filter
 def get_item(dictionary, key):
@@ -195,3 +198,13 @@ def adopter_detail(request, adopter_id):
     }
 
     return render(request, 'administrative_staff/adopter_detail.html', context)
+
+def get_adoption_data(request):
+    adoption_data = supabase.table('adoption').select('*').execute()
+    return JsonResponse(adoption_data)
+
+def get_animal_data(request):
+    animal_data = supabase.table('animals').select('*').execute()
+    return JsonResponse(animal_data)
+
+
