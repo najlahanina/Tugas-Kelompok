@@ -1,9 +1,5 @@
 from django import forms
-from .models import Atraksi, Wahana
-from animals.models import Animal
-from django.contrib.auth.models import User
-
-from django import forms
+from supabase_client import supabase
 
 class AtraksiForm(forms.Form):
     nama_atraksi = forms.CharField(
@@ -38,29 +34,72 @@ class AtraksiForm(forms.Form):
     )
 
     pelatih = forms.MultipleChoiceField(
-        choices=[('budi', 'Budi'), ('andi', 'Andi'), ('havana', 'Havana')],
+        choices=[],  
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'space-y-2 ml-1'
-        })
+        }),
+        required=False
     )
 
     hewan = forms.MultipleChoiceField(
-        choices=[('hewan_1', 'Zebra'), ('hewan_2', 'Macan'), ('hewan_3', 'Panda')],
+        choices=[],  
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'space-y-2 ml-1'
-        })
+        }),
+        required=False
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Populate pelatih choices from database
+        try:
+            pelatih_result = supabase.table('pelatih_hewan').select('''
+                username_lh,
+                pengguna!inner(
+                    nama_depan,
+                    nama_belakang
+                )
+            ''').execute()
+            
+            pelatih_choices = []
+            for pelatih in pelatih_result.data:
+                pengguna = pelatih['pengguna']
+                full_name = f"{pengguna['nama_depan']} {pengguna['nama_belakang']}"
+                pelatih_choices.append((pelatih['username_lh'], full_name))
+            
+            self.fields['pelatih'].choices = pelatih_choices
+        except Exception as e:
+            self.fields['pelatih'].choices = []
+
+        # Populate hewan choices from database
+        try:
+            hewan_result = supabase.table('hewan').select('id, nama, spesies').execute()
+            
+            hewan_choices = []
+            for hewan in hewan_result.data:
+                display_name = hewan['nama'] if hewan['nama'] else hewan['spesies']
+                hewan_choices.append((hewan['id'], display_name))
+            
+            self.fields['hewan'].choices = hewan_choices
+        except Exception as e:
+            self.fields['hewan'].choices = []
 
 
 class EditAtraksiForm(forms.Form):
     kapasitas_max = forms.IntegerField(
         label='Kapasitas Maksimum',
         min_value=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={
+            'class': 'block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-[#586132] focus:border-[#586132]'
+        })
     )
     jadwal = forms.TimeField(
         label='Jadwal Atraksi',
-        widget=forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'class': 'form-control'})
+        widget=forms.TimeInput(format='%H:%M', attrs={
+            'type': 'time', 
+            'class': 'block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-[#586132] focus:border-[#586132]'
+        })
     )
 
 
@@ -94,6 +133,7 @@ class WahanaForm(forms.Form):
         required=True
     )
 
+
 class EditWahanaForm(forms.Form):
     kapasitas_max = forms.IntegerField(
         widget=forms.NumberInput(attrs={
@@ -102,9 +142,18 @@ class EditWahanaForm(forms.Form):
         })
     )
     jadwal = forms.TimeField(
-        label='Jadwal Atraksi',
+        label='Jadwal Wahana',
         widget=forms.TimeInput(format='%H:%M', attrs={
             'type': 'time',
             'class': 'block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring focus:border-blue-300',
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        # Extract initial data if passed
+        initial_data = kwargs.get('initial', {})
+        super().__init__(*args, **kwargs)
+        
+        # Set initial values if available
+        if 'peraturan' in initial_data:
+            self.fields['peraturan'].initial = initial_data['peraturan']

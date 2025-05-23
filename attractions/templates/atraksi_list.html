@@ -32,7 +32,7 @@
           <tbody class="divide-y divide-gray-200">
             {% for atraksi in data_atraksi %}
             <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ atraksi.nama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ atraksi.nama_atraksi }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.lokasi }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.kapasitas }} orang</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.jadwal }}</td>
@@ -40,12 +40,12 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.pelatih }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <div class="flex space-x-2">
-                  <a href="{% url 'attractions:edit_atraksi' forloop.counter0 %}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                  <a href="{% url 'attractions:edit_atraksi' atraksi.nama_atraksi %}" class="text-blue-600 hover:text-blue-900">Edit</a>
                   <button 
                     type="button"
                     data-item-name="{{ atraksi.nama }}" 
                     data-item-type="Atraksi" 
-                    data-item-url="{% url 'attractions:hapus_atraksi' forloop.counter0 %}"
+                    data-item-url="{% url 'attractions:hapus_atraksi' atraksi.nama_atraksi %}"
                     class="text-red-600 hover:text-red-900 delete-btn bg-transparent border-none cursor-pointer p-0"
                   >
                     Hapus

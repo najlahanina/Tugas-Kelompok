@@ -76,7 +76,7 @@
 
                     <!-- Action Buttons -->
                     <div class="flex justify-between mt-8">
-                        <a href="{% url 'tickets:detail_reservasi' reservasi_id=reservasi.id %}" 
+                        <a href="{% url 'tickets:detail_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan%}" 
                            class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
                             Batal
                         </a>
