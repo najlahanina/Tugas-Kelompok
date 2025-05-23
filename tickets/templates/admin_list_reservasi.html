@@ -62,7 +62,7 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex space-x-2">
-                                                <a href="{% url 'tickets:admin_edit_reservasi' reservasi_id=reservasi.id %}" 
+                                                <a href="{% url 'tickets:admin_edit_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan %}" 
                                                 class="px-3 py-1 text-sm bg-[#e0cfc2] text-[#586132] rounded hover:bg-[#d0bfb2] transition-colors">
                                                     Edit
                                                 </a>
@@ -70,7 +70,7 @@
                                                     <button type="button" 
                                                             class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                                                             data-bs-toggle="modal" 
-                                                            data-bs-target="#modalBatalkan{{ reservasi.id }}">
+                                                            data-bs-target="#modalBatalkan{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}">
                                                         Batalkan
                                                     </button>
                                                 {% endif %}
@@ -80,12 +80,12 @@
 
                                     <!-- Modal Konfirmasi Batal -->
                                     {% if reservasi.status == 'Terjadwal' %}
-                                        <div class="modal fade" id="modalBatalkan{{ reservasi.id }}" tabindex="-1" 
-                                            aria-labelledby="konfirmasiBatalLabel{{ reservasi.id }}" aria-hidden="true">
+                                        <div class="modal fade" id="modalBatalkan{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}" tabindex="-1" 
+                                            aria-labelledby="konfirmasiBatalLabel{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-red-500 text-white">
-                                                        <h5 class="modal-title" id="konfirmasiBatalLabel{{ reservasi.id }}">Batalkan Reservasi</h5>
+                                                        <h5 class="modal-title" id="konfirmasiBatalLabel{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}">Batalkan Reservasi</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -96,7 +96,7 @@
                                                                 data-bs-dismiss="modal">
                                                             Tidak
                                                         </button>
-                                                        <form method="post" action="{% url 'tickets:admin_batalkan_reservasi' reservasi_id=reservasi.id %}">
+                                                        <form method="post" action="{% url 'tickets:admin_batalkan_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan %}">
                                                             {% csrf_token %}
                                                             <button type="submit" name="confirm" value="ya" 
                                                                     class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
