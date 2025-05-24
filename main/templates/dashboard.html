@@ -7,7 +7,7 @@
             <h1 class="text-3xl font-bold text-[#586132] font-gabarito">
                 Dashboard
             </h1>
-            <p class="text-gray-600 mt-2 font-raleway">Selamat datang, {{ user.first_name }}!</p>
+            <p class="text-gray-600 mt-2 font-raleway">Selamat datang, {{ user.nama_depan }}!</p>
             <div class="h-1 w-16 bg-[#586132] mt-2"></div>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -19,14 +19,14 @@
                 <div class="p-6">
                     <div class="flex items-center justify-center mb-6">
                         <div class="w-24 h-24 rounded-full bg-[#e0cfc2] flex items-center justify-center text-[#586132] text-3xl font-bold">
-                            {{ user.first_name|first }}{{ user.last_name|first }}
+                            {{ user.nama_depan|first }}{{ user.nama_belakang|first }}
                         </div>
                     </div>
                     
                     <div class="space-y-3">
                         <div class="flex flex-col">
                             <span class="text-sm text-gray-500">Nama Lengkap</span>
-                            <span class="font-medium">{{ user.first_name }} {% if user.profile.middle_name %}{{ user.profile.middle_name }}{% endif %} {{ user.last_name }}</span>
+                            <span class="font-medium">{{ user.nama_depan }} {% if user.profile.nama_tengah %}{{ user.profile.nama_tengah }}{% endif %} {{ user.nama_belakang }}</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm text-gray-500">Username</span>
@@ -38,14 +38,17 @@
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm text-gray-500">Nomor Telepon</span>
-                            <span class="font-medium">{{ user.profile.phone_number }}</span>
+                            <span class="font-medium">{{ user.no_telepon }}</span>
                         </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-gray-500">Peran</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#e0cfc2] text-[#586132]">
-                                {{ user.profile.get_role_display }}
-                            </span>
-                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#e0cfc2] text-[#586132]">
+                                {% if role == 'visitor' %}Pengunjung
+                                {% elif role == 'veterinarian' %}Dokter Hewan
+                                {% elif role == 'animal_keeper' %}Penjaga Hewan
+                                {% elif role == 'trainer' %}Pelatih Hewan
+                                {% elif role == 'admin_staff' %}Staf Admin
+                                {% else %}{{ role }}
+                                {% endif %}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -61,11 +64,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div class="bg-[#f8f5f0] p-4 rounded-lg">
                                 <p class="text-sm text-gray-500">Alamat Lengkap</p>
-                                <p class="font-medium">{{ user.profile.address|default:"Belum diisi" }}</p>
+                                <p class="font-medium">{{ role_data.alamat|default:"Belum diisi" }}</p>
                             </div>
                             <div class="bg-[#f8f5f0] p-4 rounded-lg">
                                 <p class="text-sm text-gray-500">Tanggal Lahir</p>
-                                <p class="font-medium">{{ user.profile.birth_date|date:"d F Y"|default:"Belum diisi" }}</p>
+                                <p class="font-medium">{{ role_data.tgl_lahir|date:"d F Y"|default:"Belum diisi" }}</p>
                             </div>
                         </div>
                         <!-- Riwayat Kunjungan -->
@@ -126,15 +129,15 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div class="bg-[#f8f5f0] p-4 rounded-lg">
                                 <p class="text-sm text-gray-500">Nomor Sertifikasi Profesional</p>
-                                <p class="font-medium">{{ vet.certification_number }}</p>
+                                <p class="font-medium">{{ role_data.no_str }}</p>
                             </div>
                             <div class="bg-[#f8f5f0] p-4 rounded-lg">
                                 <p class="text-sm text-gray-500">Spesialisasi</p>
                                 <p class="font-medium">
-                                    {% if vet.specialization == 'other' %}
-                                        {{ vet.other_specialization }}
+                                    {% if role_data.specializations == 'other' %}
+                                        {{ role_data.other_specialization }}
                                     {% else %}
-                                        {{ vet.get_specialization_display }}
+                                        {{ role_data.specializations|join:", " }}
                                     {% endif %}
                                 </p>
                             </div>
@@ -217,7 +220,7 @@
                         <div class="mb-6">
                             <div class="bg-[#f8f5f0] p-4 rounded-lg">
                                 <p class="text-sm text-gray-500">ID Staff</p>
-                                <p class="font-medium">{{ user.profile.staff_profile.staff_id}}</p> 
+                                <p class="font-medium">{{ role_data.staff_id}}</p> 
                             </div>
                         </div>
                         <h3 class="text-lg font-gabarito text-[#586132] mb-3">Ringkasan Penjualan Tiket Hari Ini</h3>

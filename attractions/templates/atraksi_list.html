@@ -37,7 +37,14 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.kapasitas }} orang</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.jadwal }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.hewan|join:", " }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ atraksi.pelatih }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {% for p in atraksi.pelatih %}
+                  {{ p }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                  -
+                {% endfor %}
+              </td>
+
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <div class="flex space-x-2">
                   <a href="{% url 'attractions:edit_atraksi' atraksi.nama_atraksi %}" class="text-blue-600 hover:text-blue-900">Edit</a>

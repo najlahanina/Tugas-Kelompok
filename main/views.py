@@ -1,16 +1,19 @@
+# views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import random
 import string
-from django.contrib.auth.forms import PasswordChangeForm
+import hashlib
+from datetime import datetime
+from supabase_client import supabase
 from .forms import (
     RoleSelectionForm, VisitorRegistrationForm, VeterinarianRegistrationForm,
     StaffRegistrationForm, UserProfileUpdateForm, VisitorProfileUpdateForm, VeterinarianProfileUpdateForm
 )
-from .models import UserProfile, Visitor, Veterinarian, Staff
 
 def show_main(request):
     return render(request, 'main.html')
@@ -19,18 +22,67 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
         
-        if user is not None:
-            login(request, user)
-            return redirect('main:dashboard')  # Redirect to dashboard or main page
-        else:
-            messages.error(request, 'Username atau password salah')
+        try:
+            # Query user from Supabase
+            result = supabase.table('pengguna').select('*').eq('username', username).execute()
+            
+            if result.data and len(result.data) > 0:
+                user_data = result.data[0]
+                if password == user_data['password']:
+                    # Create session
+                    request.session['username'] = username
+                    request.session['user_data'] = user_data
+                    
+                    # Determine user role
+                    role = get_user_role(username)
+                    request.session['user_role'] = role
+                    
+                    return redirect('main:dashboard')
+                else:
+                    messages.error(request, 'Username atau password salah')
+            else:
+                messages.error(request, 'Username atau password salah')
+                
+        except Exception as e:
+            messages.error(request, f'Error saat login: {str(e)}')
     
     return render(request, 'login.html')
 
+def get_user_role(username):
+    """Helper function to determine user role"""
+    try:
+        # Check if user is pengunjung
+        result = supabase.table('pengunjung').select('username_p').eq('username_p', username).execute()
+        if result.data and len(result.data) > 0:
+            return 'visitor'
+            
+        # Check if user is dokter hewan
+        result = supabase.table('dokter_hewan').select('username_dh').eq('username_dh', username).execute()
+        if result.data and len(result.data) > 0:
+            return 'veterinarian'
+            
+        # Check if user is penjaga hewan
+        result = supabase.table('penjaga_hewan').select('username_jh').eq('username_jh', username).execute()
+        if result.data and len(result.data) > 0:
+            return 'animal_keeper'
+            
+        # Check if user is pelatih hewan
+        result = supabase.table('pelatih_hewan').select('username_lh').eq('username_lh', username).execute()
+        if result.data and len(result.data) > 0:
+            return 'trainer'
+            
+        # Check if user is staf admin
+        result = supabase.table('staf_admin').select('username_sa').eq('username_sa', username).execute()
+        if result.data and len(result.data) > 0:
+            return 'admin_staff'
+            
+        return 'unknown'
+    except Exception as e:
+        return 'unknown'
+
 def logout_view(request):
-    logout(request)
+    request.session.flush()
     return redirect('main:login')
 
 def register_step1(request):
@@ -66,25 +118,51 @@ def register_visitor(request):
     if request.method == 'POST':
         form = VisitorRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.email = form.cleaned_data['email']
-            user.save()
-            
-            profile = UserProfile.objects.create(
-                user=user,
-                middle_name=form.cleaned_data['middle_name'],
-                phone_number=form.cleaned_data['phone_number'],
-                address=form.cleaned_data['address'],
-                birth_date=form.cleaned_data['birth_date'],
-                role='visitor'
-            )
-            
-            Visitor.objects.create(profile=profile)
-            
-            login(request, user)
-            return redirect('main:dashboard')
+            try:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                
+                # Insert into PENGGUNA table
+                pengguna_data = {
+                    'username': username,
+                    'email': form.cleaned_data['email'],
+                    'password': password,
+                    'nama_depan': form.cleaned_data['first_name'],
+                    'nama_tengah': form.cleaned_data.get('middle_name', ''),
+                    'nama_belakang': form.cleaned_data['last_name'],
+                    'no_telepon': form.cleaned_data['phone_number']
+                }
+                
+                pengguna_result = supabase.table('pengguna').insert(pengguna_data).execute()
+                
+                # Check if insert was successful
+                if not pengguna_result.data:
+                    raise Exception("Failed to insert into pengguna table")
+                
+                # Insert into PENGUNJUNG table
+                pengunjung_data = {
+                    'username_p': username,
+                    'alamat': form.cleaned_data['address'],
+                    'tgl_lahir': form.cleaned_data['birth_date'].isoformat()
+                }
+                
+                pengunjung_result = supabase.table('pengunjung').insert(pengunjung_data).execute()
+                
+                # Check if insert was successful
+                if not pengunjung_result.data:
+                    raise Exception("Failed to insert into pengunjung table")
+                
+                messages.success(request, 'Registrasi berhasil! Silakan login.')
+                return redirect('main:login')
+                
+            except Exception as e:
+                messages.error(request, f'Error saat registrasi: {str(e)}')
+                
+                # Try to cleanup if pengguna was inserted but pengunjung failed
+                try:
+                    supabase.table('pengguna').delete().eq('username', username).execute()
+                except:
+                    pass
     else:
         form = VisitorRegistrationForm()
     
@@ -94,33 +172,63 @@ def register_veterinarian(request):
     if request.method == 'POST':
         form = VeterinarianRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.email = form.cleaned_data['email']
-            user.save()
-            
-            profile = UserProfile.objects.create(
-                user=user,
-                middle_name=form.cleaned_data['middle_name'],
-                phone_number=form.cleaned_data['phone_number'],
-                role='veterinarian'
-            )
-            
-            specialization = form.cleaned_data['specialization']
-            other_specialization = None
-            if specialization == 'other':
-                other_specialization = form.cleaned_data['other_specialization']
-            
-            Veterinarian.objects.create(
-                profile=profile,
-                certification_number=form.cleaned_data['certification_number'],
-                specialization=specialization,
-                other_specialization=other_specialization
-            )
-            
-            login(request, user)
-            return redirect('main:dashboard')
+            try:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                
+                
+                # Insert into PENGGUNA table
+                pengguna_data = {
+                    'username': username,
+                    'email': form.cleaned_data['email'],
+                    'password': password,
+                    'nama_depan': form.cleaned_data['first_name'],
+                    'nama_tengah': form.cleaned_data.get('middle_name', ''),
+                    'nama_belakang': form.cleaned_data['last_name'],
+                    'no_telepon': form.cleaned_data['phone_number']
+                }
+                
+                pengguna_result = supabase.table('pengguna').insert(pengguna_data).execute()
+                
+                if not pengguna_result.data:
+                    raise Exception("Failed to insert into pengguna table")
+                
+                # Insert into DOKTER_HEWAN table
+                dokter_data = {
+                    'username_dh': username,
+                    'no_str': form.cleaned_data['certification_number']
+                }
+                
+                dokter_result = supabase.table('dokter_hewan').insert(dokter_data).execute()
+                
+                if not dokter_result.data:
+                    raise Exception("Failed to insert into dokter_hewan table")
+                
+                # Insert specializations
+                specialization = form.cleaned_data['specialization']
+                if specialization == 'other':
+                    specialization = form.cleaned_data['other_specialization']
+                
+                spesialisasi_data = {
+                    'username_sh': username,
+                    'nama_spesialisasi': specialization
+                }
+                
+                spesialisasi_result = supabase.table('spesialisasi').insert(spesialisasi_data).execute()
+                
+                messages.success(request, 'Registrasi berhasil! Silakan login.')
+                return redirect('main:login')
+                
+            except Exception as e:
+                messages.error(request, f'Error saat registrasi: {str(e)}')
+                
+                # Cleanup on error
+                try:
+                    supabase.table('spesialisasi').delete().eq('username_sh', username).execute()
+                    supabase.table('dokter_hewan').delete().eq('username_dh', username).execute()
+                    supabase.table('pengguna').delete().eq('username', username).execute()
+                except:
+                    pass
     else:
         form = VeterinarianRegistrationForm()
     
@@ -130,30 +238,72 @@ def register_staff(request, staff_role=None):
     if request.method == 'POST':
         form = StaffRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.email = form.cleaned_data['email']
-            user.save()
-            
-            # Get staff role from the form
-            staff_role = form.cleaned_data['staff_role']
-            
-            profile = UserProfile.objects.create(
-                user=user,
-                middle_name=form.cleaned_data['middle_name'],
-                phone_number=form.cleaned_data['phone_number'],
-                role=staff_role
-            )
-            
-            staff_id = form.cleaned_data['staff_id']
-            Staff.objects.create(
-                profile=profile,
-                staff_id=staff_id
-            )
-            
-            login(request, user)
-            return redirect('main:dashboard')  # Note: using 'main:dashboard' namespace
+            try:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                staff_role = form.cleaned_data['staff_role']
+                                
+                # Insert into PENGGUNA table
+                pengguna_data = {
+                    'username': username,
+                    'email': form.cleaned_data['email'],
+                    'password': password,
+                    'nama_depan': form.cleaned_data['first_name'],
+                    'nama_tengah': form.cleaned_data.get('middle_name', ''),
+                    'nama_belakang': form.cleaned_data['last_name'],
+                    'no_telepon': form.cleaned_data['phone_number']
+                }
+                
+                pengguna_result = supabase.table('pengguna').insert(pengguna_data).execute()
+                
+                if not pengguna_result.data:
+                    raise Exception("Failed to insert into pengguna table")
+                
+                # Insert into appropriate staff table based on role
+                staff_id = form.cleaned_data['staff_id']
+                
+                if staff_role == 'animal_keeper':
+                    staff_data = {
+                        'username_jh': username,
+                        'id_staf': staff_id
+                    }
+                    staff_result = supabase.table('penjaga_hewan').insert(staff_data).execute()
+                    
+                elif staff_role == 'trainer':
+                    staff_data = {
+                        'username_lh': username,
+                        'id_staf': staff_id
+                    }
+                    staff_result = supabase.table('pelatih_hewan').insert(staff_data).execute()
+                    
+                elif staff_role == 'admin_staff':
+                    staff_data = {
+                        'username_sa': username,
+                        'id_staf': staff_id
+                    }
+                    staff_result = supabase.table('staf_admin').insert(staff_data).execute()
+                                
+                if not staff_result.data:
+                    raise Exception(f"Failed to insert into {staff_role} table")
+                
+                messages.success(request, 'Registrasi berhasil! Silakan login.')
+                return redirect('main:login')
+                
+            except Exception as e:
+                messages.error(request, f'Error saat registrasi: {str(e)}')
+                
+                # Cleanup on error
+                try:
+                    if staff_role == 'animal_keeper':
+                        supabase.table('penjaga_hewan').delete().eq('username_jh', username).execute()
+                    elif staff_role == 'trainer':
+                        supabase.table('pelatih_hewan').delete().eq('username_lh', username).execute()
+                    elif staff_role == 'admin_staff':
+                        supabase.table('staf_admin').delete().eq('username_sa', username).execute()
+                    
+                    supabase.table('pengguna').delete().eq('username', username).execute()
+                except:
+                    pass
     else:
         form = StaffRegistrationForm(initial={'staff_role': staff_role} if staff_role else {})
     
@@ -175,105 +325,176 @@ def generate_staff_id(request):
     staff_id = f"{prefix}{random_suffix}"
     return JsonResponse({'staff_id': staff_id})
 
-@login_required
+def login_required_custom(view_func):
+    """Custom login required decorator using session"""
+    def wrapper(request, *args, **kwargs):
+        if 'username' not in request.session:
+            return redirect('main:login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+@login_required_custom
 def dashboard(request):
     """Dashboard view - displays different content based on user role"""
     try:
-        profile = request.user.profile
-        role = profile.role
+        username = request.session.get('username')
+        user_data = request.session.get('user_data')
+        role = request.session.get('user_role')
+        
+        # Get role-specific data
+        role_data = {}
+        visitor_data = {}
+        
+        if role == 'visitor':
+            # Get visitor specific data
+            visitor_result = supabase.table('pengunjung').select('*').eq('username_p', username).execute()
+            if visitor_result.data:
+                visitor_data = visitor_result.data[0]
+                role_data = visitor_data
+                # Convert tgl_lahir string to date object if exists
+                if role_data.get('tgl_lahir'):
+                    try:
+                        from datetime import datetime
+                        role_data['tgl_lahir'] = datetime.fromisoformat(role_data['tgl_lahir']).date()
+                    except:
+                        role_data['tgl_lahir'] = None
+                
+        elif role == 'veterinarian':
+            # Get veterinarian specific data
+            dokter_result = supabase.table('dokter_hewan').select('*').eq('username_dh', username).execute()
+            if dokter_result.data:
+                role_data = dokter_result.data[0]
+                
+            # Get specializations
+            spesialisasi_result = supabase.table('spesialisasi').select('nama_spesialisasi').eq('username_sh', username).execute()
+            if spesialisasi_result.data:
+                role_data['specializations'] = [s['nama_spesialisasi'] for s in spesialisasi_result.data]
+            else:
+                role_data['specializations'] = []
+                
+        elif role == 'animal_keeper':
+            # Get animal keeper specific data
+            keeper_result = supabase.table('penjaga_hewan').select('*').eq('username_jh', username).execute()
+            if keeper_result.data:
+                role_data = keeper_result.data[0]
+                
+        elif role == 'trainer':
+            # Get trainer specific data
+            trainer_result = supabase.table('pelatih_hewan').select('*').eq('username_lh', username).execute()
+            if trainer_result.data:
+                role_data = trainer_result.data[0]
+                
+        elif role == 'admin_staff':
+            # Get admin staff specific data
+            admin_result = supabase.table('staf_admin').select('*').eq('username_sa', username).execute()
+            if admin_result.data:
+                role_data = admin_result.data[0]
         
         context = {
             'role': role,
-            'user': request.user
+            'user': user_data,
+            'username': username,
+            'role_data': role_data,
+            'visitor_data': visitor_data,
         }
         
         return render(request, 'dashboard.html', context)
-    except UserProfile.DoesNotExist:
-        # Handle case where user doesn't have a profile
-        messages.error(request, 'Profil pengguna tidak ditemukan')
+        
+    except Exception as e:
+        messages.error(request, f'Error mengakses dashboard: {str(e)}')
         return redirect('main:login')
-    
-@login_required
+
+
+@login_required_custom
 def profile_settings(request):
     """View for updating user profile information based on their role"""
     try:
-        profile = request.user.profile
-        role = profile.role
+        username = request.session.get('username')
+        role = request.session.get('user_role')
+        
+        # Get current user data
+        user_result = supabase.table('pengguna').select('*').eq('username', username).execute()
+        if not user_result.data:
+            messages.error(request, 'Profil pengguna tidak ditemukan')
+            return redirect('main:dashboard')
+            
+        user_data = user_result.data[0]
         
         if request.method == 'POST':
-            profile_form = UserProfileUpdateForm(request.POST, instance=profile)
-            
-            # Role-specific forms
-            role_form = None
-            if role == 'visitor':
-                try:
-                    visitor_profile = profile.visitor_profile
-                    role_form = VisitorProfileUpdateForm(request.POST, instance=visitor_profile)
-                except:
-                    messages.error(request, 'Profil pengunjung tidak ditemukan')
-            elif role == 'veterinarian':
-                try:
-                    vet_profile = profile.vet_profile
-                    role_form = VeterinarianProfileUpdateForm(request.POST, instance=vet_profile)
-                except:
-                    messages.error(request, 'Profil dokter hewan tidak ditemukan')
-            
-            forms_valid = profile_form.is_valid()
-            if role_form:
-                forms_valid = forms_valid and role_form.is_valid()
+            try:
+                # Update PENGGUNA table
+                update_data = {
+                    'email': request.POST.get('email'),
+                    'nama_depan': request.POST.get('first_name'),
+                    'nama_belakang': request.POST.get('last_name'),
+                    'nama_tengah': request.POST.get('middle_name', ''),
+                    'no_telepon': request.POST.get('phone_number')
+                }
                 
-            if forms_valid:
-                # Update user model fields
-                user = request.user
-                user.email = profile_form.cleaned_data['email']
-                user.first_name = profile_form.cleaned_data['first_name']
-                if 'last_name' in profile_form.cleaned_data:
-                    user.last_name = profile_form.cleaned_data['last_name']
-                user.save()
+                supabase.table('pengguna').update(update_data).eq('username', username).execute()
                 
-                profile_form.save()
+                # Update role-specific tables
+                if role == 'visitor':
+                    visitor_data = {
+                        'alamat': request.POST.get('address'),
+                        'tgl_lahir': request.POST.get('birth_date')
+                    }
+                    supabase.table('pengunjung').update(visitor_data).eq('username_p', username).execute()
                 
-                # Save role-specific form if exists
-                if role_form:
-                    role_form.save()
+                elif role == 'veterinarian':
+                    dokter_data = {
+                        'no_str': request.POST.get('certification_number')
+                    }
+                    supabase.table('dokter_hewan').update(dokter_data).eq('username_dh', username).execute()
                     
+                    # Update spesialisasi if provided
+                    new_specialization = request.POST.get('specialization')
+                    if new_specialization:
+                        # Delete old specializations
+                        supabase.table('spesialisasi').delete().eq('username_sh', username).execute()
+                        # Insert new specialization
+                        spesialisasi_data = {
+                            'username_sh': username,
+                            'nama_spesialisasi': new_specialization
+                        }
+                        supabase.table('spesialisasi').insert(spesialisasi_data).execute()
+                
+                # Update session data
+                request.session['user_data'] = {**user_data, **update_data}
+                
                 messages.success(request, 'Profil berhasil diperbarui')
                 return redirect('main:dashboard')
-        else:
-            initial_data = {
-                'email': request.user.email,
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
-                'middle_name': profile.middle_name,
-                'phone_number': profile.phone_number,
-            }
-            
-            profile_form = UserProfileUpdateForm(instance=profile, initial=initial_data)
-            role_form = None
-            
-            if role == 'visitor':
-                try:
-                    visitor_profile = profile.visitor_profile
-                    role_form = VisitorProfileUpdateForm(instance=visitor_profile)
-                except:
-                    pass
-            elif role == 'veterinarian':
-                try:
-                    vet_profile = profile.vet_profile
-                    role_form = VeterinarianProfileUpdateForm(instance=vet_profile)
-                except:
-                    pass
+                
+            except Exception as e:
+                messages.error(request, f'Error saat memperbarui profil: {str(e)}')
+        
+        # Get role-specific data for display
+        role_data = {}
+        if role == 'visitor':
+            visitor_result = supabase.table('pengunjung').select('*').eq('username_p', username).execute()
+            if visitor_result.data:
+                role_data = visitor_result.data[0]
+                
+        elif role == 'veterinarian':
+            dokter_result = supabase.table('dokter_hewan').select('*').eq('username_dh', username).execute()
+            if dokter_result.data:
+                role_data = dokter_result.data[0]
+                
+            # Get specializations
+            spesialisasi_result = supabase.table('spesialisasi').select('nama_spesialisasi').eq('username_sh', username).execute()
+            role_data['specializations'] = [s['nama_spesialisasi'] for s in spesialisasi_result.data]
         
         context = {
-            'profile_form': profile_form,
-            'role_form': role_form,
+            'user_data': user_data,
+            'role_data': role_data,
             'role': role,
-            'user': request.user,
+            'username': username
         }
         
         return render(request, 'profile_settings.html', context)
-    except UserProfile.DoesNotExist:
-        messages.error(request, 'Profil pengguna tidak ditemukan')
+        
+    except Exception as e:
+        messages.error(request, f'Error mengakses pengaturan profil: {str(e)}')
         return redirect('main:dashboard')
 
 @login_required

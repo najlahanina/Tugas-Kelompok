@@ -82,9 +82,12 @@
           </div>
         {% else %}
           <!-- Tampilan data readonly untuk pelatih dan hewan -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Pelatih Pertunjukan</label>
-            <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">{{ readonly_data.pelatih }}</div>
+          <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">
+            {% for p in readonly_data.pelatih %}
+              {{ p }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+              Tidak ada pelatih.
+            {% endfor %}
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Hewan yang Terlibat</label>

@@ -41,7 +41,7 @@
                             <tbody class="divide-y divide-gray-200">
                                 {% for reservasi in reservasi_list %}
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4">{{ reservasi.username }}</td>
+                                        <td class="px-6 py-4">{{ reservasi.username_p }}</td>
                                         <td class="px-6 py-4">{{ reservasi.nama_atraksi }}</td>
                                         <td class="px-6 py-4">{{ reservasi.tanggal_kunjungan }}</td>
                                         <td class="px-6 py-4">{{ reservasi.jumlah_tiket }}</td>
@@ -70,7 +70,7 @@
                                                     <button type="button" 
                                                             class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                                                             data-bs-toggle="modal" 
-                                                            data-bs-target="#modalBatalkan{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}">
+                                                            data-bs-target="#modalBatalkan{{ forloop.counter }}">
                                                         Batalkan
                                                     </button>
                                                 {% endif %}
@@ -80,23 +80,28 @@
 
                                     <!-- Modal Konfirmasi Batal -->
                                     {% if reservasi.status == 'Terjadwal' %}
-                                        <div class="modal fade" id="modalBatalkan{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}" tabindex="-1" 
-                                            aria-labelledby="konfirmasiBatalLabel{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}" aria-hidden="true">
+                                        <div class="modal fade" id="modalBatalkan{{ forloop.counter }}" tabindex="-1" 
+                                            aria-labelledby="konfirmasiBatalLabel{{ forloop.counter }}" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-red-500 text-white">
-                                                        <h5 class="modal-title" id="konfirmasiBatalLabel{{ reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan }}">Batalkan Reservasi</h5>
+                                                        <h5 class="modal-title" id="konfirmasiBatalLabel{{ forloop.counter }}">Batalkan Reservasi</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <p class="py-4">Apakah Anda yakin ingin membatalkan reservasi ini?</p>
+                                                        <div class="text-sm text-gray-600">
+                                                            <p><strong>Username:</strong> {{ reservasi.username_p }}</p>
+                                                            <p><strong>Atraksi:</strong> {{ reservasi.nama_atraksi }}</p>
+                                                            <p><strong>Tanggal:</strong> {{ reservasi.tanggal_kunjungan }}</p>
+                                                        </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" 
                                                                 data-bs-dismiss="modal">
                                                             Tidak
                                                         </button>
-                                                        <form method="post" action="{% url 'tickets:admin_batalkan_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan %}">
+                                                        <form method="post" action="{% url 'tickets:admin_batalkan_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan %}" style="display: inline;">
                                                             {% csrf_token %}
                                                             <button type="submit" name="confirm" value="ya" 
                                                                     class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">

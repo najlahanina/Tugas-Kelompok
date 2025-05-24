@@ -48,10 +48,12 @@ def list_atraksi(request):
             ''').eq('nama_atraksi', atraksi['nama_atraksi']).execute()
             
             hewan_list = [h['hewan']['nama'] or h['hewan']['spesies'] for h in hewan_result.data]
-            pelatih_name = ""
-            if pelatih_result.data:
-                pengguna = pelatih_result.data[0]['pelatih_hewan']['pengguna']
-                pelatih_name = f"{pengguna['nama_depan']} {pengguna['nama_belakang']}"
+            pelatih_list = []
+            for item in pelatih_result.data:
+                pengguna = item.get('pelatih_hewan', {}).get('pengguna')
+                if pengguna:
+                    nama = f"{pengguna.get('nama_depan', '')} {pengguna.get('nama_belakang', '')}".strip()
+                    pelatih_list.append(nama)
             
             formatted_data.append({
                 'nama_atraksi': atraksi['nama_atraksi'],
@@ -60,7 +62,7 @@ def list_atraksi(request):
                 'kapasitas': atraksi['fasilitas']['kapasitas_max'],
                 'jadwal': datetime.fromisoformat(atraksi['fasilitas']['jadwal']).strftime('%H:%M'),
                 'hewan': hewan_list,
-                'pelatih': pelatih_name
+                'pelatih': pelatih_list
             })
         
         return render(request, 'atraksi_list.html', {'data_atraksi': formatted_data})
@@ -105,13 +107,13 @@ def tambah_atraksi(request):
                         
                         # 4. Jika ada pelatih yang dipilih, insert ke JADWAL_PENUGASAN
                         if 'pelatih' in form.cleaned_data and form.cleaned_data['pelatih']:
-                            penugasan_data = {
-                                'username_lh': form.cleaned_data['pelatih'],
-                                'tgl_penugasan': form.cleaned_data['jadwal'].strftime('%Y-%m-%d %H:%M:%S'),
-                                'nama_atraksi': nama_atraksi
-                            }
-                            supabase.table('jadwal_penugasan').insert(penugasan_data).execute()
-                        
+                            for username in form.cleaned_data['pelatih']:
+                                penugasan_data = {
+                                    'username_lh': username,
+                                    'tgl_penugasan': form.cleaned_data['jadwal'].strftime('%Y-%m-%d %H:%M:%S'),
+                                    'nama_atraksi': nama_atraksi
+                                }
+                                supabase.table('jadwal_penugasan').insert(penugasan_data).execute()
                         messages.success(request, 'Atraksi berhasil ditambahkan!')
                         return redirect('attractions:list_atraksi')
                     else:
@@ -262,16 +264,18 @@ def edit_atraksi(request, nama_atraksi):
         ''').eq('nama_atraksi', nama_atraksi).execute()
         
         hewan_list = [h['hewan']['nama'] or h['hewan']['spesies'] for h in hewan_result.data]
-        pelatih_name = ""
-        if pelatih_result.data:
-            pengguna = pelatih_result.data[0]['pelatih_hewan']['pengguna']
-            pelatih_name = f"{pengguna['nama_depan']} {pengguna['nama_belakang']}"
+        pelatih_list = []
+        for item in pelatih_result.data:
+                pengguna = item.get('pelatih_hewan', {}).get('pengguna')
+                if pengguna:
+                    nama = f"{pengguna.get('nama_depan', '')} {pengguna.get('nama_belakang', '')}".strip()
+                    pelatih_list.append(nama)
         
         readonly_data = {
             'nama_atraksi': atraksi['nama_atraksi'],
             'lokasi': atraksi['lokasi'],
             'hewan': hewan_list,
-            'pelatih': pelatih_name,
+            'pelatih': pelatih_list,
         }
         
         return render(request, 'atraksi_form.html', {
@@ -396,16 +400,11 @@ def hapus_wahana(request, nama_wahana):
     if request.method == 'POST':
         if request.POST.get('confirm') == 'ya':
             try:
-                # Hapus dalam urutan yang benar
-                # 1. Hapus berpartisipasi jika ada
-                supabase.table('berpartisipasi').delete().eq('nama_fasilitas', nama_wahana).execute()
-                
-                # 2. Hapus wahana
+                # 1.Hapus wahana
                 supabase.table('wahana').delete().eq('nama_wahana', nama_wahana).execute()
                 
-                # 3. Hapus fasilitas
+                # 2. Hapus fasilitas
                 result = supabase.table('fasilitas').delete().eq('nama', nama_wahana).execute()
-                
                 if result.data:
                     messages.success(request, 'Wahana berhasil dihapus!')
                 else:
