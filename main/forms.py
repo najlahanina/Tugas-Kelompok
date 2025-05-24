@@ -317,7 +317,7 @@ class VeterinarianProfileUpdateForm(forms.Form):
         ('Reptil', 'Reptil'),
         ('Burung Eksotis', 'Burung Eksotis'),
         ('Primata', 'Primata'),
-        ('other', 'Lainnya'),
+        ('Other', 'Lainnya'),
     )
     
     certification_number = forms.CharField(
@@ -362,9 +362,11 @@ class VeterinarianProfileUpdateForm(forms.Form):
         specialization = cleaned_data.get('specialization')
         other_specialization = cleaned_data.get('other_specialization')
         
-        if specialization == 'other' and not other_specialization:
-            raise ValidationError('Harap isi spesialisasi lainnya jika memilih "Lainnya".')
-            
+        if specialization == 'other':
+            if not other_specialization:
+                raise ValidationError('Harap isi spesialisasi lainnya jika memilih "Lainnya".')
+            cleaned_data['specialization'] = other_specialization
+
         return cleaned_data
 
 class PasswordChangeForm(forms.Form):

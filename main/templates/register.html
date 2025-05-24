@@ -165,16 +165,33 @@
             </div>
             
             <div class="mb-4">
-              <label for="id_specialization" class="block text-gray-700 mb-2">Spesialisasi:</label>
-              {{ form.specialization }}
+              <label class="block text-gray-700 mb-2 font-semibold">Spesialisasi:</label>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="specialization" id="mamalia_besar" value="Mamalia Besar">
+                  <label class="text-gray-700" for="mamalia_besar">Mamalia Besar</label>
+                </div>
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="specialization" id="reptil" value="Reptil">
+                  <label class="text-gray-700" for="reptil">Reptil</label>
+                </div>
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="specialization" id="burung_eksotis" value="Burung Eksotis">
+                  <label class="text-gray-700" for="burung_eksotis">Burung Eksotis</label>
+                </div>
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="specialization" id="primata" value="Primata">
+                  <label class="text-gray-700" for="primata">Primata</label>
+                </div>
+                <div class="flex items-center">
+                  <input class="mr-2 h-4 w-4 text-[#586132] focus:ring-[#586132] border-gray-300 rounded" type="radio" name="specialization" id="other" value="other">
+                  <label class="text-gray-700" for="other">Lainnya:</label>
+                  <input type="text" name="other_specialization" id="other_specialization_input" class="ml-2 px-2 py-1 border border-gray-300 rounded text-sm" placeholder="[isian]" disabled>
+                </div>
+              </div>
               {% if form.specialization.errors %}
               <div class="text-red-600 text-sm">{{ form.specialization.errors }}</div>
               {% endif %}
-            </div>
-            
-            <div class="mb-4" id="other_specialization_container" style="display: none;">
-              <label for="id_other_specialization" class="block text-gray-700 mb-2">Spesialisasi Lainnya:</label>
-              {{ form.other_specialization }}
             </div>
             {% endif %}
             
@@ -197,22 +214,22 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Untuk Veterinarian - spesialisasi lainnya
-    var specializationSelect = document.getElementById('id_specialization');
-    var otherSpecializationContainer = document.getElementById('other_specialization_container');
+    // Untuk Veterinarian - spesialisasi radio buttons
+    var specializationRadios = document.querySelectorAll('input[name="specialization"]');
+    var otherSpecializationInput = document.getElementById('other_specialization_input');
     
-    if (specializationSelect && otherSpecializationContainer) {
-      specializationSelect.addEventListener('change', function() {
-        if (this.value === 'other') {
-          otherSpecializationContainer.style.display = 'block';
-        } else {
-          otherSpecializationContainer.style.display = 'none';
-        }
+    if (specializationRadios.length > 0 && otherSpecializationInput) {
+      specializationRadios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+          if (this.value === 'other') {
+            otherSpecializationInput.disabled = false;
+            otherSpecializationInput.focus();
+          } else {
+            otherSpecializationInput.disabled = true;
+            otherSpecializationInput.value = '';
+          }
+        });
       });
-      
-      if (specializationSelect.value === 'other') {
-        otherSpecializationContainer.style.display = 'block';
-      }
     }
     
     // Untuk Staff - generate ID otomatis
