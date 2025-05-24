@@ -12,7 +12,7 @@ from datetime import datetime
 from supabase_client import supabase
 from .forms import (
     RoleSelectionForm, VisitorRegistrationForm, VeterinarianRegistrationForm,
-    StaffRegistrationForm, UserProfileUpdateForm, VisitorProfileUpdateForm, VeterinarianProfileUpdateForm
+    StaffRegistrationForm, UserProfileUpdateForm, VisitorProfileUpdateForm, VeterinarianProfileUpdateForm, PasswordChangeForm
 )
 
 def show_main(request):
@@ -205,9 +205,11 @@ def register_veterinarian(request):
                     raise Exception("Failed to insert into dokter_hewan table")
                 
                 # Insert specializations
-                specialization = form.cleaned_data['specialization']
-                if specialization == 'other':
-                    specialization = form.cleaned_data['other_specialization']
+                specialization = (
+                    form.cleaned_data.get('other_specialization')
+                    if form.cleaned_data.get('specialization') == 'other'
+                    else form.cleaned_data.get('specialization')
+                )
                 
                 spesialisasi_data = {
                     'username_sh': username,
@@ -442,17 +444,17 @@ def profile_settings(request):
                     supabase.table('pengunjung').update(visitor_data).eq('username_p', username).execute()
                 
                 elif role == 'veterinarian':
-                    dokter_data = {
-                        'no_str': request.POST.get('certification_number')
-                    }
-                    supabase.table('dokter_hewan').update(dokter_data).eq('username_dh', username).execute()
-                    
-                    # Update spesialisasi if provided
+                    # Ambil spesialisasi dari form
                     new_specialization = request.POST.get('specialization')
+                    other_specialization = request.POST.get('other_specialization')
+
+                    if new_specialization == 'other' and other_specialization:
+                        new_specialization = other_specialization
+
                     if new_specialization:
-                        # Delete old specializations
+                        # Hapus spesialisasi lama
                         supabase.table('spesialisasi').delete().eq('username_sh', username).execute()
-                        # Insert new specialization
+                        # Simpan spesialisasi baru
                         spesialisasi_data = {
                             'username_sh': username,
                             'nama_spesialisasi': new_specialization
@@ -497,20 +499,61 @@ def profile_settings(request):
         messages.error(request, f'Error mengakses pengaturan profil: {str(e)}')
         return redirect('main:dashboard')
 
-@login_required
+@login_required_custom
 def change_password(request):
     """View for changing user password"""
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Keep the user logged in after password change
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Password berhasil diubah')
-            return redirect('main:dashboard')
+    try:
+        username = request.session.get('username')
+        
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.POST)
+            if form.is_valid():
+                current_password = form.cleaned_data['current_password']
+                new_password = form.cleaned_data['new_password']
+                
+                try:
+                    # Verify current password
+                    result = supabase.table('pengguna').select('password').eq('username', username).execute()
+                    
+                    if not result.data or len(result.data) == 0:
+                        messages.error(request, 'Pengguna tidak ditemukan')
+                        return render(request, 'change_password.html', {'form': form})
+                    
+                    current_db_password = result.data[0]['password']
+                    
+                    if current_password != current_db_password:
+                        messages.error(request, 'Password lama tidak benar')
+                        return render(request, 'change_password.html', {'form': form})
+                    
+                    # Update password in Supabase
+                    update_result = supabase.table('pengguna').update({
+                        'password': new_password
+                    }).eq('username', username).execute()
+                    
+                    if update_result.data:
+                        # Update session data
+                        user_data = request.session.get('user_data')
+                        if user_data:
+                            user_data['password'] = new_password
+                            request.session['user_data'] = user_data
+                        
+                        messages.success(request, 'Password berhasil diubah')
+                        return redirect('main:dashboard')
+                    else:
+                        messages.error(request, 'Gagal mengubah password')
+                        
+                except Exception as e:
+                    messages.error(request, f'Error saat mengubah password: {str(e)}')
+            else:
+                # Display form errors
+                for field_name, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field_name}: {error}')
         else:
-            messages.error(request, 'Silakan perbaiki kesalahan di bawah ini.')
-    else:
-        form = PasswordChangeForm(request.user)
-    
-    return render(request, 'change_password.html', {'form': form})
+            form = PasswordChangeForm()
+        
+        return render(request, 'change_password.html', {'form': form})
+        
+    except Exception as e:
+        messages.error(request, f'Error mengakses halaman ubah password: {str(e)}')
+        return redirect('main:dashboard')
