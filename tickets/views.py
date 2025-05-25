@@ -1,7 +1,7 @@
 # views tickets
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import ReservasiForm, ReservasiEditForm, AdminReservasiEditForm
+from .forms import ReservasiForm, ReservasiEditForm, AdminReservasiEditForm, ReservasiWahanaEditForm, ReservasiWahanaForm
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models import Count
@@ -10,6 +10,129 @@ from main.views import login_required_custom, get_user_role  # Import from main 
 import uuid
 from datetime import datetime
 
+@login_required_custom
+def list_reservasi(request):
+    """View untuk menampilkan daftar semua reservasi milik user"""
+    try:
+        current_username = request.session.get('username')
+        
+        # Get all reservations for current user
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', current_username).execute()
+        
+        reservasi_list = []
+        for reservasi in reservasi_result.data:
+            nama_fasilitas = reservasi['nama_fasilitas']
+            
+            # Determine if it's an attraction or wahana
+            atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_fasilitas).execute()
+            wahana_result = supabase.table('wahana').select('*').eq('nama_wahana', nama_fasilitas).execute()
+            
+            jenis_reservasi = "Atraksi" if atraksi_result.data else "Wahana"
+            
+            # Get facility details for capacity
+            facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
+            facility = facility_result.data[0] if facility_result.data else {}
+            
+            reservasi_data = {
+                'jenis_reservasi': jenis_reservasi,
+                'nama_fasilitas': nama_fasilitas,
+                'tanggal_kunjungan': reservasi['tanggal_kunjungan'],
+                'jumlah_tiket': reservasi['jumlah_tiket'],
+                'status': reservasi['status'],
+                'kapasitas_max': facility.get('kapasitas_max', 0),
+                'username_p': reservasi['username_p']
+            }
+            
+            reservasi_list.append(reservasi_data)
+        
+        # Sort by date (newest first)
+        reservasi_list.sort(key=lambda x: x['tanggal_kunjungan'], reverse=True)
+        
+        return render(request, 'list_reservasi.html', {
+            'reservasi_list': reservasi_list
+        })
+        
+    except Exception as e:
+        messages.error(request, f"Error loading reservations: {str(e)}")
+        return render(request, 'list_reservasi.html', {
+            'reservasi_list': []
+        })
+
+@login_required_custom
+def list_reservasi_tersedia(request):
+    """View untuk menampilkan daftar fasilitas yang tersedia untuk booking"""
+    try:
+        # Get all attractions
+        atraksi_result = supabase.table('atraksi').select('*').execute()
+        
+        # Get all wahana
+        wahana_result = supabase.table('wahana').select('*').execute()
+        
+        fasilitas_list = []
+        
+        # Process attractions
+        for atraksi in atraksi_result.data:
+            nama_fasilitas = atraksi['nama_atraksi']
+            
+            # Get facility details
+            facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
+            facility = facility_result.data[0] if facility_result.data else {}
+            
+            # Count current reservations for today or future dates
+            from datetime import date
+            today = date.today().isoformat()
+            
+            reservasi_result = supabase.table('reservasi').select('jumlah_tiket').eq('nama_fasilitas', nama_fasilitas).gte('tanggal_kunjungan', today).neq('status', 'Dibatalkan').execute()
+            
+            total_reserved = sum([r['jumlah_tiket'] for r in reservasi_result.data]) if reservasi_result.data else 0
+            kapasitas_tersedia = facility.get('kapasitas_max', 0) - total_reserved
+            
+            fasilitas_data = {
+                'jenis_reservasi': 'Atraksi',
+                'nama_fasilitas': nama_fasilitas,
+                'kapasitas_tersedia': max(0, kapasitas_tersedia),  # Ensure not negative
+                'kapasitas_max': facility.get('kapasitas_max', 0)
+            }
+            
+            fasilitas_list.append(fasilitas_data)
+        
+        # Process wahana
+        for wahana in wahana_result.data:
+            nama_fasilitas = wahana['nama_wahana']
+            
+            # Get facility details
+            facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).eq('jadwal', jadwal).execute()
+            facility = facility_result.data[0] if facility_result.data else {}
+            
+            # Count current reservations for today or future dates
+            reservasi_result = supabase.table('reservasi').select('jumlah_tiket').eq('nama_fasilitas', nama_fasilitas).gte('tanggal_kunjungan', today).neq('status', 'Dibatalkan').execute()
+            
+            total_reserved = sum([r['jumlah_tiket'] for r in reservasi_result.data]) if reservasi_result.data else 0
+            kapasitas_tersedia = facility.get('kapasitas_max', 0) - total_reserved
+            
+            fasilitas_data = {
+                'jenis_reservasi': 'Wahana',
+                'nama_fasilitas': nama_fasilitas,
+                'jadwal': jadwal,
+                'kapasitas_tersedia': max(0, kapasitas_tersedia),  # Ensure not negative
+                'kapasitas_max': facility.get('kapasitas_max', 0)
+            }
+            
+            fasilitas_list.append(fasilitas_data)
+        
+        # Sort by name
+        fasilitas_list.sort(key=lambda x: x['nama_fasilitas'])
+        
+        return render(request, 'list_reservasi_tersedia.html', {
+            'fasilitas_list': fasilitas_list
+        })
+        
+    except Exception as e:
+        messages.error(request, f"Error loading available facilities: {str(e)}")
+        return render(request, 'list_reservasi_tersedia.html', {
+            'fasilitas_list': []
+        })
+    
 @login_required_custom
 def tambah_reservasi(request):
     if request.method == 'POST':
@@ -27,14 +150,14 @@ def tambah_reservasi(request):
                 
                 attraction = attraction_result.data[0]
                 
-                # Get facility details 
+                # Get facility details - using nama_atraksi as it references fasilitas.nama
                 facility_result = supabase.table('fasilitas').select('*').eq('nama', cd['nama_atraksi']).execute()
                 facility = facility_result.data[0] if facility_result.data else {}
                 
-                # Create reservation
+                # Create reservation - using nama_fasilitas field
                 reservasi_data = {
                     'username_p': request.session.get('username'),
-                    'nama_atraksi': cd['nama_atraksi'],
+                    'nama_fasilitas': cd['nama_atraksi'],  # This now maps to fasilitas.nama
                     'tanggal_kunjungan': cd['tanggal_kunjungan'].isoformat(),
                     'jumlah_tiket': cd['jumlah_tiket'],
                     'status': 'Terjadwal'
@@ -46,7 +169,7 @@ def tambah_reservasi(request):
                     messages.success(request, f"Reservasi untuk {cd['nama_atraksi']} berhasil dibuat.")
                     return redirect('tickets:detail_reservasi', 
                                   username_p=request.session.get('username'),
-                                  nama_atraksi=cd['nama_atraksi'], 
+                                  nama_fasilitas=cd['nama_atraksi'], 
                                   tanggal_kunjungan=cd['tanggal_kunjungan'].isoformat())
                 else:
                     messages.error(request, "Gagal membuat reservasi")
@@ -61,11 +184,11 @@ def tambah_reservasi(request):
         
         atraksi_list = []
         for atraksi in atraksi_result.data:
-            # Get facility details 
+            # Get facility details - using nama_atraksi as foreign key to fasilitas.nama
             facility_result = supabase.table('fasilitas').select('*').eq('nama', atraksi['nama_atraksi']).execute()
             facility = facility_result.data[0] if facility_result.data else {}
             
-            # Get animals participating
+            # Get animals participating - using nama_atraksi as facility name
             hewan_result = supabase.table('berpartisipasi').select('''
                 hewan!inner(
                     nama,
@@ -73,7 +196,7 @@ def tambah_reservasi(request):
                 )
             ''').eq('nama_fasilitas', atraksi['nama_atraksi']).execute()
             
-            # Get trainer assigned
+            # Get trainer assigned - using nama_atraksi
             pelatih_result = supabase.table('jadwal_penugasan').select('''
                 pelatih_hewan!inner(
                     pengguna!inner(
@@ -117,11 +240,11 @@ def tambah_reservasi(request):
     })
 
 @login_required_custom
-def detail_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
+def detail_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan):
     """View for viewing reservation details"""
     try:
-        # Get reservation
-        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        # Get reservation - using nama_fasilitas
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
         
         current_username = request.session.get('username')
         if not reservasi_result.data or reservasi_result.data[0]['username_p'] != current_username:
@@ -130,12 +253,12 @@ def detail_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
         
         reservasi = reservasi_result.data[0]
         
-        # Get attraction details 
-        atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_atraksi).execute()
+        # Get attraction details - nama_fasilitas corresponds to nama_atraksi (which is FK to fasilitas.nama)
+        atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_fasilitas).execute()
         atraksi = atraksi_result.data[0] if atraksi_result.data else {}
         
-        # Get facility details 
-        facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_atraksi).execute()
+        # Get facility details - using nama_fasilitas directly
+        facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
         facility = facility_result.data[0] if facility_result.data else {}
         
         # Format jadwal
@@ -150,6 +273,7 @@ def detail_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
         # Add formatted data
         reservasi['lokasi'] = atraksi.get('lokasi', 'Tidak ada')
         reservasi['jam'] = jam
+        reservasi['nama_atraksi'] = nama_fasilitas  # For template compatibility
         
         return render(request, 'detail_reservasi.html', {
             'reservasi': reservasi
@@ -159,11 +283,11 @@ def detail_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
         return redirect('tickets:tambah_reservasi')
 
 @login_required_custom
-def edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
+def edit_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan):
     """View for editing a reservation"""
     try:
-        # Get reservation
-        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        # Get reservation - using nama_fasilitas
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
         
         current_username = request.session.get('username')
         if not reservasi_result.data or reservasi_result.data[0]['username_p'] != current_username:
@@ -179,13 +303,13 @@ def edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
                     
                     update_result = supabase.table('reservasi').update({
                         'jumlah_tiket': new_jumlah
-                    }).eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                    }).eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
                     
                     if update_result.data:
                         messages.success(request, "Reservasi berhasil diubah")
                         return redirect('tickets:detail_reservasi', 
                                       username_p=username_p,
-                                      nama_atraksi=nama_atraksi, 
+                                      nama_fasilitas=nama_fasilitas, 
                                       tanggal_kunjungan=tanggal_kunjungan)
                     else:
                         messages.error(request, "Gagal mengubah reservasi")
@@ -193,10 +317,10 @@ def edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
                     messages.error(request, f"Error updating reservation: {str(e)}")
         
         # Get attraction and facility details
-        atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_atraksi).execute()
+        atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_fasilitas).execute()
         atraksi = atraksi_result.data[0] if atraksi_result.data else {}
         
-        facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_atraksi).execute()
+        facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
         facility = facility_result.data[0] if facility_result.data else {}
         
         # Format jadwal
@@ -211,6 +335,7 @@ def edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
         # Add formatted data
         reservasi['lokasi'] = atraksi.get('lokasi', 'Tidak ada')
         reservasi['jam'] = jam
+        reservasi['nama_atraksi'] = nama_fasilitas  # For template compatibility
         
         form = ReservasiEditForm(initial={
             'jumlah_tiket': reservasi['jumlah_tiket'],
@@ -226,39 +351,37 @@ def edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
         return redirect('tickets:tambah_reservasi')
 
 @login_required_custom
-def batalkan_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
+def batalkan_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan):
     """View for cancelling a reservation"""
     try:
         current_username = request.session.get('username')
         
-        # Check if reservation exists and belongs to user
-        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
-        
+        # Check if reservation exists and belongs to user - using nama_fasilitas
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
         
         if not reservasi_result.data:
             messages.error(request, "Reservasi tidak ditemukan")
             return redirect('tickets:tambah_reservasi')
             
-        # Cek ownership
+        # Check ownership
         if reservasi_result.data[0]['username_p'] != current_username:
             messages.error(request, "Anda tidak memiliki akses ke reservasi ini")
             return redirect('tickets:tambah_reservasi')
 
         if request.method == 'POST':
-            # Update dengan error handling yang lebih detail
+            # Update with detailed error handling
             try:
                 update_result = supabase.table('reservasi').update({
                     'status': 'Dibatalkan'
-                }).eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                }).eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
                 
-                
-                # Cek apakah ada error dari Supabase
+                # Check if there's an error from Supabase
                 if hasattr(update_result, 'error') and update_result.error:
                     messages.error(request, f"Error dari database: {update_result.error}")
                     return redirect('tickets:tambah_reservasi')
                 
-                # Verifikasi update berhasil dengan query ulang
-                verify_result = supabase.table('reservasi').select('status').eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                # Verify update was successful with another query
+                verify_result = supabase.table('reservasi').select('status').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
                 
                 if verify_result.data and verify_result.data[0]['status'] == 'Dibatalkan':
                     messages.success(request, "Reservasi berhasil dibatalkan")
@@ -272,13 +395,296 @@ def batalkan_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
             
         return redirect('tickets:detail_reservasi', 
                        username_p=username_p, 
-                       nama_atraksi=nama_atraksi, 
+                       nama_fasilitas=nama_fasilitas, 
                        tanggal_kunjungan=tanggal_kunjungan)
                        
     except Exception as e:
         messages.error(request, f"Error: {str(e)}")
         return redirect('tickets:tambah_reservasi')
 
+@login_required_custom
+def tambah_reservasi_wahana(request):
+    if request.method == 'POST':
+        form = ReservasiWahanaForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            
+            try:
+                # Get wahana details
+                wahana_result = supabase.table('wahana').select('*').eq('nama_wahana', cd['nama_wahana']).execute()
+                
+                if not wahana_result.data:
+                    messages.error(request, "Wahana tidak ditemukan")
+                    return redirect('tickets:tambah_reservasi_wahana')
+                
+                wahana = wahana_result.data[0]
+                
+                # Get facility details - using nama_wahana as it references fasilitas.nama
+                facility_result = supabase.table('fasilitas').select('*').eq('nama', cd['nama_wahana']).execute()
+                facility = facility_result.data[0] if facility_result.data else {}
+                
+                # Create reservation - using nama_fasilitas field
+                reservasi_data = {
+                    'username_p': request.session.get('username'),
+                    'nama_fasilitas': cd['nama_wahana'],  # This now maps to fasilitas.nama
+                    'tanggal_kunjungan': cd['tanggal_kunjungan'].isoformat(),
+                    'jumlah_tiket': cd['jumlah_tiket'],
+                    'status': 'Terjadwal'
+                }
+                
+                result = supabase.table('reservasi').insert(reservasi_data).execute()
+                
+                if result.data:
+                    messages.success(request, f"Reservasi untuk {cd['nama_wahana']} berhasil dibuat.")
+                    return redirect('tickets:detail_reservasi_wahana', 
+                                  username_p=request.session.get('username'),
+                                  nama_fasilitas=cd['nama_wahana'], 
+                                  tanggal_kunjungan=cd['tanggal_kunjungan'].isoformat())
+                else:
+                    messages.error(request, "Gagal membuat reservasi")
+            except Exception as e:
+                messages.error(request, f"Error: {str(e)}")
+    else:
+        form = ReservasiWahanaForm()
+
+    # Get wahana list for the form
+    try:
+        wahana_result = supabase.table('wahana').select('*').execute()
+        
+        wahana_list = []
+        for wahana in wahana_result.data:
+            # Get facility details - using nama_wahana as foreign key to fasilitas.nama
+            facility_result = supabase.table('fasilitas').select('*').eq('nama', wahana['nama_wahana']).execute()
+            facility = facility_result.data[0] if facility_result.data else {}
+            
+            # Format jadwal
+            jadwal_formatted = "Tidak ada"
+            if facility.get('jadwal'):
+                try:
+                    jadwal_dt = datetime.fromisoformat(facility['jadwal'].replace('Z', '+00:00'))
+                    jadwal_formatted = jadwal_dt.strftime('%H:%M')
+                except:
+                    jadwal_formatted = str(facility['jadwal'])
+            
+            # Format peraturan - split by sentences or line breaks
+            peraturan_list = []
+            if wahana.get('peraturan'):
+                # Split by periods, semicolons, or line breaks
+                peraturan_raw = wahana['peraturan'].replace('\n', '. ').replace(';', '. ')
+                peraturan_list = [p.strip() for p in peraturan_raw.split('.') if p.strip()]
+            
+            wahana_list.append({
+                'nama': wahana['nama_wahana'],
+                'peraturan': peraturan_list,
+                'kapasitas': facility.get('kapasitas_max', 0),
+                'jadwal': jadwal_formatted,
+            })
+        
+    except Exception as e:
+        wahana_list = []
+        messages.error(request, f"Error loading wahana: {str(e)}")
+
+    return render(request, 'tambah_reservasi_wahana.html', {
+        'form': form,
+        'wahana_list': wahana_list
+    })
+
+@login_required_custom
+def detail_reservasi_wahana(request, username_p, nama_fasilitas, tanggal_kunjungan):
+    """View for viewing wahana reservation details"""
+    try:
+        # Get reservation - using nama_fasilitas
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        
+        current_username = request.session.get('username')
+        if not reservasi_result.data or reservasi_result.data[0]['username_p'] != current_username:
+            messages.error(request, "Reservasi tidak ditemukan")
+            return redirect('tickets:tambah_reservasi_wahana')
+        
+        reservasi = reservasi_result.data[0]
+        
+        # Get wahana details - nama_fasilitas corresponds to nama_wahana (which is FK to fasilitas.nama)
+        wahana_result = supabase.table('wahana').select('*').eq('nama_wahana', nama_fasilitas).execute()
+        wahana = wahana_result.data[0] if wahana_result.data else {}
+        
+        # Get facility details - using nama_fasilitas directly
+        facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
+        facility = facility_result.data[0] if facility_result.data else {}
+        
+        # Format jadwal
+        jam = "Tidak ada"
+        if facility.get('jadwal'):
+            try:
+                jadwal_dt = datetime.fromisoformat(facility['jadwal'].replace('Z', '+00:00'))
+                jam = jadwal_dt.strftime('%H:%M')
+            except:
+                jam = str(facility['jadwal'])
+        
+        # Format peraturan - split by sentences or line breaks
+        peraturan_list = []
+        if wahana.get('peraturan'):
+            # Split by periods, semicolons, or line breaks
+            peraturan_raw = wahana['peraturan'].replace('\n', '. ').replace(';', '. ')
+            peraturan_list = [p.strip() for p in peraturan_raw.split('.') if p.strip()]
+        
+        # Add formatted data
+        reservasi['peraturan'] = peraturan_list
+        reservasi['jam'] = jam
+        reservasi['nama_wahana'] = nama_fasilitas  # For template compatibility
+        
+        return render(request, 'detail_reservasi_wahana.html', {
+            'reservasi': reservasi
+        })
+    except Exception as e:
+        messages.error(request, f"Error: {str(e)}")
+        return redirect('tickets:tambah_reservasi_wahana')
+
+@login_required_custom
+def edit_reservasi_wahana(request, username_p, nama_fasilitas, tanggal_kunjungan):
+    """View for editing a wahana reservation"""
+    try:
+        # Get reservation - using nama_fasilitas
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        
+        current_username = request.session.get('username')
+        if not reservasi_result.data or reservasi_result.data[0]['username_p'] != current_username:
+            messages.error(request, "Reservasi tidak ditemukan")
+            return redirect('tickets:tambah_reservasi_wahana')
+        
+        reservasi = reservasi_result.data[0]
+        
+        if request.method == 'POST':
+            if 'jumlah_tiket' in request.POST:
+                try:
+                    new_jumlah = int(request.POST.get('jumlah_tiket'))
+                    
+                    # Validate capacity before updating
+                    form = ReservasiWahanaEditForm(request.POST, initial={
+                        'username_p': username_p,
+                        'nama_fasilitas': nama_fasilitas,
+                        'tanggal_kunjungan': tanggal_kunjungan,
+                        'jumlah_tiket': reservasi['jumlah_tiket'],
+                        'status': reservasi['status']
+                    })
+                    
+                    if form.is_valid():
+                        update_result = supabase.table('reservasi').update({
+                            'jumlah_tiket': new_jumlah
+                        }).eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                        
+                        if update_result.data:
+                            messages.success(request, "Reservasi berhasil diubah")
+                            return redirect('tickets:detail_reservasi_wahana', 
+                                          username_p=username_p,
+                                          nama_fasilitas=nama_fasilitas, 
+                                          tanggal_kunjungan=tanggal_kunjungan)
+                        else:
+                            messages.error(request, "Gagal mengubah reservasi")
+                    else:
+                        # Display form errors
+                        for field, errors in form.errors.items():
+                            for error in errors:
+                                messages.error(request, error)
+                        
+                except Exception as e:
+                    messages.error(request, f"Error updating reservation: {str(e)}")
+        
+        # Get wahana and facility details
+        wahana_result = supabase.table('wahana').select('*').eq('nama_wahana', nama_fasilitas).execute()
+        wahana = wahana_result.data[0] if wahana_result.data else {}
+        
+        facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
+        facility = facility_result.data[0] if facility_result.data else {}
+        
+        # Format jadwal
+        jam = "Tidak ada"
+        if facility.get('jadwal'):
+            try:
+                jadwal_dt = datetime.fromisoformat(facility['jadwal'].replace('Z', '+00:00'))
+                jam = jadwal_dt.strftime('%H:%M')
+            except:
+                jam = str(facility['jadwal'])
+        
+        # Format peraturan - split by sentences or line breaks
+        peraturan_list = []
+        if wahana.get('peraturan'):
+            # Split by periods, semicolons, or line breaks
+            peraturan_raw = wahana['peraturan'].replace('\n', '. ').replace(';', '. ')
+            peraturan_list = [p.strip() for p in peraturan_raw.split('.') if p.strip()]
+        
+        # Add formatted data
+        reservasi['peraturan'] = peraturan_list
+        reservasi['jam'] = jam
+        reservasi['nama_wahana'] = nama_fasilitas  # For template compatibility
+        
+        form = ReservasiWahanaEditForm(initial={
+            'username_p': username_p,
+            'nama_fasilitas': nama_fasilitas,
+            'tanggal_kunjungan': tanggal_kunjungan,
+            'jumlah_tiket': reservasi['jumlah_tiket'],
+            'status': reservasi['status']
+        })
+        
+        return render(request, 'edit_reservasi_wahana.html', {
+            'form': form,
+            'reservasi': reservasi
+        })
+    except Exception as e:
+        messages.error(request, f"Error: {str(e)}")
+        return redirect('tickets:tambah_reservasi_wahana')
+
+@login_required_custom
+def batalkan_reservasi_wahana(request, username_p, nama_fasilitas, tanggal_kunjungan):
+    """View for cancelling a wahana reservation"""
+    try:
+        current_username = request.session.get('username')
+        
+        # Check if reservation exists and belongs to user - using nama_fasilitas
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        
+        if not reservasi_result.data:
+            messages.error(request, "Reservasi tidak ditemukan")
+            return redirect('tickets:tambah_reservasi_wahana')
+            
+        # Check ownership
+        if reservasi_result.data[0]['username_p'] != current_username:
+            messages.error(request, "Anda tidak memiliki akses ke reservasi ini")
+            return redirect('tickets:tambah_reservasi_wahana')
+
+        if request.method == 'POST':
+            # Update with detailed error handling
+            try:
+                update_result = supabase.table('reservasi').update({
+                    'status': 'Dibatalkan'
+                }).eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                
+                # Check if there's an error from Supabase
+                if hasattr(update_result, 'error') and update_result.error:
+                    messages.error(request, f"Error dari database: {update_result.error}")
+                    return redirect('tickets:tambah_reservasi_wahana')
+                
+                # Verify update was successful with another query
+                verify_result = supabase.table('reservasi').select('status').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                
+                if verify_result.data and verify_result.data[0]['status'] == 'Dibatalkan':
+                    messages.success(request, "Reservasi berhasil dibatalkan")
+                else:
+                    messages.error(request, "Update tidak berhasil - status tidak berubah")
+                    
+            except Exception as update_error:
+                messages.error(request, f"Error saat update: {str(update_error)}")
+                
+            return redirect('tickets:tambah_reservasi_wahana')
+            
+        return redirect('tickets:detail_reservasi_wahana', 
+                       username_p=username_p, 
+                       nama_fasilitas=nama_fasilitas, 
+                       tanggal_kunjungan=tanggal_kunjungan)
+                       
+    except Exception as e:
+        messages.error(request, f"Error: {str(e)}")
+        return redirect('tickets:tambah_reservasi_wahana')
+    
 # Admin views
 @login_required_custom
 def admin_list_reservasi(request):
@@ -306,7 +712,7 @@ def admin_list_reservasi(request):
             atraksi = atraksi_result.data[0] if atraksi_result.data else {}
             
             # Get facility details
-            facility_result = supabase.table('fasilitas').select('*').eq('nama', reservasi['nama_atraksi']).execute()
+            facility_result = supabase.table('fasilitas').select('*').eq('nama', reservasi['nama_fasilitas']).execute()
             facility = facility_result.data[0] if facility_result.data else {}
             
             # Format jadwal
@@ -349,7 +755,7 @@ def admin_edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
 
     try:
         # Get reservation
-        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
                 
         if not reservasi_result.data:
             messages.error(request, "Reservasi tidak ditemukan")
@@ -373,7 +779,7 @@ def admin_edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
             if update_data:
                 try:
                     # Update dengan error handling yang lebih detail
-                    update_result = supabase.table('reservasi').update(update_data).eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                    update_result = supabase.table('reservasi').update(update_data).eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
                                         
                     # Cek error dari Supabase
                     if hasattr(update_result, 'error') and update_result.error:
@@ -381,7 +787,7 @@ def admin_edit_reservasi(request, username_p, nama_atraksi, tanggal_kunjungan):
                         return redirect('tickets:admin_list_reservasi')
                     
                     # Verifikasi update dengan query ulang
-                    verify_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_atraksi', nama_atraksi).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                    verify_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
                     
                     if verify_result.data:
                         updated_reservasi = verify_result.data[0]

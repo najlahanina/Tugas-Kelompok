@@ -48,8 +48,16 @@
                 {% elif request.session.user_role == "trainer" %}
                     <li><a href="{% url 'attractions:list_atraksi_trainer' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
                 {% elif request.session.user_role == "visitor" %}
-                    <li><a href="{% url 'attractions:list_atraksi_trainer' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
-                    <li><a href="{% url 'tickets:tambah_reservasi' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Reservasi Tiket</a></li>
+                    <li><a href="{% url 'tickets:list_reservasi_tersedia' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Jadwal Pertunjukan</a></li>
+                    <!-- Dropdown Menu -->
+                    <li class="relative group" id="dropdownMenu3">
+                        <a href="#" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Reservasi Tiket</a>
+                        <ul class="absolute hidden bg-[#f8f5f0] text-white rounded shadow-lg w-40 mt-2 z-50" id="dropdownList3">
+                            <li><a href="{% url 'tickets:tambah_reservasi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Atraksi</a></li>
+                            <li><a href="{% url 'tickets:tambah_reservasi_wahana' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Wahana</a></li>
+                            <li><a href="{% url 'tickets:list_reservasi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Booking History</a></li>
+                        </ul>
+                    </li>
                     {% comment %} Check if visitor is adopter {% endcomment %}
                     {% if request.session.is_adopter %}
                         <li><a href="{% url 'main:dashboard' %}" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Hewan Adopsi</a></li>
@@ -116,6 +124,7 @@
             // Setup each dropdown
             setupDropdown('dropdownMenu1', 'dropdownList1');
             setupDropdown('dropdownMenu2', 'dropdownList2');
+             setupDropdown('dropdownMenu3', 'dropdownList3');
         });
     </script>
 

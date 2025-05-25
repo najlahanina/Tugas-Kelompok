@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Reservasi - Zoo Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #333;
+        }
+        
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .status-terjadwal {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-dibatalkan {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .status-selesai {
+            color: #6c757d;
+            font-weight: bold;
+        }
+        
+        .action-links {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-links a {
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .edit-link {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .cancel-link {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .edit-link:hover {
+            background-color: #0056b3;
+        }
+        
+        .cancel-link:hover {
+            background-color: #c82333;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .navigation {
+            margin-bottom: 20px;
+        }
+        
+        .navigation a {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        
+        .navigation a:hover {
+            background-color: #218838;
+        }
+        
+        .page-info {
+            text-align: right;
+            color: #666;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .messages {
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DATA RESERVASI</h1>
+            <p class="description">
+            </p>
+        </div>
+        
+        <div class="navigation">
+            <a href="{% url 'tickets:tambah_reservasi' %}">Buat Reservasi Atraksi</a>
+            <a href="{% url 'tickets:tambah_reservasi_wahana' %}">Buat Reservasi Wahana</a>
+            <a href="{% url 'tickets:list_reservasi_tersedia' %}">Lihat Fasilitas Tersedia</a>
+        </div>
+        
+        <!-- Display Messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="table-container">
+            {% if reservasi_list %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jenis<br>Reservasi</th>
+                            <th>Nama<br>Atraksi</th>
+                            <th>Tanggal<br>reservasi</th>
+                            <th>Jumlah<br>tiket</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reservasi in reservasi_list %}
+                        <tr>
+                            <td>{{ reservasi.jenis_reservasi }}</td>
+                            <td>{{ reservasi.nama_fasilitas }}</td>
+                            <td>{{ reservasi.tanggal_kunjungan }}</td>
+                            <td>{{ reservasi.jumlah_tiket }}</td>
+                            <td>
+                                <span class="{% if reservasi.status == 'Terjadwal' %}status-terjadwal{% elif reservasi.status == 'Dibatalkan' %}status-dibatalkan{% else %}status-selesai{% endif %}">
+                                    {{ reservasi.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if reservasi.status == 'Terjadwal' %}
+                                    <div class="action-links">
+                                        {% if reservasi.jenis_reservasi == 'Atraksi' %}
+                                            <a href="{% url 'tickets:edit_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="edit-link">[Edit]</a>
+                                            <a href="{% url 'tickets:batalkan_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="cancel-link" onclick="return confirm('Apakah Anda yakin ingin membatalkan reservasi ini?')">[Batalkan]</a>
+                                        {% else %}
+                                            <a href="{% url 'tickets:edit_reservasi_wahana' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="edit-link">[Edit]</a>
+                                            <a href="{% url 'tickets:batalkan_reservasi_wahana' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="cancel-link" onclick="return confirm('Apakah Anda yakin ingin membatalkan reservasi ini?')">[Batalkan]</a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="no-data">
+                    <p>Belum ada data reservasi.</p>
+                    <p>Silakan buat reservasi baru menggunakan tombol di atas.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if reservasi_list %}
+        <div class="page-info">
+            Total: {{ reservasi_list|length }} reservasi
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
