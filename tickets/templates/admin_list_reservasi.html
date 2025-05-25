@@ -42,7 +42,7 @@
                                 {% for reservasi in reservasi_list %}
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4">{{ reservasi.username_p }}</td>
-                                        <td class="px-6 py-4">{{ reservasi.nama_atraksi }}</td>
+                                        <td class="px-6 py-4">{{ reservasi.nama_fasilitas }}</td>
                                         <td class="px-6 py-4">{{ reservasi.tanggal_kunjungan }}</td>
                                         <td class="px-6 py-4">{{ reservasi.jumlah_tiket }}</td>
                                         <td class="px-6 py-4">
@@ -62,7 +62,7 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex space-x-2">
-                                                <a href="{% url 'tickets:admin_edit_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan %}" 
+                                                <a href="{% url 'tickets:admin_edit_reservasi' reservasi.username_p reservasi.fasilitas reservasi.tanggal_kunjungan %}" 
                                                 class="px-3 py-1 text-sm bg-[#e0cfc2] text-[#586132] rounded hover:bg-[#d0bfb2] transition-colors">
                                                     Edit
                                                 </a>
@@ -92,7 +92,7 @@
                                                         <p class="py-4">Apakah Anda yakin ingin membatalkan reservasi ini?</p>
                                                         <div class="text-sm text-gray-600">
                                                             <p><strong>Username:</strong> {{ reservasi.username_p }}</p>
-                                                            <p><strong>Atraksi:</strong> {{ reservasi.nama_atraksi }}</p>
+                                                            <p><strong>Atraksi:</strong> {{ reservasi.nama_fasilitas }}</p>
                                                             <p><strong>Tanggal:</strong> {{ reservasi.tanggal_kunjungan }}</p>
                                                         </div>
                                                     </div>
@@ -101,7 +101,7 @@
                                                                 data-bs-dismiss="modal">
                                                             Tidak
                                                         </button>
-                                                        <form method="post" action="{% url 'tickets:admin_batalkan_reservasi' reservasi.username_p reservasi.nama_atraksi reservasi.tanggal_kunjungan %}" style="display: inline;">
+                                                        <form method="post" action="{% url 'tickets:admin_batalkan_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" style="display: inline;">
                                                             {% csrf_token %}
                                                             <button type="submit" name="confirm" value="ya" 
                                                                     class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
