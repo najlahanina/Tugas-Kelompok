@@ -31,7 +31,8 @@
                             <thead>
                                 <tr class="bg-[#586132] text-[#f8f5f0] text-left">
                                     <th class="px-6 py-3 font-medium">Username Pengunjung</th>
-                                    <th class="px-6 py-3 font-medium">Nama Atraksi</th>
+                                    <th class="px-6 py-3 font-medium">Jenis Fasilitas</th>
+                                    <th class="px-6 py-3 font-medium">Nama Fasilitas</th>
                                     <th class="px-6 py-3 font-medium">Tanggal Reservasi</th>
                                     <th class="px-6 py-3 font-medium">Jumlah Tiket</th>
                                     <th class="px-6 py-3 font-medium">Status</th>
@@ -42,6 +43,15 @@
                                 {% for reservasi in reservasi_list %}
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4">{{ reservasi.username_p }}</td>
+                                        <td>
+                                            {% if reservasi.jenis_reservasi == 'Atraksi' %}
+                                              <span class="bg-green-200 text-green-800 px-2 py-1 rounded text-sm">Atraksi</span>
+                                            {% elif reservasi.jenis_reservasi == 'Wahana' %}
+                                              <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded text-sm">Wahana</span>
+                                            {% else %}
+                                              <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm">Tidak diketahui</span>
+                                            {% endif %}
+                                        </td>
                                         <td class="px-6 py-4">{{ reservasi.nama_fasilitas }}</td>
                                         <td class="px-6 py-4">{{ reservasi.tanggal_kunjungan }}</td>
                                         <td class="px-6 py-4">{{ reservasi.jumlah_tiket }}</td>

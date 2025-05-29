@@ -74,6 +74,7 @@ def list_reservasi_tersedia(request):
             for r in user_reservasi_result.data
         } if user_reservasi_result.data else set()
 
+        # ATRAKSI
         atraksi_result = supabase.table('atraksi').select('*').execute()
         for atraksi in atraksi_result.data:
             nama_fasilitas = atraksi['nama_atraksi']
@@ -81,14 +82,17 @@ def list_reservasi_tersedia(request):
             facility = facility_result.data[0] if facility_result.data else {}
             kapasitas_max = facility.get('kapasitas_max', 0)
 
-            reservasi_terjadwal_result = supabase.table('reservasi') \
-                .select('jumlah_tiket') \
-                .eq('nama_fasilitas', nama_fasilitas) \
-                .eq('status', 'Terjadwal').execute()
-            total_reserved = sum([r['jumlah_tiket'] for r in reservasi_terjadwal_result.data]) if reservasi_terjadwal_result.data else 0
-            kapasitas_tersedia = max(0, kapasitas_max - total_reserved)
-
             for tanggal in tanggal_ke_depan:
+                reservasi_tanggal_result = supabase.table('reservasi') \
+                    .select('jumlah_tiket') \
+                    .eq('nama_fasilitas', nama_fasilitas) \
+                    .eq('tanggal_kunjungan', tanggal) \
+                    .eq('status', 'Terjadwal') \
+                    .execute()
+                
+                total_reserved = sum([r['jumlah_tiket'] for r in reservasi_tanggal_result.data]) if reservasi_tanggal_result.data else 0
+                kapasitas_tersedia = max(0, kapasitas_max - total_reserved)
+
                 fasilitas_list.append({
                     'jenis_reservasi': 'Atraksi',
                     'nama_fasilitas': nama_fasilitas,
@@ -98,6 +102,7 @@ def list_reservasi_tersedia(request):
                     'is_user_reserved': (nama_fasilitas, tanggal) in user_reservasi,
                 })
 
+        # WAHANA
         wahana_result = supabase.table('wahana').select('*').execute()
         for wahana in wahana_result.data:
             nama_fasilitas = wahana['nama_wahana']
@@ -105,14 +110,17 @@ def list_reservasi_tersedia(request):
             facility = facility_result.data[0] if facility_result.data else {}
             kapasitas_max = facility.get('kapasitas_max', 0)
 
-            reservasi_terjadwal_result = supabase.table('reservasi') \
-                .select('jumlah_tiket') \
-                .eq('nama_fasilitas', nama_fasilitas) \
-                .eq('status', 'Terjadwal').execute()
-            total_reserved = sum([r['jumlah_tiket'] for r in reservasi_terjadwal_result.data]) if reservasi_terjadwal_result.data else 0
-            kapasitas_tersedia = max(0, kapasitas_max - total_reserved)
-
             for tanggal in tanggal_ke_depan:
+                reservasi_tanggal_result = supabase.table('reservasi') \
+                    .select('jumlah_tiket') \
+                    .eq('nama_fasilitas', nama_fasilitas) \
+                    .eq('tanggal_kunjungan', tanggal) \
+                    .eq('status', 'Terjadwal') \
+                    .execute()
+                
+                total_reserved = sum([r['jumlah_tiket'] for r in reservasi_tanggal_result.data]) if reservasi_tanggal_result.data else 0
+                kapasitas_tersedia = max(0, kapasitas_max - total_reserved)
+
                 fasilitas_list.append({
                     'jenis_reservasi': 'Wahana',
                     'nama_fasilitas': nama_fasilitas,
@@ -125,6 +133,7 @@ def list_reservasi_tersedia(request):
         return render(request, 'list_reservasi_tersedia.html', {
             'fasilitas_list': fasilitas_list
         })
+
     except Exception as e:
         messages.error(request, f"Error loading available facilities: {str(e)}")
         return render(request, 'list_reservasi_tersedia.html', {
@@ -160,6 +169,14 @@ def tambah_reservasi(request):
                 # if cd['jumlah_tiket'] > sisa_kapasitas:
                 #     messages.error(request, f"Tiket tidak mencukupi. Sisa tiket tersedia: {sisa_kapasitas}")
                 #     return redirect('tickets:tambah_reservasi')
+
+                supabase.table('reservasi') \
+                    .delete() \
+                    .eq('username_p', request.session.get('username')) \
+                    .eq('nama_fasilitas', cd['nama_atraksi']) \
+                    .eq('tanggal_kunjungan', cd['tanggal_kunjungan'].isoformat()) \
+                    .eq('status', 'Dibatalkan') \
+                .execute()
 
                 reservasi_data = {
                     'username_p': request.session.get('username'),
@@ -233,7 +250,6 @@ def tambah_reservasi(request):
         'prefill_tanggal': prefill_tanggal,
         'today_date': today.isoformat(),
     })
-
 
 @login_required_custom
 def detail_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan):
@@ -376,6 +392,9 @@ def batalkan_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan):
 
 @login_required_custom
 def tambah_reservasi_wahana(request):
+    prefill_nama = request.GET.get("nama")
+    prefill_tanggal = request.GET.get("tanggal")
+
     if request.method == 'POST':
         form = ReservasiWahanaForm(request.POST)
         if form.is_valid():
@@ -393,13 +412,23 @@ def tambah_reservasi_wahana(request):
                 reservasi_terjadwal_result = supabase.table('reservasi') \
                     .select('jumlah_tiket') \
                     .eq('nama_fasilitas', cd['nama_wahana']) \
+                    .eq('tanggal_kunjungan', cd['tanggal_kunjungan'].isoformat()) \
                     .eq('status', 'Terjadwal').execute()
                 total_reserved = sum([r['jumlah_tiket'] for r in reservasi_terjadwal_result.data]) if reservasi_terjadwal_result.data else 0
                 sisa_kapasitas = kapasitas_max - total_reserved
 
+                # Validasi kapasitas di sisi frontend
                 if cd['jumlah_tiket'] > sisa_kapasitas:
                     messages.error(request, f"Tiket tidak mencukupi. Sisa tiket tersedia: {sisa_kapasitas}")
                     return redirect('tickets:tambah_reservasi_wahana')
+                
+                supabase.table('reservasi') \
+                    .delete() \
+                    .eq('username_p', request.session.get('username')) \
+                    .eq('nama_fasilitas', cd['nama_wahana']) \
+                    .eq('tanggal_kunjungan', cd['tanggal_kunjungan'].isoformat()) \
+                    .eq('status', 'Dibatalkan') \
+                    .execute()
 
                 reservasi_data = {
                     'username_p': request.session.get('username'),
@@ -422,14 +451,12 @@ def tambah_reservasi_wahana(request):
                 messages.error(request, f"Error: {str(e)}")
     else:
         form = ReservasiWahanaForm()
-        prefill_nama = request.GET.get("nama")
-        prefill_tanggal = request.GET.get("tanggal")
-
         if prefill_nama:
             form.fields['nama_wahana'].initial = prefill_nama
         if prefill_tanggal:
             form.fields['tanggal_kunjungan'].initial = prefill_tanggal
 
+    # Tetap ambil daftar wahana
     try:
         wahana_result = supabase.table('wahana').select('*').execute()
         wahana_list = []
@@ -627,7 +654,6 @@ def admin_list_reservasi(request):
         reservasi_list = []
         for reservasi in reservasi_result.data:
             nama_fasilitas_reservasi = reservasi.get('nama_atraksi') or reservasi.get('nama_fasilitas')
-
             if not nama_fasilitas_reservasi:
                 continue
 
@@ -638,23 +664,29 @@ def admin_list_reservasi(request):
             atraksi = {}
             facility = {}
             jam = "Tidak ada"
+            jenis_reservasi = "Tidak diketahui"
 
             atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_fasilitas_reservasi).execute()
             if atraksi_result.data:
+                jenis_reservasi = 'Atraksi'
                 atraksi = atraksi_result.data[0]
                 facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas_reservasi).execute()
                 facility = facility_result.data[0] if facility_result.data else {}
+
                 if facility.get('jadwal'):
                     try:
                         jadwal_dt = datetime.fromisoformat(facility['jadwal'].replace('Z', '+00:00'))
                         jam = jadwal_dt.strftime('%H:%M')
                     except:
                         jam = str(facility['jadwal'])
+
             else:
                 wahana_result = supabase.table('wahana').select('*').eq('nama_wahana', nama_fasilitas_reservasi).execute()
                 if wahana_result.data:
+                    jenis_reservasi = 'Wahana'
                     facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas_reservasi).execute()
                     facility = facility_result.data[0] if facility_result.data else {}
+
                     if facility.get('jadwal'):
                         try:
                             jadwal_dt = datetime.fromisoformat(facility['jadwal'].replace('Z', '+00:00'))
@@ -662,14 +694,13 @@ def admin_list_reservasi(request):
                         except:
                             jam = str(facility['jadwal'])
 
-            # Add formatted data
             reservasi['nama_lengkap'] = f"{user.get('nama_depan', '')} {user.get('nama_belakang', '')}"
             reservasi['lokasi'] = atraksi.get('lokasi', 'Tidak ada')
             reservasi['jam'] = jam
+            reservasi['jenis_reservasi'] = jenis_reservasi
 
             reservasi_list.append(reservasi)
 
-        # Sort by tanggal_kunjungan descending
         reservasi_list.sort(key=lambda x: x['tanggal_kunjungan'], reverse=True)
 
         return render(request, 'admin_list_reservasi.html', {
