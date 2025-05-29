@@ -13,14 +13,12 @@
 
     <!-- Form Card -->
     <div class="w-full max-w-2xl bg-white rounded-lg shadow-md overflow-hidden">
-        <!-- Tab Navigation -->
         <div class="flex">
             <div class="w-full bg-[#586132] text-white p-4 text-center font-medium">
                 Form Reservasi
             </div>
         </div>
 
-        <!-- Form Content -->
         <div class="p-6">
             {% if messages %}
                 <div class="mb-6">
@@ -37,50 +35,52 @@
                 
                 <div class="mb-4">
                     <label for="id_nama_wahana" class="block text-[#586132] font-medium mb-1">Nama Wahana</label>
-                    <select name="nama_wahana" id="id_nama_wahana" 
-                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
+                    <select name="nama_wahana" id="id_nama_wahana"
+                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]"
                             required onchange="updateWahanaInfo()">
                         <option value="">----- Pilih Wahana -----</option>
                         {% for wahana in wahana_list %}
-                            <option value="{{ wahana.nama }}" 
-                                    data-peraturan="{{ wahana.peraturan }}" 
-                                    data-jam="{{ wahana.jadwal }}">
+                            <option value="{{ wahana.nama }}"
+                                    data-peraturan="{{ wahana.peraturan }}"
+                                    data-jam="{{ wahana.jadwal }}"
+                                    {% if form.initial.nama_wahana == wahana.nama %}selected{% endif %}>
                                 {{ wahana.nama }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-[#586132] font-medium mb-1">Peraturan</label>
                     <textarea class="w-full p-2 border border-gray-300 rounded bg-gray-50 h-20" id="peraturan_display" readonly></textarea>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-[#586132] font-medium mb-1">Jam</label>
                     <input type="text" class="w-full p-2 border border-gray-300 rounded bg-gray-50" id="jam_display" readonly>
                 </div>
-                
+
                 <div class="mb-4">
                     <label for="id_tanggal_kunjungan" class="block text-[#586132] font-medium mb-1">Tanggal</label>
-                    <input type="date" name="tanggal_kunjungan" id="id_tanggal_kunjungan" 
-                           class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
-                           required min="{{ today_date }}">
+                    <input type="date" name="tanggal_kunjungan" id="id_tanggal_kunjungan"
+                           class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]"
+                           required min="{{ today_date }}"
+                           value="{{ form.initial.tanggal_kunjungan }}">
                 </div>
-                
+
                 <div class="mb-4">
                     <label for="id_jumlah_tiket" class="block text-[#586132] font-medium mb-1">Jumlah tiket yang ingin dibeli</label>
-                    <input type="number" name="jumlah_tiket" id="id_jumlah_tiket" 
-                           class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
+                    <input type="number" name="jumlah_tiket" id="id_jumlah_tiket"
+                           class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]"
                            required min="1">
                 </div>
-                
+
                 <div class="flex justify-between pt-4">
-                    <a href="{% url 'tickets:tambah_reservasi_wahana' %}" 
+                    <a href="{% url 'tickets:tambah_reservasi_wahana' %}"
                        class="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
                         Batal
                     </a>
-                    <button type="submit" 
+                    <button type="submit"
                             class="px-6 py-2 bg-[#586132] text-white rounded hover:bg-[#485129] transition-colors">
                         Simpan
                     </button>
@@ -92,13 +92,29 @@
 
 <script>
     function updateWahanaInfo() {
-        const selectElement = document.getElementById('id_nama_wahana');
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
-        document.getElementById('peraturan_display').value = selectedOption.dataset.peraturan || '';
-        document.getElementById('jam_display').value = selectedOption.dataset.jam || '';
+        const select = document.getElementById('id_nama_wahana');
+        const option = select.options[select.selectedIndex];
+        document.getElementById('peraturan_display').value = option.dataset.peraturan || '';
+        document.getElementById('jam_display').value = option.dataset.jam || '';
     }
-    
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', updateWahanaInfo);
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateWahanaInfo();
+
+        // Ambil parameter URL untuk prefill (nama & tanggal)
+        const params = new URLSearchParams(window.location.search);
+        const nama = params.get('nama');
+        const tanggal = params.get('tanggal');
+
+        if (nama) {
+            const select = document.getElementById('id_nama_wahana');
+            select.value = nama;
+            select.dispatchEvent(new Event('change'));
+        }
+
+        if (tanggal) {
+            document.getElementById('id_tanggal_kunjungan').value = tanggal;
+        }
+    });
 </script>
 {% endblock %}

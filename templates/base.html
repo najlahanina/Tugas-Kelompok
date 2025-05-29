@@ -52,10 +52,11 @@
                     <!-- Dropdown Menu -->
                     <li class="relative group" id="dropdownMenu3">
                         <a href="#" class="text-white hover:text-[#e0cfc2] active:text-[#e0cfc2]">Reservasi Tiket</a>
-                        <ul class="absolute hidden bg-[#f8f5f0] text-white rounded shadow-lg w-40 mt-2 z-50" id="dropdownList3">
+                        <ul class="absolute hidden bg-[#f8f5f0] text-white rounded shadow-lg w-64 mt-2 z-50" id="dropdownList3">
                             <li><a href="{% url 'tickets:tambah_reservasi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Atraksi</a></li>
                             <li><a href="{% url 'tickets:tambah_reservasi_wahana' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Wahana</a></li>
-                            <li><a href="{% url 'tickets:list_reservasi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Booking History</a></li>
+                            <li><a href="{% url 'tickets:list_reservasi' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Lihat Reservasi Saya</a></li>
+                            <li><a href="{% url 'tickets:list_reservasi_tersedia' %}" class="block px-4 py-2 hover:bg-[#e0cfc2] text-[#586132]" onclick="event.stopPropagation()">Lihat Reservasi Tersedia</a></li>
                         </ul>
                     </li>
                     {% comment %} Check if visitor is adopter {% endcomment %}

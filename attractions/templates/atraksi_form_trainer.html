@@ -10,44 +10,39 @@
         </div>
         
         <div class="p-6">
-            <form method="post">
+            <form method="POST">
                 {% csrf_token %}
-                
-                <div class="mb-5">
-                    <label for="nama" class="block text-gray-700 font-medium mb-2">Nama Pertunjukan</label>
-                    <input type="text" name="nama" id="nama" placeholder="Nama pertunjukan" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#586132]/30"
-                        {% if edit_mode %}value="{{ data.nama }}" readonly{% endif %} required>
+                <div class="mb-4">
+                  <label class="font-semibold">Nama Atraksi:</label>
+                  <div class="text-gray-700">{{ nama_atraksi }}</div>
                 </div>
-                
-                <div class="mb-5">
-                    <label for="lokasi" class="block text-gray-700 font-medium mb-2">Lokasi</label>
-                    <input type="text" name="lokasi" id="lokasi" placeholder="Lokasi pertunjukan" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#586132]/30"
-                        value="{{ data.lokasi|default_if_none:'' }}" required>
+              
+                <div class="mb-4">
+                  <label class="font-semibold">Lokasi:</label>
+                  <div class="text-gray-700">{{ lokasi }}</div>
                 </div>
-                
-                <div class="flex flex-wrap -mx-2">
-                    <div class="w-full md:w-1/2 px-2 mb-5">
-                        <label for="kapasitas" class="block text-gray-700 font-medium mb-2">Kapasitas Maksimum (orang)</label>
-                        <input type="number" name="kapasitas" id="kapasitas" placeholder="Kapasitas maksimum" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#586132]/30"
-                            value="{{ data.kapasitas|default_if_none:'' }}" required>
-                    </div>
-                    
-                    <div class="w-full md:w-1/2 px-2 mb-5">
-                        <label for="jadwal" class="block text-gray-700 font-medium mb-2">Jadwal</label>
-                        <input type="time" name="jadwal" id="jadwal" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#586132]/30"
-                            value="{{ data.jadwal|default_if_none:'' }}" required>
-                    </div>
+              
+                <div class="mb-4">
+                  <label class="font-semibold">Kapasitas:</label>
+                  <div class="text-gray-700">{{ kapasitas }} orang</div>
                 </div>
-                
-                <div class="flex justify-end mt-6 space-x-2">
-                    <a href="{% url 'attractions:list_atraksi_trainer' %}" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-700 font-medium transition duration-200">Batal</a>
-                    <button type="submit" class="px-5 py-2 bg-[#586132] hover:bg-[#4a5229] text-white rounded-md font-medium transition duration-200">Simpan</button>
+              
+                <div class="mb-6">
+                  <label for="jadwal" class="font-semibold">Jam Atraksi:</label>
+                  <input
+                    type="time"
+                    name="jadwal"
+                    id="jadwal"
+                    value="{{ jadwal|time:'H:i' }}"
+                    class="w-full px-4 py-2 border rounded"
+                    required
+                  />
                 </div>
-            </form>
+              
+                <button type="submit" class="bg-[#586132] hover:bg-[#4a5229] text-white font-medium py-2 px-6 rounded">
+                  Simpan Perubahan
+                </button>
+              </form>              
         </div>
     </div>
 </div>

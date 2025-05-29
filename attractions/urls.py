@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('atraksi-trainer/', views.list_atraksi_trainer, name='list_atraksi_trainer'),
     path('atraksi-trainer/tambah/', views.tambah_atraksi_trainer, name='tambah_atraksi_trainer'),
-    path('atraksi-trainer/edit/<int:id>/', views.edit_atraksi_trainer, name='edit_atraksi_trainer'),
+    path('atraksi-trainer/edit/<str:nama_atraksi>/', views.edit_atraksi_trainer, name='edit_atraksi_trainer'),
     path('atraksi-trainer/hapus/<int:id>/', views.hapus_atraksi_trainer, name='hapus_atraksi_trainer'),
 
 ]

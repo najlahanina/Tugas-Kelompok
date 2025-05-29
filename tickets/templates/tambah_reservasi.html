@@ -42,9 +42,10 @@
                             required onchange="updateAttractionInfo()">
                         <option value="">----- Pilih Atraksi -----</option>
                         {% for atraksi in atraksi_list %}
-                            <option value="{{ atraksi.nama }}" 
-                                    data-lokasi="{{ atraksi.lokasi }}" 
-                                    data-jadwal="{{ atraksi.jadwal }}">
+                            <option value="{{ atraksi.nama }}"
+                                    data-lokasi="{{ atraksi.lokasi }}"
+                                    data-jadwal="{{ atraksi.jadwal }}"
+                                    {% if prefill_nama == atraksi.nama %}selected{% endif %}>
                                 {{ atraksi.nama }}
                             </option>
                         {% endfor %}
@@ -63,9 +64,9 @@
                 
                 <div class="mb-4">
                     <label for="id_tanggal_kunjungan" class="block text-[#586132] font-medium mb-1">Tanggal</label>
-                    <input type="date" name="tanggal_kunjungan" id="id_tanggal_kunjungan" 
+                    <input type="date" name="tanggal_kunjungan" id="id_tanggal_kunjungan"
                            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#586132]" 
-                           required min="{{ today_date }}">
+                           required min="{{ today_date }}" value="{{ prefill_tanggal }}">
                 </div>
                 
                 <div class="mb-4">
@@ -97,8 +98,9 @@
         document.getElementById('lokasi_display').value = selectedOption.dataset.lokasi || '';
         document.getElementById('jam_display').value = selectedOption.dataset.jadwal || '';
     }
-    
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', updateAttractionInfo);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateAttractionInfo();
+    });
 </script>
 {% endblock %}

@@ -97,11 +97,38 @@ class EditAtraksiForm(forms.Form):
     jadwal = forms.TimeField(
         label='Jadwal Atraksi',
         widget=forms.TimeInput(format='%H:%M', attrs={
-            'type': 'time', 
+            'type': 'time',
             'class': 'block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-[#586132] focus:border-[#586132]'
         })
     )
+    pelatih_choices = []
+    try:
+        pelatih_result = supabase.table('pelatih_hewan').select('username_lh').execute()
+        pengguna_result = supabase.table('pengguna').select('username, nama_depan, nama_belakang').execute()
+        pengguna_map = {p['username']: f"{p['nama_depan']} {p['nama_belakang']}" for p in pengguna_result.data}
+        pelatih_choices = [(p['username_lh'], pengguna_map.get(p['username_lh'], p['username_lh'])) for p in pelatih_result.data]
+    except Exception as e:
+        print(f"Error loading pelatih choices: {e}")
+    pelatih = forms.MultipleChoiceField(
+        label='Pelatih Pertunjukan',
+        choices=pelatih_choices,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'space-y-2 ml-1'
+        }),
+        required=False
+    )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        pelatih_choices = []
+        try:
+            pelatih_result = supabase.table('pelatih_hewan').select('username_lh').execute()
+            pengguna_result = supabase.table('pengguna').select('username, nama_depan, nama_belakang').execute()
+            pengguna_map = {p['username']: f"{p['nama_depan']} {p['nama_belakang']}" for p in pengguna_result.data}
+            pelatih_choices = [(p['username_lh'], pengguna_map.get(p['username_lh'], p['username_lh'])) for p in pelatih_result.data]
+            self.fields['pelatih'].choices = pelatih_choices
+        except Exception as e:
+            print(f"Error reloading pelatih choices: {e}")
 
 class WahanaForm(forms.Form):
     nama_wahana = forms.CharField(

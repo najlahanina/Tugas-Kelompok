@@ -1,4 +1,3 @@
-<!-- atraksi_form -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -32,7 +31,13 @@
 
       <form method="post" class="p-6 space-y-6">
         {% csrf_token %}
-        
+        {% if messages %}
+          {% for message in messages %}
+            <div class="text-red-600 font-semibold mb-4">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
         {% if not edit_mode %}
           <div class="grid grid-cols-1 gap-6">
             <div>
@@ -45,7 +50,6 @@
             </div>
           </div>
         {% else %}
-          <!-- Tampilan data yang readonly untuk edit mode -->
           <div class="grid grid-cols-1 gap-6">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Nama Atraksi</label>
@@ -69,35 +73,31 @@
           </div>
         </div>
 
-        {% if not edit_mode %}
-          <div>
-            <label for="id_pelatih" class="block text-sm font-medium text-gray-700 mb-1">Pelatih Pertunjukan</label>
+        <div>
+          <label for="id_pelatih" class="block text-sm font-medium text-gray-700 mb-1">Pelatih Pertunjukan</label>
+          {% if edit_mode %}
             {{ form.pelatih|safe }}
-          </div>
-          <div>
-            <label for="id_hewan" class="block text-sm font-medium text-gray-700 mb-1">Hewan yang Terlibat</label>
-            <div class="mt-1 bg-gray-50 p-3 rounded-md">
-              {{ form.hewan|safe }}
-            </div>
-          </div>
-        {% else %}
-          <!-- Tampilan data readonly untuk pelatih dan hewan -->
-          <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">
-            {% for p in readonly_data.pelatih %}
-              {{ p }}{% if not forloop.last %}, {% endif %}
-            {% empty %}
-              Tidak ada pelatih.
-            {% endfor %}
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Hewan yang Terlibat</label>
+          {% else %}
+            {{ form.pelatih|safe }}
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="id_hewan" class="block text-sm font-medium text-gray-700 mb-1">Hewan yang Terlibat</label>
+          {% if edit_mode %}
             <div class="mt-1 bg-gray-100 p-2 rounded-md border border-gray-300 text-gray-700">
               {% for hewan in readonly_data.hewan %}
                 <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ hewan }}</span>
+              {% empty %}
+                Tidak ada hewan.
               {% endfor %}
             </div>
-          </div>
-        {% endif %}
+          {% else %}
+            <div class="mt-1 bg-gray-50 p-3 rounded-md">
+              {{ form.hewan|safe }}
+            </div>
+          {% endif %}
+        </div>
 
         <div class="flex justify-end space-x-3 pt-4 border-t">
           <a href="{% url 'attractions:list_atraksi' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md transition duration-300">
