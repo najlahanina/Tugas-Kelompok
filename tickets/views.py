@@ -724,7 +724,10 @@ def admin_edit_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan)
 
     try:
         # Get reservation
-        reservasi_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+        reservasi_result = supabase.table('reservasi').select('*')\
+            .eq('username_p', username_p)\
+            .eq('nama_fasilitas', nama_fasilitas)\
+            .eq('tanggal_kunjungan', tanggal_kunjungan).execute()
 
         if not reservasi_result.data:
             messages.error(request, "Reservasi tidak ditemukan")
@@ -747,21 +750,23 @@ def admin_edit_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan)
 
             if update_data:
                 try:
-                    # Update dengan error handling yang lebih detail
-                    update_result = supabase.table('reservasi').update(update_data).eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                    update_result = supabase.table('reservasi').update(update_data)\
+                        .eq('username_p', username_p)\
+                        .eq('nama_fasilitas', nama_fasilitas)\
+                        .eq('tanggal_kunjungan', tanggal_kunjungan).execute()
 
-                    # Cek error dari Supabase
                     if hasattr(update_result, 'error') and update_result.error:
                         messages.error(request, f"Error dari database: {update_result.error}")
                         return redirect('tickets:admin_list_reservasi')
 
-                    # Verifikasi update dengan query ulang
-                    verify_result = supabase.table('reservasi').select('*').eq('username_p', username_p).eq('nama_fasilitas', nama_fasilitas).eq('tanggal_kunjungan', tanggal_kunjungan).execute()
+                    verify_result = supabase.table('reservasi').select('*')\
+                        .eq('username_p', username_p)\
+                        .eq('nama_fasilitas', nama_fasilitas)\
+                        .eq('tanggal_kunjungan', tanggal_kunjungan).execute()
 
                     if verify_result.data:
                         updated_reservasi = verify_result.data[0]
 
-                        # Cek apakah data benar-benar berubah
                         update_success = True
                         if 'status' in update_data and updated_reservasi['status'] != update_data['status']:
                             update_success = False
@@ -781,7 +786,12 @@ def admin_edit_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan)
             return redirect('tickets:admin_list_reservasi')
 
         atraksi_result = supabase.table('atraksi').select('*').eq('nama_atraksi', nama_fasilitas).execute()
-        atraksi = atraksi_result.data[0] if atraksi_result.data else {}
+        is_atraksi = bool(atraksi_result.data)
+        atraksi = atraksi_result.data[0] if is_atraksi else {}
+
+        wahana_result = supabase.table('wahana').select('*').eq('nama_wahana', nama_fasilitas).execute()
+        is_wahana = bool(wahana_result.data)
+        wahana = wahana_result.data[0] if is_wahana else {}
 
         facility_result = supabase.table('fasilitas').select('*').eq('nama', nama_fasilitas).execute()
         facility = facility_result.data[0] if facility_result.data else {}
@@ -795,9 +805,12 @@ def admin_edit_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan)
             except:
                 jam = str(facility['jadwal'])
 
-        # Add formatted data
-        reservasi['lokasi'] = atraksi.get('lokasi', 'Tidak ada')
         reservasi['jam'] = jam
+        reservasi['tipe_fasilitas'] = 'Atraksi' if is_atraksi else 'Wahana'
+        if is_atraksi:
+            reservasi['lokasi'] = atraksi.get('lokasi', 'Tidak ada')
+        else:
+            reservasi['peraturan'] = wahana.get('peraturan', 'Tidak ada')
 
         form = AdminReservasiEditForm(initial={
             'username_p': reservasi['username_p'],
@@ -814,7 +827,6 @@ def admin_edit_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan)
     except Exception as e:
         messages.error(request, f"Error: {str(e)}")
         return redirect('tickets:admin_list_reservasi')
-
 
 @login_required_custom
 def admin_batalkan_reservasi(request, username_p, nama_fasilitas, tanggal_kunjungan):

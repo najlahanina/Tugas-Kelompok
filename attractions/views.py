@@ -608,7 +608,6 @@ def list_atraksi_trainer(request):
     
     try:
         username_lh = request.session.get('username')
-        print("username", username_lh)
         
         penugasan_result = supabase.table('jadwal_penugasan').select('''
             nama_atraksi,
