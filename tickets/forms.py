@@ -74,10 +74,10 @@ class ReservasiForm(forms.Form):
                     total_reserved = sum(item['jumlah_tiket'] for item in existing_result.data) if existing_result.data else 0
                     available_capacity = max_capacity - total_reserved
                     
-                    if jumlah_tiket > available_capacity:
-                        raise forms.ValidationError(
-                            f"Kapasitas tidak mencukupi. Tersisa {available_capacity} tiket untuk tanggal ini."
-                        )
+                    # if jumlah_tiket > available_capacity:
+                    #     raise forms.ValidationError(
+                    #         f"Kapasitas tidak mencukupi. Tersisa {available_capacity} tiket untuk tanggal ini."
+                    #     )
                         
             except Exception as e:
                 print(f"Error checking capacity: {e}")
@@ -157,10 +157,10 @@ class ReservasiEditForm(forms.Form):
                     total_reserved -= current_jumlah
                     available_capacity = max_capacity - total_reserved
                     
-                    if jumlah_tiket > available_capacity:
-                        raise forms.ValidationError(
-                            f"Kapasitas tidak mencukupi. Tersisa {available_capacity} tiket untuk tanggal ini."
-                        )
+                    # if jumlah_tiket > available_capacity:
+                    #     raise forms.ValidationError(
+                    #         f"Kapasitas tidak mencukupi. Tersisa {available_capacity} tiket untuk tanggal ini."
+                    #     )
                         
             except Exception as e:
                 print(f"Error checking capacity during edit: {e}")

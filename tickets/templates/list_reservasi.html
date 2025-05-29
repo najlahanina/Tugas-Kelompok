@@ -1,244 +1,212 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Reservasi - Zoo Management</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .description {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 2px solid #333;
-        }
-        
-        th, td {
-            border: 1px solid #333;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .status-terjadwal {
-            color: #28a745;
-            font-weight: bold;
-        }
-        
-        .status-dibatalkan {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        
-        .status-selesai {
-            color: #6c757d;
-            font-weight: bold;
-        }
-        
-        .action-links {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .action-links a {
-            padding: 5px 10px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .edit-link {
-            background-color: #007bff;
-            color: white;
-        }
-        
-        .cancel-link {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .edit-link:hover {
-            background-color: #0056b3;
-        }
-        
-        .cancel-link:hover {
-            background-color: #c82333;
-        }
-        
-        .no-data {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 40px;
-        }
-        
-        .navigation {
-            margin-bottom: 20px;
-        }
-        
-        .navigation a {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-        
-        .navigation a:hover {
-            background-color: #218838;
-        }
-        
-        .page-info {
-            text-align: right;
-            color: #666;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        
-        .messages {
-            margin-bottom: 20px;
-        }
-        
-        .message {
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>DATA RESERVASI</h1>
-            <p class="description">
-            </p>
-        </div>
-        
-        <div class="navigation">
-            <a href="{% url 'tickets:tambah_reservasi' %}">Buat Reservasi Atraksi</a>
-            <a href="{% url 'tickets:tambah_reservasi_wahana' %}">Buat Reservasi Wahana</a>
-            <a href="{% url 'tickets:list_reservasi_tersedia' %}">Lihat Fasilitas Tersedia</a>
-        </div>
-        
-        <!-- Display Messages -->
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">
+{% extends 'base.html' %}
+
+{% block title %}Data Reservasi{% endblock %}
+
+{% block content %}
+<div class="bg-[#f8f5f0] min-h-screen py-10 px-4">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-[#586132] text-3xl font-bold">DATA RESERVASI</h1>
+                <p class="text-gray-600 mt-2"></p>
+            </div>
+
+            <div class="mb-6 flex flex-wrap gap-4">
+                <a href="{% url 'tickets:tambah_reservasi' %}" class="px-6 py-3 bg-[#586132] text-white rounded-md hover:bg-[#484f2a] focus:outline-none focus:ring-2 focus:ring-[#586132]">Buat Reservasi Atraksi</a>
+                <a href="{% url 'tickets:tambah_reservasi_wahana' %}" class="px-6 py-3 bg-[#586132] text-white rounded-md hover:bg-[#484f2a] focus:outline-none focus:ring-2 focus:ring-[#586132]">Buat Reservasi Wahana</a>
+                <a href="{% url 'tickets:list_reservasi_tersedia' %}" class="px-6 py-3 bg-[#586132] text-white rounded-md hover:bg-[#484f2a] focus:outline-none focus:ring-2 focus:ring-[#586132]">Lihat Fasilitas Tersedia</a>
+            </div>
+
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 mb-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">
                     {{ message }}
                 </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                {% if reservasi_list %}
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="border border-gray-800 px-4 py-3 bg-gray-50 font-bold text-center">Jenis<br>Reservasi</th>
+                                <th class="border border-gray-800 px-4 py-3 bg-gray-50 font-bold text-center">Nama<br>Atraksi</th>
+                                <th class="border border-gray-800 px-4 py-3 bg-gray-50 font-bold text-center">Tanggal<br>reservasi</th>
+                                <th class="border border-gray-800 px-4 py-3 bg-gray-50 font-bold text-center">Jumlah<br>tiket</th>
+                                <th class="border border-gray-800 px-4 py-3 bg-gray-50 font-bold text-center">Status</th>
+                                <th class="border border-gray-800 px-4 py-3 bg-gray-50 font-bold text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reservasi in reservasi_list %}
+<tr>
+    <td class="border border-gray-800 px-4 py-3 text-left">{{ reservasi.jenis_reservasi }}</td>
+    <td class="border border-gray-800 px-4 py-3 text-left">{{ reservasi.nama_fasilitas }}</td>
+    <td class="border border-gray-800 px-4 py-3 text-left">{{ reservasi.tanggal_kunjungan }}</td>
+    <td class="border border-gray-800 px-4 py-3 text-left">{{ reservasi.jumlah_tiket }}</td>
+    <td class="border border-gray-800 px-4 py-3">
+        {% if reservasi.status == 'Terjadwal' %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                {{ reservasi.status }}
+            </span>
+        {% elif reservasi.status == 'Dibatalkan' %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                {{ reservasi.status }}
+            </span>
+        {% else %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                {{ reservasi.status }}
+            </span>
+        {% endif %}
+    </td>
+    <td class="border border-gray-800 px-4 py-3 text-left">
+        {% if reservasi.status == 'Terjadwal' %}
+        <div class="flex gap-2">
+            {% if reservasi.jenis_reservasi == 'Atraksi' %}
+            <a href="{% url 'tickets:edit_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="action-button edit-button">Edit</a>
+            {% else %}
+            <a href="{% url 'tickets:edit_reservasi_wahana' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="action-button edit-button">Edit</a>
+            {% endif %}
+
+            <button type="button"
+                    class="action-button delete-button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#konfirmasiBatalModal-{{ forloop.counter }}">
+                Batalkan
+            </button>
         </div>
         {% endif %}
-        
-        <div class="table-container">
-            {% if reservasi_list %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Jenis<br>Reservasi</th>
-                            <th>Nama<br>Atraksi</th>
-                            <th>Tanggal<br>reservasi</th>
-                            <th>Jumlah<br>tiket</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for reservasi in reservasi_list %}
-                        <tr>
-                            <td>{{ reservasi.jenis_reservasi }}</td>
-                            <td>{{ reservasi.nama_fasilitas }}</td>
-                            <td>{{ reservasi.tanggal_kunjungan }}</td>
-                            <td>{{ reservasi.jumlah_tiket }}</td>
-                            <td>
-                                <span class="{% if reservasi.status == 'Terjadwal' %}status-terjadwal{% elif reservasi.status == 'Dibatalkan' %}status-dibatalkan{% else %}status-selesai{% endif %}">
-                                    {{ reservasi.status }}
-                                </span>
-                            </td>
-                            <td>
-                                {% if reservasi.status == 'Terjadwal' %}
-                                    <div class="action-links">
-                                        {% if reservasi.jenis_reservasi == 'Atraksi' %}
-                                            <a href="{% url 'tickets:edit_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="edit-link">[Edit]</a>
-                                            <a href="{% url 'tickets:batalkan_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="cancel-link" onclick="return confirm('Apakah Anda yakin ingin membatalkan reservasi ini?')">[Batalkan]</a>
-                                        {% else %}
-                                            <a href="{% url 'tickets:edit_reservasi_wahana' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="edit-link">[Edit]</a>
-                                            <a href="{% url 'tickets:batalkan_reservasi_wahana' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}" class="cancel-link" onclick="return confirm('Apakah Anda yakin ingin membatalkan reservasi ini?')">[Batalkan]</a>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <div class="no-data">
-                    <p>Belum ada data reservasi.</p>
-                    <p>Silakan buat reservasi baru menggunakan tombol di atas.</p>
+    </td>
+</tr>
+
+<div class="modal fade" id="konfirmasiBatalModal-{{ forloop.counter }}" tabindex="-1" aria-labelledby="konfirmasiBatalLabel-{{ forloop.counter }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-red-500 text-white">
+        <h5 class="modal-title" id="konfirmasiBatalLabel-{{ forloop.counter }}">Batalkan Reservasi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda yakin ingin membatalkan reservasi ini?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+        {% if reservasi.jenis_reservasi == 'Atraksi' %}
+        <form method="post" action="{% url 'tickets:batalkan_reservasi' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}">
+        {% else %}
+        <form method="post" action="{% url 'tickets:batalkan_reservasi_wahana' reservasi.username_p reservasi.nama_fasilitas reservasi.tanggal_kunjungan %}">
+        {% endif %}
+          {% csrf_token %}
+          <button type="submit" name="confirm" value="ya" class="btn btn-danger">Ya, Batalkan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+                        </tbody>
+                    </table>
                 </div>
+                {% else %}
+                <div class="text-center py-16 text-gray-600">
+                    <p class="italic">Belum ada data reservasi.</p>
+                    <p class="italic">Silakan buat reservasi baru menggunakan tombol di atas.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if reservasi_list %}
+            <div class="text-right text-gray-600 text-sm mt-6">
+                Total: {{ reservasi_list|length }} reservasi
+            </div>
             {% endif %}
         </div>
-        
-        {% if reservasi_list %}
-        <div class="page-info">
-            Total: {{ reservasi_list|length }} reservasi
-        </div>
-        {% endif %}
     </div>
-</body>
-</html>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+
+<style>
+    .habitat-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+  
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+  
+    .add-button {
+        display: inline-block;
+        background-color: #586132;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+  
+    .add-button:hover {
+        background-color: #6a7339;
+    }
+  
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        background-color: white;
+    }
+  
+    .action-cell {
+        white-space: nowrap;
+    }
+  
+    .action-button {
+        display: inline-block;
+        padding: 6px 10px;
+        margin-right: 5px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 13px;
+        color: white;
+        transition: background-color 0.3s;
+    }
+  
+    .edit-button {
+        background-color: #7d8b4e;
+    }
+  
+    .edit-button:hover {
+        background-color: #8c9a5d;
+    }
+  
+    .delete-button {
+        background-color: #a67c52;
+    }
+  
+    .delete-button:hover {
+        background-color: #b58a60;
+    }
+  </style>
+{% endblock %}

@@ -43,13 +43,13 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <div class="flex space-x-2">
-                  <a href="{% url 'attractions:edit_wahana' wahana.nama_wahana %}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                  <a href="{% url 'attractions:edit_wahana' wahana.nama_wahana %}" class="action-button edit-button">Edit</a>
                   <button 
                     type="button"
                     data-item-name="{{ wahana.nama }}" 
                     data-item-type="Wahana" 
                     data-item-url="{% url 'attractions:hapus_wahana' wahana.nama_wahana %}"
-                    class="text-red-600 hover:text-red-900 delete-btn bg-transparent border-none cursor-pointer p-0"
+                    class="action-button delete-button"
                   >
                     Hapus
                   </button>
@@ -99,6 +99,111 @@
     </div>
   </div>
 </div>
+<style>
+  .habitat-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f5f0;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #586132;
+  }
+
+  h1 {
+      color: #586132;
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+  }
+
+  .add-button {
+      display: inline-block;
+      background-color: #586132;
+      color: white;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+  }
+
+  .add-button:hover {
+      background-color: #6a7339;
+  }
+
+  .table-container {
+      overflow-x: auto;
+      border: 1px solid #e0cfc2;
+      border-radius: 6px;
+      background-color: white;
+  }
+
+  .habitat-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .habitat-table th,
+  .habitat-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e0cfc2;
+  }
+
+  .habitat-table th {
+      background-color: #586132;
+      color: white;
+      font-weight: bold;
+  }
+
+  .habitat-table tr:last-child td {
+      border-bottom: none;
+  }
+
+  .habitat-table tr:hover {
+      background-color: #f8f5f0;
+  }
+
+  .action-cell {
+      white-space: nowrap;
+  }
+
+  .action-button {
+      display: inline-block;
+      padding: 6px 10px;
+      margin-right: 5px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 13px;
+      color: white;
+      transition: background-color 0.3s;
+  }
+
+  .edit-button {
+      background-color: #7d8b4e;
+  }
+
+  .edit-button:hover {
+      background-color: #8c9a5d;
+  }
+
+  .delete-button {
+      background-color: #a67c52;
+  }
+
+  .delete-button:hover {
+      background-color: #b58a60;
+  }
+</style>
 {% endblock %}
 
 {% block script %}

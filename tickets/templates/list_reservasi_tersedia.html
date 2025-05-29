@@ -1,240 +1,175 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List Data Reservasi - Zoo Management</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .description {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 2px solid #333;
-        }
-        
-        th, td {
-            border: 1px solid #333;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .book-link {
-            background-color: #007bff;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-        }
-        
-        .book-link:hover {
-            background-color: #0056b3;
-        }
-        
-        .book-link.disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        
-        .no-data {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 40px;
-        }
-        
-        .navigation {
-            margin-bottom: 20px;
-        }
-        
-        .navigation a {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-        
-        .navigation a:hover {
-            background-color: #218838;
-        }
-        
-        .notes {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        .notes p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #495057;
-        }
-        
-        .messages {
-            margin-bottom: 20px;
-        }
-        
-        .message {
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .capacity-info {
-            font-size: 12px;
-            color: #6c757d;
-        }
-        
-        .capacity-full {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        
-        .capacity-available {
-            color: #28a745;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>LIST DATA RESERVASI</h1>
-            <p class="description">
-            </p>
-        </div>
-        
-        <div class="navigation">
-            <a href="{% url 'tickets:list_reservasi' %}">Lihat Reservasi Saya</a>
-            <a href="{% url 'tickets:tambah_reservasi' %}">Buat Reservasi Atraksi</a>
-            <a href="{% url 'tickets:tambah_reservasi_wahana' %}">Buat Reservasi Wahana</a>
-        </div>
-        
-        <!-- Display Messages -->
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <div class="table-container">
-            {% if fasilitas_list %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Jenis<br>Reservasi</th>
-                            <th>Nama<br>Atraksi</th>
-                            <th>Tanggal<br>reservasi</th>
-                            <th>Kapasitas<br>tersedia</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for fasilitas in fasilitas_list %}
-                        <tr>
-                            <td>{{ fasilitas.jenis_reservasi }}</td>
-                            <td>{{ fasilitas.nama_fasilitas }}</td>
-                            <td>{{ fasilitas.jadwal }}</td>
-                            <td>
-                                <span class="{% if fasilitas.kapasitas_tersedia > 0 %}capacity-available{% else %}capacity-full{% endif %}">
-                                    {{ fasilitas.kapasitas_tersedia }} dari {{ fasilitas.kapasitas_max }}
-                                </span>
-                                <div class="capacity-info">
-                                    {% if fasilitas.kapasitas_tersedia == 0 %}
-                                        (Penuh)
-                                    {% elif fasilitas.kapasitas_tersedia <= 5 %}
-                                        (Sisa sedikit)
-                                    {% else %}
-                                        (Tersedia)
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <td>
-                                {% if fasilitas.kapasitas_tersedia > 0 %}
-                                    {% if fasilitas.jenis_reservasi == 'Atraksi' %}
-                                        <a href="{% url 'tickets:tambah_reservasi' %}" class="book-link">[Pesan Tiket]</a>
-                                    {% else %}
-                                        <a href="{% url 'tickets:tambah_reservasi_wahana' %}" class="book-link">[Pesan Tiket]</a>
-                                    {% endif %}
-                                {% else %}
-                                    <span class="book-link disabled">[Pesan Tiket]</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <div class="no-data">
-                    <p>Tidak ada fasilitas yang tersedia saat ini.</p>
-                    <p>Silakan coba lagi nanti.</p>
+{% extends 'base.html' %}
+
+{% block title %}Reservasi Tersedia{% endblock %}
+
+{% block content %}
+<div class="bg-[#f8f5f0] min-h-screen py-10 px-4">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-[#586132] text-3xl font-bold">LIST DATA RESERVASI</h1>
+                <p class="text-gray-600 mt-2">Pilih jadwal yang tersedia untuk melakukan reservasi tiket</p>
+            </div>
+
+            <div class="mb-6 flex flex-wrap gap-4">
+                <a href="{% url 'tickets:list_reservasi' %}" class="px-6 py-3 bg-[#586132] text-white rounded-md hover:bg-[#485129]">Lihat Reservasi Saya</a>
+                <a href="{% url 'tickets:tambah_reservasi' %}" class="px-6 py-3 bg-[#586132] text-white rounded-md hover:bg-[#485129]">Buat Reservasi Atraksi</a>
+                <a href="{% url 'tickets:tambah_reservasi_wahana' %}" class="px-6 py-3 bg-[#586132] text-white rounded-md hover:bg-[#485129]">Buat Reservasi Wahana</a>
+            </div>
+
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="p-4 mb-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 </div>
             {% endif %}
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                {% if fasilitas_list %}
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-800">
+                                    <th class="px-4 py-3 border border-gray-300 text-center font-bold">Jenis<br>Reservasi</th>
+                                    <th class="px-4 py-3 border border-gray-300 text-center font-bold">Nama<br>Fasilitas</th>
+                                    <th class="px-4 py-3 border border-gray-300 text-center font-bold">Tanggal<br>Kunjungan</th>
+                                    <th class="px-4 py-3 border border-gray-300 text-center font-bold">Kapasitas<br>Tersedia</th>
+                                    <th class="px-4 py-3 border border-gray-300 text-center font-bold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fasilitas in fasilitas_list %}
+                                <tr>
+                                    <td class="px-4 py-3 border border-gray-300 text-left">{{ fasilitas.jenis_reservasi }}</td>
+                                    <td class="px-4 py-3 border border-gray-300 text-left">{{ fasilitas.nama_fasilitas }}</td>
+                                    <td class="px-4 py-3 border border-gray-300 text-left">
+                                        {{ fasilitas.tanggal_kunjungan }}
+                                    </td>
+                                    <td class="px-4 py-3 border border-gray-300 text-left">
+                                        <span class="{% if fasilitas.kapasitas_tersedia > 0 %}text-green-700{% else %}text-red-600 font-semibold{% endif %}">
+                                            {{ fasilitas.kapasitas_tersedia }} dari {{ fasilitas.kapasitas_max }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 border border-gray-300 text-left">
+                                        {% if fasilitas.kapasitas_tersedia > 0 %}
+                                            {% if fasilitas.is_user_reserved %}
+                                                <a href="{% url 'tickets:edit_reservasi' request.session.username fasilitas.nama_fasilitas fasilitas.tanggal_kunjungan %}"
+                                                   class="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-yellow-600 text-xs font-semibold">
+                                                    Edit Reservasi
+                                                </a>
+                                            {% else %}
+                                                {% if fasilitas.jenis_reservasi == 'Atraksi' %}
+                                                    <a href="{% url 'tickets:tambah_reservasi' %}?nama={{ fasilitas.nama_fasilitas }}&tanggal={{ fasilitas.tanggal_kunjungan }}"
+                                                       class="action-button edit-button">
+                                                        Pesan Tiket
+                                                    </a>
+                                                {% else %}
+                                                    <a href="{% url 'tickets:tambah_reservasi_wahana' %}?nama={{ fasilitas.nama_fasilitas }}&tanggal={{ fasilitas.tanggal_kunjungan }}"
+                                                       class="action-button edit-button">
+                                                        Pesan Tiket
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="px-4 py-2 bg-gray-400 text-white rounded text-xs font-semibold cursor-not-allowed opacity-70">
+                                                Penuh
+                                            </span>
+                                        {% endif %}
+                                    </td>                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-16 text-gray-600 italic">
+                        Tidak ada fasilitas dengan jadwal tersedia saat ini.
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+<style>
+    .habitat-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f5f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #586132;
+    }
+  
+    h1 {
+        color: #586132;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+  
+    .add-button {
+        display: inline-block;
+        background-color: #586132;
+        color: white;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+  
+    .add-button:hover {
+        background-color: #6a7339;
+    }
+  
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid #e0cfc2;
+        border-radius: 6px;
+        background-color: white;
+    }
+  
+    .action-cell {
+        white-space: nowrap;
+    }
+  
+    .action-button {
+        display: inline-block;
+        padding: 6px 10px;
+        margin-right: 5px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 13px;
+        color: white;
+        transition: background-color 0.3s;
+    }
+  
+    .edit-button {
+        background-color: #7d8b4e;
+    }
+  
+    .edit-button:hover {
+        background-color: #8c9a5d;
+    }
+  
+    .delete-button {
+        background-color: #a67c52;
+    }
+  
+    .delete-button:hover {
+        background-color: #b58a60;
+    }
+</style>
+{% endblock %}
